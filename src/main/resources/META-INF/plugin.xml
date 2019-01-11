@@ -1,0 +1,30 @@
+<idea-plugin>
+    <id>hdzi.idea-editstarters-plugin</id>
+    <name>EditStarters</name>
+    <vendor email="taojinhou@qq.com" url="http://github.com/Hdzi">Hdzi</vendor>
+
+    <description><![CDATA[
+    This plugin provides the ability to modify Spring Boot Starters.
+    ]]></description>
+
+    <idea-version since-build="183.4588"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+    <depends>org.jetbrains.idea.maven</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="EditStarters.MavenButton" class="hdzi.editstarters.ui.MavenButtonAction" text="Edit Starters"
+                description="edit maven spring boot starters" icon="/icons/button.png">
+            <add-to-group group-id="Maven.BaseProjectMenu" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>
