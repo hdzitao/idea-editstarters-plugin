@@ -3,9 +3,11 @@ package hdzi.editstarters.springboot
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.util.ThrowableComputable
 import hdzi.editstarters.springboot.bean.StarterInfo
 import hdzi.editstarters.ui.EditStartersDialog
 import hdzi.editstarters.ui.InitializrUrlDialog
+import java.io.IOException
 
 /**
  * 编辑器
@@ -20,8 +22,9 @@ abstract class SpringBootEditor(val context: DataContext) {
         if (isSpringBootProject()) {
             // 弹出spring initializr地址输入框
             val dialog = InitializrUrlDialog().show()
-            // 检查url确定是否点击了ok && initializr是否初始化成功
-            if (dialog.isOK && initSpringInitializr(dialog.url!!)) {
+            // 检查url确定是否点击了ok
+            if (dialog.isOK) {
+                initSpringInitializr(dialog.url!!)
                 EditStartersDialog(this).show()
             }
         }
@@ -39,11 +42,11 @@ abstract class SpringBootEditor(val context: DataContext) {
     /**
      * 初始化Initializr
      */
-    fun initSpringInitializr(url: String): Boolean =
-        ProgressManager.getInstance().runProcessWithProgressSynchronously({
+    fun initSpringInitializr(url: String) =
+        ProgressManager.getInstance().runProcessWithProgressSynchronously(ThrowableComputable<Unit, Exception> {
             springInitializr = SpringInitializr(url, version!!)
             addExistsStarters()
-        }, "Load ${url}", true, context.getData(DataKeys.PROJECT))
+        }, "Load ${url}", false, context.getData(DataKeys.PROJECT))
 
 
     /**
