@@ -16,20 +16,22 @@ class SpringInitializr(url: String, versionStr: String) {
     private val idsMap = hashMapOf<String, StarterInfo>()
     private val anchorsMap = hashMapOf<String, StarterInfo>()
     private val gson = Gson()
-    val version: Version
+    var version: Version
     val existStarters = linkedSetOf<StarterInfo>()
 
     init {
         // 请求initurl
-        var request = HttpRequests.request(url)
-        request.accept("application/json")
-        val baseInfoJSON = this.gson.fromJson(request.readString(), JsonObject::class.java)
+        val baseInfoJSON = HttpRequests.request(url).accept("application/json").connect {
+            this.gson.fromJson(it.readString(), JsonObject::class.java)
+        }
 
         parseSpringBootModules(baseInfoJSON)
 
         val dependenciesUrl = parseDependenciesUrl(baseInfoJSON, versionStr)
-        request = HttpRequests.request(dependenciesUrl)
-        val depsJSON = this.gson.fromJson(request.readString(), JsonObject::class.java)
+        val depsJSON = HttpRequests.request(dependenciesUrl).connect {
+            this.gson.fromJson(it.readString(), JsonObject::class.java)
+        }
+
         parseDependencies(depsJSON)
 
         this.version = this.gson.fromJson(baseInfoJSON.getAsJsonObject("bootVersion"), Version::class.java)
