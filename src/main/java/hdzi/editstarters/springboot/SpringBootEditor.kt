@@ -31,7 +31,7 @@ abstract class SpringBootEditor(val context: DataContext) {
 
     var springInitializr: SpringInitializr? = null
 
-    abstract val version: String?
+    abstract val currentVersion: String?
 
     /**
      * 判断是否是spring boot项目
@@ -43,7 +43,7 @@ abstract class SpringBootEditor(val context: DataContext) {
      */
     fun initSpringInitializr(url: String) =
         ProgressManager.getInstance().runProcessWithProgressSynchronously(ThrowableComputable<Unit, Exception> {
-            springInitializr = SpringInitializr(url, version!!)
+            springInitializr = SpringInitializr(url, currentVersion!!)
             addExistsStarters()
         }, "Load ${url}", false, context.getData(DataKeys.PROJECT))
 

@@ -36,7 +36,7 @@ public class EditStartersDialog {
 
         this.versionComboBox.setModel(new CollectionComboBoxModel(
                 initializr.getVersion().getValues(),
-                springBoot.getVersion()));
+                springBoot.getCurrentVersion()));
         this.versionComboBox.setEnabled(false);
 
         this.frame = new JFrame(this.title);

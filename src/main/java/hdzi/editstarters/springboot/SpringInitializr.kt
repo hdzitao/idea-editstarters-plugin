@@ -11,7 +11,7 @@ import java.util.*
 /**
  * Created by taojinhou on 2018/12/21.
  */
-class SpringInitializr(url: String, versionStr: String) {
+class SpringInitializr(url: String, currentVersion: String) {
     val modulesMap = linkedMapOf<String, List<StarterInfo>>()
     private val idsMap = hashMapOf<String, StarterInfo>()
     private val anchorsMap = hashMapOf<String, StarterInfo>()
@@ -27,7 +27,7 @@ class SpringInitializr(url: String, versionStr: String) {
 
         parseSpringBootModules(baseInfoJSON)
 
-        val dependenciesUrl = parseDependenciesUrl(baseInfoJSON, versionStr)
+        val dependenciesUrl = parseDependenciesUrl(baseInfoJSON, currentVersion)
         val depsJSON = HttpRequests.request(dependenciesUrl).connect {
             this.gson.fromJson(it.readString(), JsonObject::class.java)
         }

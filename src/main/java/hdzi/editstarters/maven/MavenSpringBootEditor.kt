@@ -21,7 +21,7 @@ class MavenSpringBootEditor(context: DataContext) : SpringBootEditor(context) {
      */
     private val pomXml = PomXml(context.getData(DataKeys.PSI_FILE) as XmlFile)
 
-    override val version: String? = mavenProject.parentId?.version
+    override val currentVersion: String? = mavenProject.parentId?.version
 
     override val isSpringBootProject: Boolean
         get() {
