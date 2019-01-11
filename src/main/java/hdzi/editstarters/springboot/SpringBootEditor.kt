@@ -7,7 +7,6 @@ import com.intellij.openapi.util.ThrowableComputable
 import hdzi.editstarters.springboot.bean.StarterInfo
 import hdzi.editstarters.ui.EditStartersDialog
 import hdzi.editstarters.ui.InitializrUrlDialog
-import java.io.IOException
 
 /**
  * 编辑器
@@ -27,7 +26,7 @@ abstract class SpringBootEditor(val context: DataContext) {
                 initSpringInitializr(dialog.url!!)
                 EditStartersDialog(this).show()
             }
-        }
+        } else throw Exception("Not a Spring Boot Project!")
     }
 
     var springInitializr: SpringInitializr? = null
