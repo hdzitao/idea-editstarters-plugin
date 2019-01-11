@@ -9,7 +9,7 @@ class ExceptionDialog(val e: Exception) {
             """
                 Please check the network connection and try again.
                 If it fails again, please contact the author.
-                Details:${e}
+                Details:${if (e.javaClass === Exception::class.java) e.message else e}
             """.trimIndent(),
             "Edit Starters Error"
         )
