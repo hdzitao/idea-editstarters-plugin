@@ -18,7 +18,7 @@ abstract class SpringBootEditor(val context: DataContext) {
      * 启动编辑器
      */
     fun edit() {
-        if (isSpringBootProject()) {
+        if (isSpringBootProject) {
             // 弹出spring initializr地址输入框
             val dialog = InitializrUrlDialog().show()
             // 检查url确定是否点击了ok
@@ -36,7 +36,7 @@ abstract class SpringBootEditor(val context: DataContext) {
     /**
      * 判断是否是spring boot项目
      */
-    abstract fun isSpringBootProject(): Boolean
+    abstract val isSpringBootProject: Boolean
 
     /**
      * 初始化Initializr

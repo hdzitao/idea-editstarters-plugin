@@ -23,13 +23,14 @@ class MavenSpringBootEditor(context: DataContext) : SpringBootEditor(context) {
 
     override val version: String? = mavenProject.parentId?.version
 
-    override fun isSpringBootProject(): Boolean {
-        val parent = mavenProject.parentId
+    override val isSpringBootProject: Boolean
+        get() {
+            val parent = mavenProject.parentId
 
-        return parent != null
-                && "org.springframework.boot" == parent.groupId
-                && "spring-boot-starter-parent" == parent.artifactId
-    }
+            return parent != null
+                    && "org.springframework.boot" == parent.groupId
+                    && "spring-boot-starter-parent" == parent.artifactId
+        }
 
     override fun addExistsStarters() {
         this.mavenProject.dependencies.forEach { mavenDep ->

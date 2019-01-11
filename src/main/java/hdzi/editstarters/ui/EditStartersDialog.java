@@ -31,13 +31,12 @@ public class EditStartersDialog {
     private Set<StarterInfo> addStarters = new HashSet<>(64);
     private Set<StarterInfo> removeStarters = new HashSet<>(64);
 
-    private SpringInitializr initializr;
-
     public EditStartersDialog(SpringBootEditor springBoot) {
-        this.initializr = springBoot.getSpringInitializr();
+        SpringInitializr initializr = springBoot.getSpringInitializr();
+
         this.versionComboBox.setModel(new CollectionComboBoxModel(
-                this.initializr.getVersion().getValues(),
-                this.initializr.getVersion().getDefault()));
+                initializr.getVersion().getValues(),
+                springBoot.getVersion()));
         this.versionComboBox.setEnabled(false);
 
         this.frame = new JFrame(this.title);
@@ -53,10 +52,10 @@ public class EditStartersDialog {
             this.frame.dispose();
         });
 
-        LinkedHashMap<String, List<StarterInfo>> modulesMap = this.initializr.getModulesMap();
+        LinkedHashMap<String, List<StarterInfo>> modulesMap = initializr.getModulesMap();
 
         this.moduleList.setModel(new CollectionListModel(modulesMap.keySet()));
-        this.selectList.setModel(new CollectionListModel(this.initializr.getExistStarters()));
+        this.selectList.setModel(new CollectionListModel(initializr.getExistStarters()));
 
         this.moduleList.addListSelectionListener(e -> {
             String name = (String) ((JList) e.getSource()).getSelectedValue();
