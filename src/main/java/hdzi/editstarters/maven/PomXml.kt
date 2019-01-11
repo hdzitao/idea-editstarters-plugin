@@ -12,34 +12,35 @@ import java.util.stream.Collectors
  * Created by taojinhou on 2018/12/24.
  */
 class PomXml(private val file: XmlFile) {
-    private val rootTag: XmlTag? = this.file.document!!.rootTag
+    /**
+     * 根标签
+     */
+    private val rootTag: XmlTag = this.file.document!!.rootTag!!
 
+    /**
+     * 删除依赖
+     */
     fun removeDependencies(dependencies: Collection<StarterInfo>) {
-        val dependenciesTag = getOrCreateXmlTag(this.rootTag!!, "dependencies")
-
+        val dependenciesTag = getOrCreateXmlTag(this.rootTag, "dependencies")
+        // 取已存在的依赖
         val extdeps = dependenciesTag.findSubTags("dependency")
-
+        // 转化待删除的依赖成字符串形式，方便对比
         val removeDeps = dependencies.stream()
             .map { info -> createPoint(info.groupId!!, info.artifactId!!) }
             .collect(Collectors.toSet())
-
+        // 遍历存在的依赖，如果待删除的依赖包含它，就删除
         for (extdep in extdeps) {
-            if (removeDeps.contains(
-                    createPoint(
-                        getTagText(extdep, "groupId"),
-                        getTagText(extdep, "artifactId")
-                    )
-                )
-            ) {
-
+            if (removeDeps.contains(createPoint(getTagText(extdep, "groupId"), getTagText(extdep, "artifactId")))) {
                 extdep.delete()
             }
         }
     }
 
-
+    /**
+     * 添加依赖
+     */
     fun addDependencies(dependencies: Collection<StarterInfo>) {
-        val dependenciesTag = getOrCreateXmlTag(this.rootTag!!, "dependencies")
+        val dependenciesTag = getOrCreateXmlTag(this.rootTag, "dependencies")
 
         for (info in dependencies) {
             val dependency = createSubTag(dependenciesTag, "dependency")
@@ -60,39 +61,44 @@ class PomXml(private val file: XmlFile) {
         }
     }
 
-    private fun addRepositories(repositories: MutableSet<DepResponse.Repository>) {
-        val repositoriesTag = getOrCreateXmlTag(this.rootTag!!, "repositories")
-        // 去重
-        val iterator = repositories.iterator()
-        while (iterator.hasNext()) {
-            val repository = iterator.next()
-            val point = createPoint(repository.id!!, repository.url!!)
-            for (sub in repositoriesTag.findSubTags("repository")) {
-                if (point == createPoint(getTagText(sub, "id"), getTagText(sub, "url"))) {
-                    iterator.remove()
+    /**
+     * 添加仓库信息
+     */
+    private fun addRepositories(repositories: Set<DepResponse.Repository>) {
+        val repositoriesTag = getOrCreateXmlTag(this.rootTag, "repositories")
+
+        val existingRepos = repositoriesTag.findSubTags("repository")
+        repositories.stream()
+            .filter { repo ->
+                // 去重
+                val point = createPoint(repo.id!!, repo.url!!)
+                existingRepos.find { tag ->
+                    point == createPoint(getTagText(tag, "id"), getTagText(tag, "url"))
+                } == null
+            }.forEach { repo ->
+                // 添加
+                val repositoryTag = createSubTag(repositoriesTag, "repository")
+                addSubTagWithTextBody(repositoryTag, "id", repo.id)
+                addSubTagWithTextBody(repositoryTag, "name", repo.name)
+                addSubTagWithTextBody(repositoryTag, "url", repo.url)
+                if (repo.snapshotEnabled != null) {
+                    val snapshotsTag = createSubTag(repositoryTag, "snapshots")
+                    addSubTagWithTextBody(snapshotsTag, "enabled", repo.snapshotEnabled!!.toString())
                 }
             }
-        }
-
-        for (repository in repositories) {
-            val repositoryTag = createSubTag(repositoriesTag, "repository")
-            addSubTagWithTextBody(repositoryTag, "id", repository.id)
-            addSubTagWithTextBody(repositoryTag, "name", repository.name)
-            addSubTagWithTextBody(repositoryTag, "url", repository.url)
-            if (repository.snapshotEnabled != null) {
-                val snapshotsTag = createSubTag(repositoryTag, "snapshots")
-                addSubTagWithTextBody(snapshotsTag, "enabled", repository.snapshotEnabled!!.toString())
-            }
-        }
     }
 
-    private fun getTagText(parent: XmlTag, name: String): String {
-        val subTag = parent.findFirstSubTag(name)
-        return subTag?.value?.text!!
-    }
+    /**
+     * 获取标签里的值
+     */
+    private fun getTagText(parent: XmlTag, name: String): String =
+        parent.findFirstSubTag(name)?.value?.text!!
 
+    /**
+     * 添加bom信息
+     */
     private fun addBom(bom: DepResponse.Bom) {
-        val dependencyManagementTag = getOrCreateXmlTag(this.rootTag!!, "dependencyManagement")
+        val dependencyManagementTag = getOrCreateXmlTag(this.rootTag, "dependencyManagement")
         val dependencies = getOrCreateXmlTag(dependencyManagementTag, "dependencies")
         // 去重
         val point = createPoint(bom.groupId!!, bom.artifactId!!)
@@ -110,6 +116,9 @@ class PomXml(private val file: XmlFile) {
         addSubTagWithTextBody(dependencyTag, "scope", "import")
     }
 
+    /**
+     * 获取或者新建标签
+     */
     private fun getOrCreateXmlTag(parent: XmlTag, name: String): XmlTag {
         var subTag = parent.findFirstSubTag(name)
         if (subTag == null) {
@@ -119,17 +128,24 @@ class PomXml(private val file: XmlFile) {
         return subTag!!
     }
 
+    /**
+     * 添加有内容的标签
+     */
     private fun addSubTagWithTextBody(parent: XmlTag?, key: String, value: String?) {
         if (parent != null && StringUtils.isNotEmpty(value) && StringUtils.isNotEmpty(key)) {
             parent.addSubTag(parent.createChildTag(key, parent.namespace, value, false), false)
         }
     }
 
-    private fun createSubTag(parent: XmlTag, name: String): XmlTag {
-        return parent.addSubTag(parent.createChildTag(name, parent.namespace, null, false), false)
-    }
+    /**
+     * 新建标签
+     */
+    private fun createSubTag(parent: XmlTag, name: String): XmlTag =
+        parent.addSubTag(parent.createChildTag(name, parent.namespace, null, false), false)
 
-    private fun createPoint(vararg info: String): String {
-        return StringUtils.join(info, ":")
-    }
+    /**
+     * 生成标识字符串
+     */
+    private fun createPoint(vararg info: String): String = StringUtils.join(info, ":")
+
 }

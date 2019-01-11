@@ -16,6 +16,9 @@ class MavenSpringBootEditor(context: DataContext) : SpringBootEditor(context) {
      * maven项目实体
      */
     private val mavenProject = MavenActionUtil.getMavenProject(context)!!
+    /**
+     * 自定义的pom文件操作类
+     */
     private val pomXml = PomXml(context.getData(DataKeys.PSI_FILE) as XmlFile)
 
     override val version: String? = mavenProject.parentId?.version
