@@ -5,7 +5,7 @@ import com.intellij.openapi.ui.Messages
 import org.apache.commons.lang.StringUtils
 
 class InitializrUrlDialog {
-    private val URL_VERIFIER = object : InputValidator {
+    private val urlVerifier = object : InputValidator {
         private val URL_PATTERN = "^https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]".toRegex()
 
         override fun checkInput(inputString: String): Boolean {
@@ -29,7 +29,7 @@ class InitializrUrlDialog {
             "Spring Initializr Url",
             null,
             this.url,
-            URL_VERIFIER
+            urlVerifier
         )
 
         return this

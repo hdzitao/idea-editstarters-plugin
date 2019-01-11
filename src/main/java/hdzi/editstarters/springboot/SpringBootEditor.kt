@@ -41,7 +41,7 @@ abstract class SpringBootEditor(val context: DataContext) {
     /**
      * 初始化Initializr
      */
-    fun initSpringInitializr(url: String) =
+    private fun initSpringInitializr(url: String) =
         ProgressManager.getInstance().runProcessWithProgressSynchronously(ThrowableComputable<Unit, Exception> {
             springInitializr = SpringInitializr(url, currentVersion!!)
             addExistsStarters()

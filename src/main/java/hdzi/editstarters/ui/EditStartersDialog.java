@@ -34,16 +34,19 @@ public class EditStartersDialog {
     public EditStartersDialog(SpringBootEditor springBoot) {
         SpringInitializr initializr = springBoot.getSpringInitializr();
 
+        this.frame = new JFrame(this.title);
+        this.frame.setContentPane(this.root);
+
+        // boot版本选框
         this.versionComboBox.setModel(new CollectionComboBoxModel(
                 initializr.getVersion().getValues(),
                 springBoot.getCurrentVersion()));
         this.versionComboBox.setEnabled(false);
 
-        this.frame = new JFrame(this.title);
-        this.frame.setContentPane(this.root);
-
+        // 取消按钮
         this.buttonCancel.addActionListener(e -> this.frame.dispose());
 
+        // ok按钮
         this.buttonOK.addActionListener(e -> {
             WriteCommandAction.runWriteCommandAction(springBoot.getContext().getData(DataKeys.PROJECT), () -> {
                 springBoot.addDependencies(this.addStarters);
@@ -54,51 +57,51 @@ public class EditStartersDialog {
 
         LinkedHashMap<String, List<StarterInfo>> modulesMap = initializr.getModulesMap();
 
+        // Module列表
         this.moduleList.setModel(new CollectionListModel(modulesMap.keySet()));
-        this.selectList.setModel(new CollectionListModel(initializr.getExistStarters()));
-
         this.moduleList.addListSelectionListener(e -> {
             String name = (String) ((JList) e.getSource()).getSelectedValue();
             this.starterList.setModel(new CollectionListModel(modulesMap.get(name)));
             this.starterDescPan.setText(null);
         });
-
+        // Starter列表
         this.starterList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 StarterInfo starterInfo = (StarterInfo) ((JList) e.getSource()).getSelectedValue();
 
                 switch (e.getClickCount()) {
-                    case 1:
+                    case 1: // 按一下显示信息
                         starterDescPan.setText(starterInfo.getDescription());
                         break;
-                    case 2:
-                        if (starterInfo.getExist()) {
+                    case 2: // 按两下选择
+                        if (starterInfo.getExist()) { // 对于已存在的starter，添加就是从删除列表里删除
                             removeStarters.remove(starterInfo);
-                        } else {
+                        } else { // 对于不存在的starter，添加直接加入添加列表
                             addStarters.add(starterInfo);
                         }
+                        // 去重显示
                         CollectionListModel<Object> listModel = (CollectionListModel) selectList.getModel();
                         if (!listModel.contains(starterInfo)) {
                             listModel.add(starterInfo);
                         }
-                        selectList.setModel(listModel);
                         break;
                 }
             }
         });
-
+        // selected列表
+        this.selectList.setModel(new CollectionListModel(initializr.getExistStarters()));
         this.selectList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
+                if (e.getClickCount() == 2) { // 按两下删除
                     StarterInfo starterInfo = (StarterInfo) ((JList) e.getSource()).getSelectedValue();
-                    if (starterInfo.getExist()) {
+                    if (starterInfo.getExist()) { // 对于已存在的starter，删除就是加入删除列表
                         removeStarters.add(starterInfo);
-                    } else {
+                    } else { // 对于不存在的starter，删除是从添加列表里删除
                         addStarters.remove(starterInfo);
                     }
-
+                    // 显示
                     ((CollectionListModel) selectList.getModel()).remove(starterInfo);
                 }
             }
@@ -108,7 +111,7 @@ public class EditStartersDialog {
 
     public void show() {
         this.frame.pack();
-        this.frame.setLocationRelativeTo(null);
+        this.frame.setLocationRelativeTo(null); // 中间显示
         this.frame.setVisible(true);
     }
 }
