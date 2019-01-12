@@ -49,7 +49,7 @@ class PomXml(private val file: XmlFile) {
             if ("compile" != info.scope) {
                 addSubTagWithTextBody(dependency, "scope", info.scope)
             }
-            addSubTagWithTextBody(dependency, "currentVersion", info.version)
+            addSubTagWithTextBody(dependency, "version", info.version)
 
             if (info.bom != null) {
                 addBom(info.bom!!)
@@ -111,7 +111,7 @@ class PomXml(private val file: XmlFile) {
         val dependencyTag = createSubTag(dependencies, "dependency")
         addSubTagWithTextBody(dependencyTag, "groupId", bom.groupId)
         addSubTagWithTextBody(dependencyTag, "artifactId", bom.artifactId)
-        addSubTagWithTextBody(dependencyTag, "currentVersion", bom.version)
+        addSubTagWithTextBody(dependencyTag, "version", bom.version)
         addSubTagWithTextBody(dependencyTag, "type", "pom")
         addSubTagWithTextBody(dependencyTag, "scope", "import")
     }
