@@ -20,13 +20,27 @@ class StarterInfo {
     var exist = false
 
     val descDetails: String
-        get() = "groupId: ${groupId}\nartifactId: ${artifactId}\nscope: ${scope}\n" +
-                (if (version != null) "version: ${version}\n" else "") +
-                "desc: ${description}"
+        get() {
+            val buffer = StringBuffer()
+            if (groupId != null) {
+                buffer.append("groupId: ${groupId}\nartifactId: ${artifactId}\nscope: ${scope}\n")
+                if (version != null) {
+                    buffer.append("version: ${version}\n")
+                }
+            } else if (versionRange != null) {
+                buffer.append("versionRange: ${versionRange}\n")
+            }
 
+            buffer.append("desc: ${description}")
+
+            return buffer.toString()
+        }
 
     val searchKey: String
         get() = "${groupId}\t${artifactId}\t${name}\t${description}".toLowerCase()
+
+    val canBeAdded: Boolean
+        get() = groupId != null && artifactId != null
 
     fun addRepository(repository: DepResponse.Repository?) {
         if (repository != null) {

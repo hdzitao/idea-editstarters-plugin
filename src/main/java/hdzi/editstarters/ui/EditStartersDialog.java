@@ -88,6 +88,7 @@ public class EditStartersDialog {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // 按两下选择
                     StarterInfo starterInfo = (StarterInfo) starterList.getSelectedValue();
+                    if (!starterInfo.getCanBeAdded()) return; // 检查一下是否允许添加
                     if (starterInfo.getExist()) { // 对于已存在的starter，添加就是从删除列表里删除
                         removeStarters.remove(starterInfo);
                     } else { // 对于不存在的starter，添加直接加入添加列表
