@@ -33,7 +33,7 @@ intellij {
 patchPluginXml {
     changeNotes """
 <ul>
-<li>2019/1/11 support maven project<li>
+<li>2019/1/11 support maven project</li>
 <li>2019/1/14 support search</li>
 </ul>
       """
