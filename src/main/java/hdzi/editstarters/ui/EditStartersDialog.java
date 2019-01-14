@@ -11,10 +11,8 @@ import hdzi.editstarters.springboot.bean.StarterInfo;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class EditStartersDialog {
@@ -27,7 +25,6 @@ public class EditStartersDialog {
     private JList selectList;
     private JTextPane starterDescPan;
     private JTextField searchField;
-    private JButton searchButton;
     private JFrame frame;
     private String title = "Edit Starters";
     private Set<StarterInfo> addStarters = new HashSet<>(64);
@@ -61,12 +58,15 @@ public class EditStartersDialog {
 
         // Module列表
         this.moduleList.setModel(new CollectionListModel(modulesMap.keySet()));
-        this.moduleList.addListSelectionListener(e -> {
-            String name = (String) ((JList) e.getSource()).getSelectedValue();
-            this.starterList.setModel(new CollectionListModel(modulesMap.get(name)));
-            this.starterDescPan.setText(null);
+        this.moduleList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String name = (String) ((JList) e.getSource()).getSelectedValue();
+                starterList.setModel(new CollectionListModel(modulesMap.get(name)));
+                starterDescPan.setText(null);
+            }
         });
-        this.moduleList.setSelectedIndex(0);
+
         // Starter列表
         this.starterList.addMouseListener(new MouseAdapter() {
             @Override
@@ -92,6 +92,7 @@ public class EditStartersDialog {
                 }
             }
         });
+
         // selected列表
         this.selectList.setModel(new CollectionListModel(initializr.getExistStarters()));
         this.selectList.addMouseListener(new MouseAdapter() {
@@ -110,6 +111,17 @@ public class EditStartersDialog {
             }
         });
 
+        // 搜索按钮
+        this.searchField.addActionListener(e -> {
+            String searchKey = this.searchField.getText().toLowerCase();
+            List<StarterInfo> result = initializr.getSearchDB().entrySet().stream()
+                    .filter(entry -> entry.getKey().contains(searchKey))
+                    .map(Map.Entry::getValue)
+                    .collect(Collectors.toList());
+
+            this.starterList.setModel(new CollectionComboBoxModel(result));
+            this.moduleList.clearSelection();
+        });
     }
 
     public void show() {

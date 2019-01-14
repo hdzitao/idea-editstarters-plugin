@@ -12,6 +12,7 @@ import hdzi.editstarters.springboot.bean.Version
  */
 class SpringInitializr(url: String, currentVersion: String) {
     val modulesMap = linkedMapOf<String, List<StarterInfo>>()
+    val searchDB = linkedMapOf<String, StarterInfo>()
     private val idsMap = hashMapOf<String, StarterInfo>()
     private val anchorsMap = hashMapOf<String, StarterInfo>()
     private val gson = Gson()
@@ -45,9 +46,6 @@ class SpringInitializr(url: String, currentVersion: String) {
     }
 
     private fun parseSpringBootModules(json: JsonObject) {
-        val allModules = ArrayList<StarterInfo>(64)
-        modulesMap["All Modules"] = allModules
-
         val dependenciesJSON = json.getAsJsonObject("dependencies").getAsJsonArray("values")
         for (moduleEle in dependenciesJSON) {
             val module = moduleEle.asJsonObject
@@ -60,12 +58,15 @@ class SpringInitializr(url: String, currentVersion: String) {
                 val starterInfo = this.gson.fromJson(baseInfo, StarterInfo::class.java)
 
                 this.idsMap[starterInfo.id!!] = starterInfo
-                allModules.add(starterInfo)
+                this.searchDB[createSearchDBKey(starterInfo)] = starterInfo
                 dependencies.add(starterInfo)
             }
             this.modulesMap[module.get("name").asString] = dependencies
         }
     }
+
+    private fun createSearchDBKey(info: StarterInfo): String =
+        "${info.id}\t${info.name}\t${info.description}".toString()
 
     private fun parseDependenciesUrl(json: JsonObject, version: String): String {
         return json.getAsJsonObject("_links")
