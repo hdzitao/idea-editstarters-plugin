@@ -69,6 +69,7 @@ public class EditStartersDialog {
         });
 
         // 显示详细信息
+        Map<StarterInfo, String> toolTipTextCache = new WeakHashMap<>(); // 加个缓存
         MouseAdapter showDescAdapter = new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
@@ -77,7 +78,8 @@ public class EditStartersDialog {
                 int index = list.locationToIndex(e.getPoint());
                 if (index > -1) {
                     StarterInfo starter = (StarterInfo) model.getElementAt(index);
-                    list.setToolTipText(starter.getDescDetails());
+                    String toolTipText = toolTipTextCache.computeIfAbsent(starter, StarterInfo::getDescDetails);
+                    list.setToolTipText(toolTipText);
                 }
             }
         };
