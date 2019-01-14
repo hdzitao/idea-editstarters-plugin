@@ -63,7 +63,7 @@ public class EditStartersDialog {
         this.moduleList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                String name = (String) ((JList) e.getSource()).getSelectedValue();
+                String name = (String) moduleList.getSelectedValue();
                 starterList.setModel(new CollectionListModel(modulesMap.get(name)));
                 starterDescPan.setText(null);
             }
@@ -73,7 +73,7 @@ public class EditStartersDialog {
         this.starterList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                StarterInfo starterInfo = (StarterInfo) ((JList) e.getSource()).getSelectedValue();
+                StarterInfo starterInfo = (StarterInfo) starterList.getSelectedValue();
 
                 switch (e.getClickCount()) {
                     case 1: // 按一下显示信息
@@ -101,7 +101,7 @@ public class EditStartersDialog {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // 按两下删除
-                    StarterInfo starterInfo = (StarterInfo) ((JList) e.getSource()).getSelectedValue();
+                    StarterInfo starterInfo = (StarterInfo) selectList.getSelectedValue();
                     if (starterInfo.getExist()) { // 对于已存在的starter，删除就是加入删除列表
                         removeStarters.add(starterInfo);
                     } else { // 对于不存在的starter，删除是从添加列表里删除
