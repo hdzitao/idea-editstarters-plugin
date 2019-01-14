@@ -66,7 +66,7 @@ class SpringInitializr(url: String, currentVersion: String) {
     }
 
     private fun createSearchDBKey(info: StarterInfo): String =
-        "${info.id}\t${info.name}\t${info.description}".toString()
+        "${info.id}\t${info.name}\t${info.description}".toLowerCase()
 
     private fun parseDependenciesUrl(json: JsonObject, version: String): String {
         return json.getAsJsonObject("_links")

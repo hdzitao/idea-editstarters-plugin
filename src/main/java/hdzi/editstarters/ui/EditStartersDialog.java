@@ -9,6 +9,8 @@ import hdzi.editstarters.springboot.SpringInitializr;
 import hdzi.editstarters.springboot.bean.StarterInfo;
 
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -111,16 +113,19 @@ public class EditStartersDialog {
             }
         });
 
-        // 搜索按钮
-        this.searchField.addActionListener(e -> {
-            String searchKey = this.searchField.getText().toLowerCase();
-            List<StarterInfo> result = initializr.getSearchDB().entrySet().stream()
-                    .filter(entry -> entry.getKey().contains(searchKey))
-                    .map(Map.Entry::getValue)
-                    .collect(Collectors.toList());
+        // 搜索框
+        this.searchField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                String searchKey = searchField.getText().toLowerCase();
+                List<StarterInfo> result = initializr.getSearchDB().entrySet().stream()
+                        .filter(entry -> entry.getKey().contains(searchKey))
+                        .map(Map.Entry::getValue)
+                        .collect(Collectors.toList());
 
-            this.starterList.setModel(new CollectionComboBoxModel(result));
-            this.moduleList.clearSelection();
+                starterList.setModel(new CollectionComboBoxModel(result));
+                moduleList.clearSelection();
+            }
         });
     }
 
