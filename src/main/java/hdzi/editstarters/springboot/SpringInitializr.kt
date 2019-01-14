@@ -58,15 +58,12 @@ class SpringInitializr(url: String, currentVersion: String) {
                 val starterInfo = this.gson.fromJson(baseInfo, StarterInfo::class.java)
 
                 this.idsMap[starterInfo.id!!] = starterInfo
-                this.searchDB[createSearchDBKey(starterInfo)] = starterInfo
+                this.searchDB[starterInfo.searchKey] = starterInfo
                 dependencies.add(starterInfo)
             }
             this.modulesMap[module.get("name").asString] = dependencies
         }
     }
-
-    private fun createSearchDBKey(info: StarterInfo): String =
-        "${info.id}\t${info.name}\t${info.description}".toLowerCase()
 
     private fun parseDependenciesUrl(json: JsonObject, version: String): String {
         return json.getAsJsonObject("_links")

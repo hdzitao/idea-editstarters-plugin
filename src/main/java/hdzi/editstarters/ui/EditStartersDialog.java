@@ -25,7 +25,6 @@ public class EditStartersDialog {
     private JList moduleList;
     private JList starterList;
     private JList selectList;
-    private JTextPane starterDescPan;
     private JTextField searchField;
     private JFrame frame;
     private String title = "Edit Starters";
@@ -63,37 +62,46 @@ public class EditStartersDialog {
         this.moduleList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                searchField.setText("");
                 String name = (String) moduleList.getSelectedValue();
                 starterList.setModel(new CollectionListModel(modulesMap.get(name)));
-                starterDescPan.setText(null);
             }
         });
+
+        // 显示详细信息
+        MouseAdapter showDescAdapter = new MouseAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                JList list = (JList) e.getSource();
+                ListModel model = list.getModel();
+                int index = list.locationToIndex(e.getPoint());
+                if (index > -1) {
+                    StarterInfo starter = (StarterInfo) model.getElementAt(index);
+                    list.setToolTipText(starter.getDescDetails());
+                }
+            }
+        };
 
         // Starter列表
         this.starterList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                StarterInfo starterInfo = (StarterInfo) starterList.getSelectedValue();
-
-                switch (e.getClickCount()) {
-                    case 1: // 按一下显示信息
-                        starterDescPan.setText(starterInfo.getDescription());
-                        break;
-                    case 2: // 按两下选择
-                        if (starterInfo.getExist()) { // 对于已存在的starter，添加就是从删除列表里删除
-                            removeStarters.remove(starterInfo);
-                        } else { // 对于不存在的starter，添加直接加入添加列表
-                            addStarters.add(starterInfo);
-                        }
-                        // 去重显示
-                        CollectionListModel<Object> listModel = (CollectionListModel) selectList.getModel();
-                        if (!listModel.contains(starterInfo)) {
-                            listModel.add(starterInfo);
-                        }
-                        break;
+                if (e.getClickCount() == 2) { // 按两下选择
+                    StarterInfo starterInfo = (StarterInfo) starterList.getSelectedValue();
+                    if (starterInfo.getExist()) { // 对于已存在的starter，添加就是从删除列表里删除
+                        removeStarters.remove(starterInfo);
+                    } else { // 对于不存在的starter，添加直接加入添加列表
+                        addStarters.add(starterInfo);
+                    }
+                    // 去重显示
+                    CollectionListModel<Object> listModel = (CollectionListModel) selectList.getModel();
+                    if (!listModel.contains(starterInfo)) {
+                        listModel.add(starterInfo);
+                    }
                 }
             }
         });
+        this.starterList.addMouseMotionListener(showDescAdapter);
 
         // selected列表
         this.selectList.setModel(new CollectionListModel(initializr.getExistStarters()));
@@ -112,11 +120,13 @@ public class EditStartersDialog {
                 }
             }
         });
+        this.selectList.addMouseMotionListener(showDescAdapter);
 
         // 搜索框
         this.searchField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
+                moduleList.clearSelection();
                 String searchKey = searchField.getText().toLowerCase();
                 List<StarterInfo> result = initializr.getSearchDB().entrySet().stream()
                         .filter(entry -> entry.getKey().contains(searchKey))
@@ -124,7 +134,6 @@ public class EditStartersDialog {
                         .collect(Collectors.toList());
 
                 starterList.setModel(new CollectionComboBoxModel(result));
-                moduleList.clearSelection();
             }
         });
     }

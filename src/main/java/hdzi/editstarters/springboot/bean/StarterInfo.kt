@@ -19,6 +19,15 @@ class StarterInfo {
     var bom: DepResponse.Bom? = null
     var exist = false
 
+    val descDetails: String
+        get() = "groupId: ${groupId}\nartifactId: ${artifactId}\nscope: ${scope}\n" +
+                (if (version != null) "version: ${version}\n" else "") +
+                "desc: ${description}"
+
+
+    val searchKey: String
+        get() = "${groupId}\t${artifactId}\t${name}\t${description}".toLowerCase()
+
     fun addRepository(repository: DepResponse.Repository?) {
         if (repository != null) {
             this.repositories.add(repository)
