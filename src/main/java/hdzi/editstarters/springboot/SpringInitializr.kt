@@ -6,7 +6,6 @@ import com.intellij.util.io.HttpRequests
 import hdzi.editstarters.springboot.bean.DepResponse
 import hdzi.editstarters.springboot.bean.StarterInfo
 import hdzi.editstarters.springboot.bean.Version
-import java.util.*
 
 /**
  * Created by taojinhou on 2018/12/21.
@@ -46,6 +45,9 @@ class SpringInitializr(url: String, currentVersion: String) {
     }
 
     private fun parseSpringBootModules(json: JsonObject) {
+        val allModules = ArrayList<StarterInfo>(64)
+        modulesMap["All Modules"] = allModules
+
         val dependenciesJSON = json.getAsJsonObject("dependencies").getAsJsonArray("values")
         for (moduleEle in dependenciesJSON) {
             val module = moduleEle.asJsonObject
@@ -58,11 +60,11 @@ class SpringInitializr(url: String, currentVersion: String) {
                 val starterInfo = this.gson.fromJson(baseInfo, StarterInfo::class.java)
 
                 this.idsMap[starterInfo.id!!] = starterInfo
+                allModules.add(starterInfo)
                 dependencies.add(starterInfo)
             }
             this.modulesMap[module.get("name").asString] = dependencies
         }
-
     }
 
     private fun parseDependenciesUrl(json: JsonObject, version: String): String {

@@ -26,6 +26,8 @@ public class EditStartersDialog {
     private JList starterList;
     private JList selectList;
     private JTextPane starterDescPan;
+    private JTextField searchField;
+    private JButton searchButton;
     private JFrame frame;
     private String title = "Edit Starters";
     private Set<StarterInfo> addStarters = new HashSet<>(64);
@@ -64,6 +66,7 @@ public class EditStartersDialog {
             this.starterList.setModel(new CollectionListModel(modulesMap.get(name)));
             this.starterDescPan.setText(null);
         });
+        this.moduleList.setSelectedIndex(0);
         // Starter列表
         this.starterList.addMouseListener(new MouseAdapter() {
             @Override
