@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'hdzi'
-version '1.2'
+version '2.0'
 
 sourceCompatibility = 1.8
 
@@ -28,13 +28,14 @@ compileTestKotlin {
 }
 intellij {
     version '2018.3.3'
-    plugins = ['maven']
+    plugins = ['maven', 'gradle']
 }
 patchPluginXml {
     changeNotes """
 <ul>
 <li>2019/1/11 support maven project</li>
 <li>2019/1/14 support search</li>
+<li>2019/1/14 plan to supoort gradle project</li>
 </ul>
       """
 }

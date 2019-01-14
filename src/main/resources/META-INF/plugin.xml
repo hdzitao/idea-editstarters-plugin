@@ -15,6 +15,7 @@
     <depends>com.intellij.modules.lang</depends>
     -->
     <depends>org.jetbrains.idea.maven</depends>
+    <depends>org.jetbrains.idea.gradle</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
