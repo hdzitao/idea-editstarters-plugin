@@ -15,7 +15,7 @@
     <depends>com.intellij.modules.lang</depends>
     -->
     <depends>org.jetbrains.idea.maven</depends>
-    <depends>org.jetbrains.idea.gradle</depends>
+    <depends>org.jetbrains.plugins.gradle</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
@@ -26,6 +26,10 @@
         <action id="EditStarters.MavenButton" class="hdzi.editstarters.ui.MavenButtonAction" text="Edit Starters"
                 description="edit maven spring boot starters" icon="/icons/button.png">
             <add-to-group group-id="Maven.BaseProjectMenu" anchor="first"/>
+        </action>
+        <action id="EditStarters.GradleButton" class="hdzi.editstarters.ui.GradleButtonAction" text="Edit Starters"
+                description="edit gradle spring boot starters" icon="/icons/button.png">
+            <add-to-group group-id="Gradle.GenerateGroup" anchor="first"/>
         </action>
     </actions>
 </idea-plugin>
