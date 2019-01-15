@@ -14,8 +14,9 @@ import java.io.File
  * Created by taojinhou on 2019/1/14.
  */
 class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(context, {
-    val basePath = context.getData(DataKeys.VIRTUAL_FILE)?.path
-    val connect = GradleConnector.newConnector().forProjectDirectory(File(basePath)).connect()
+    // todo 依赖于 下载的gradle环境，还是要取idea中的实体
+    val basePath = context.getData(DataKeys.VIRTUAL_FILE)?.parent?.path
+    val connect = GradleConnector.newConnector().useGradleUserHomeDir(File(basePath)).connect()
     val ideaModule = connect.getModel(IdeaProject::class.java).modules.getAt(0)
     ideaModule.dependencies
         .filter { it is IdeaSingleEntryLibraryDependency && it.gradleModuleVersion != null }
