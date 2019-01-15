@@ -14,10 +14,11 @@ import hdzi.editstarters.ui.InitializrUrlDialog
  *
  * Created by taojinhou on 2019/1/11.
  */
-abstract class SpringBootEditor(val context: DataContext, dependencies: () -> List<ProjectDependency>) {
-    private val existsDependencies: Map<ProjectDependency, ProjectDependency> =
-        dependencies().associateBy({ it }, { it })
-    private val springbootDependency = existsDependencies[ProjectDependency("org.springframework.boot", "spring-boot")]
+abstract class SpringBootEditor(val context: DataContext, dependGetter: ProjectDependGetter) {
+    private val existsDependencyDB: Map<String, ProjectDependency> =
+        dependGetter[context].associateBy({ it.toString() }, { it })
+    private val springbootDependency =
+        existsDependencyDB["${ProjectDependency("org.springframework.boot", "spring-boot")}"]
 
     /**
      * 启动编辑器
@@ -41,7 +42,7 @@ abstract class SpringBootEditor(val context: DataContext, dependencies: () -> Li
     /**
      * 判断是否是spring boot项目
      */
-    val isSpringBootProject: Boolean = springbootDependency != null
+    private val isSpringBootProject: Boolean = springbootDependency != null
 
     /**
      * 初始化Initializr
@@ -49,7 +50,7 @@ abstract class SpringBootEditor(val context: DataContext, dependencies: () -> Li
     private fun initSpringInitializr(url: String) =
         ProgressManager.getInstance().runProcessWithProgressSynchronously(ThrowableComputable<Unit, Exception> {
             springInitializr = SpringInitializr(url, currentVersion!!)
-            existsDependencies.values.forEach { dep ->
+            existsDependencyDB.values.forEach { dep ->
                 this.springInitializr!!.addExistsStarter(dep)
             }
         }, "Load ${url}", false, context.getData(DataKeys.PROJECT))
