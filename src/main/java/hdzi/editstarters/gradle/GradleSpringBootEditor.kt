@@ -17,10 +17,12 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(context, {
     val basePath = context.getData(DataKeys.PROJECT)?.basePath
     val connect = GradleConnector.newConnector().forProjectDirectory(File(basePath)).connect()
     val ideaModule = connect.getModel(IdeaProject::class.java).modules.getAt(0)
-    ideaModule.dependencies.map {
-        val moduleVersion = (it as IdeaSingleEntryLibraryDependency).gradleModuleVersion!!
-        ProjectDependency(moduleVersion.group, moduleVersion.name, moduleVersion.version)
-    }
+    ideaModule.dependencies
+        .filter { it is IdeaSingleEntryLibraryDependency && it.gradleModuleVersion != null }
+        .map {
+            val moduleVersion = (it as IdeaSingleEntryLibraryDependency).gradleModuleVersion!!
+            ProjectDependency(moduleVersion.group, moduleVersion.name, moduleVersion.version)
+        }
 }) {
 
     override fun addDependencies(starterInfos: Collection<StarterInfo>) {
