@@ -14,7 +14,7 @@ import java.io.File
  * Created by taojinhou on 2019/1/14.
  */
 class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(context, {
-    val basePath = context.getData(DataKeys.PROJECT)?.basePath
+    val basePath = context.getData(DataKeys.VIRTUAL_FILE)?.path
     val connect = GradleConnector.newConnector().forProjectDirectory(File(basePath)).connect()
     val ideaModule = connect.getModel(IdeaProject::class.java).modules.getAt(0)
     ideaModule.dependencies
