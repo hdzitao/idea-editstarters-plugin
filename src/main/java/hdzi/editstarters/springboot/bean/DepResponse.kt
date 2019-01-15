@@ -4,9 +4,9 @@ class DepResponse {
 
     var repositories: Map<String, Repository>? = null
     var boms: Map<String, Bom>? = null
-    var dependencies: Map<String, Dependency>? = null
+    var dependencies: Map<String, ResDependency>? = null
 
-    class Dependency {
+    class ResDependency {
         var groupId: String? = null
         var artifactId: String? = null
         var scope: String? = null

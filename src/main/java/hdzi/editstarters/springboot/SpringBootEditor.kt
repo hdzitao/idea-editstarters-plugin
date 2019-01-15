@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
-import hdzi.editstarters.springboot.bean.Dependency
+import hdzi.editstarters.springboot.bean.ProjectDependency
 import hdzi.editstarters.springboot.bean.StarterInfo
 import hdzi.editstarters.ui.EditStartersDialog
 import hdzi.editstarters.ui.InitializrUrlDialog
@@ -14,9 +14,10 @@ import hdzi.editstarters.ui.InitializrUrlDialog
  *
  * Created by taojinhou on 2019/1/11.
  */
-abstract class SpringBootEditor(val context: DataContext, dependencies: () -> List<Dependency>) {
-    private val existsDependencies: Map<Dependency, Dependency> = dependencies().associateBy({ it }, { it })
-    private val springbootDependency = existsDependencies[Dependency("org.springframework.boot", "spring-boot")]
+abstract class SpringBootEditor(val context: DataContext, dependencies: () -> List<ProjectDependency>) {
+    private val existsDependencies: Map<ProjectDependency, ProjectDependency> =
+        dependencies().associateBy({ it }, { it })
+    private val springbootDependency = existsDependencies[ProjectDependency("org.springframework.boot", "spring-boot")]
 
     /**
      * 启动编辑器
@@ -49,7 +50,7 @@ abstract class SpringBootEditor(val context: DataContext, dependencies: () -> Li
         ProgressManager.getInstance().runProcessWithProgressSynchronously(ThrowableComputable<Unit, Exception> {
             springInitializr = SpringInitializr(url, currentVersion!!)
             existsDependencies.values.forEach { dep ->
-                this.springInitializr!!.addExistsStarter(dep.groupId, dep.artifactId)
+                this.springInitializr!!.addExistsStarter(dep)
             }
         }, "Load ${url}", false, context.getData(DataKeys.PROJECT))
 

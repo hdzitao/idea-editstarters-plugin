@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.intellij.util.io.HttpRequests
 import hdzi.editstarters.springboot.bean.DepResponse
+import hdzi.editstarters.springboot.bean.ProjectDependency
 import hdzi.editstarters.springboot.bean.StarterInfo
 import hdzi.editstarters.springboot.bean.Version
 
@@ -37,8 +38,8 @@ class SpringInitializr(url: String, currentVersion: String) {
         this.version = this.gson.fromJson(baseInfoJSON.getAsJsonObject("bootVersion"), Version::class.java)
     }
 
-    fun addExistsStarter(groupId: String, artifactId: String) {
-        val starterInfo = this.anchorsMap[depName(groupId, artifactId)]
+    fun addExistsStarter(depend: ProjectDependency) {
+        val starterInfo = this.anchorsMap[depName(depend.groupId, depend.artifactId)]
         if (starterInfo != null) {
             starterInfo.exist = true
             this.existStarters.add(starterInfo)

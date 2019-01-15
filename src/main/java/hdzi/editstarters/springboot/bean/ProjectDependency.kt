@@ -3,7 +3,7 @@ package hdzi.editstarters.springboot.bean
 /**
  * Created by taojinhou on 2019/1/15.
  */
-class Dependency(val groupId: String, val artifactId: String, val version: String?) {
+class ProjectDependency(val groupId: String, val artifactId: String, val version: String?) {
 
     constructor(groupId: String, artifactId: String) : this(groupId, artifactId, null)
 
@@ -11,7 +11,7 @@ class Dependency(val groupId: String, val artifactId: String, val version: Strin
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as Dependency
+        other as ProjectDependency
 
         if (groupId != other.groupId) return false
         if (artifactId != other.artifactId) return false

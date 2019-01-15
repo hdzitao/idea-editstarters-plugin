@@ -1,21 +1,16 @@
 package hdzi.editstarters.ui;
 
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import hdzi.editstarters.gradle.GradleSpringBootEditor;
-import hdzi.editstarters.ui.dialog.ExceptionDialog;
+import hdzi.editstarters.ui.dialog.ExceptionAction;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Created by taojinhou on 2019/1/14.
  */
-public class GradleButtonAction extends AnAction {
-
+public class GradleButtonAction extends ExceptionAction {
     @Override
-    public void actionPerformed(AnActionEvent e) {
-        try {
-            new GradleSpringBootEditor(e.getDataContext()).edit();
-        } catch (Exception ex) {
-            new ExceptionDialog(ex).show();
-        }
+    public void invoke(@NotNull AnActionEvent e) {
+        new GradleSpringBootEditor(e.getDataContext()).edit();
     }
 }

@@ -8,7 +8,7 @@ import java.util.*
 /**
  * Created by taojinhou on 2019/1/14.
  */
-class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(context, Collections.emptyList()) {
+class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(context, Collections::emptyList) {
 
     override fun addDependencies(starterInfos: Collection<StarterInfo>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

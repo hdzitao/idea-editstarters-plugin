@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.psi.xml.XmlFile
 import hdzi.editstarters.springboot.SpringBootEditor
-import hdzi.editstarters.springboot.bean.Dependency
+import hdzi.editstarters.springboot.bean.ProjectDependency
 import hdzi.editstarters.springboot.bean.StarterInfo
 import org.jetbrains.idea.maven.utils.actions.MavenActionUtil
 
@@ -15,7 +15,7 @@ import org.jetbrains.idea.maven.utils.actions.MavenActionUtil
 class MavenSpringBootEditor(context: DataContext) :
     SpringBootEditor(context, {
         MavenActionUtil.getMavenProject(context)!!.dependencies
-            .map { Dependency(it.groupId, it.artifactId, it.version) }
+            .map { ProjectDependency(it.groupId, it.artifactId, it.version) }
     }) {
     /**
      * 自定义的pom文件操作类
