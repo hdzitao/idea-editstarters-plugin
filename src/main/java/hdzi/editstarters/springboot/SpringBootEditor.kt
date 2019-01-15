@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
+import hdzi.editstarters.springboot.bean.Dependency
 import hdzi.editstarters.springboot.bean.StarterInfo
 import hdzi.editstarters.ui.EditStartersDialog
 import hdzi.editstarters.ui.InitializrUrlDialog
@@ -13,7 +14,10 @@ import hdzi.editstarters.ui.InitializrUrlDialog
  *
  * Created by taojinhou on 2019/1/11.
  */
-abstract class SpringBootEditor(val context: DataContext) {
+abstract class SpringBootEditor(val context: DataContext, dependencies: () -> List<Dependency>) {
+    private val existsDependencies: Map<Dependency, Dependency> = dependencies().associateBy({ it }, { it })
+    private val springbootDependency = existsDependencies[Dependency("org.springframework.boot", "spring-boot")]
+
     /**
      * 启动编辑器
      */
@@ -31,12 +35,12 @@ abstract class SpringBootEditor(val context: DataContext) {
 
     var springInitializr: SpringInitializr? = null
 
-    abstract val currentVersion: String?
+    val currentVersion: String? = springbootDependency?.version
 
     /**
      * 判断是否是spring boot项目
      */
-    abstract val isSpringBootProject: Boolean
+    val isSpringBootProject: Boolean = springbootDependency != null
 
     /**
      * 初始化Initializr
@@ -44,14 +48,10 @@ abstract class SpringBootEditor(val context: DataContext) {
     private fun initSpringInitializr(url: String) =
         ProgressManager.getInstance().runProcessWithProgressSynchronously(ThrowableComputable<Unit, Exception> {
             springInitializr = SpringInitializr(url, currentVersion!!)
-            addExistsStarters()
+            existsDependencies.values.forEach { dep ->
+                this.springInitializr!!.addExistsStarter(dep.groupId, dep.artifactId)
+            }
         }, "Load ${url}", false, context.getData(DataKeys.PROJECT))
-
-
-    /**
-     * 标记已存在的starters
-     */
-    abstract fun addExistsStarters()
 
     abstract fun addDependencies(starterInfos: Collection<StarterInfo>)
 
