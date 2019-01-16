@@ -14,9 +14,9 @@ import hdzi.editstarters.ui.InitializrUrlDialog
  *
  * Created by taojinhou on 2019/1/11.
  */
-abstract class SpringBootEditor(val context: DataContext, dependGetter: ProjectDependGetter) {
+abstract class SpringBootEditor(val context: DataContext, dependGetter: () -> List<ProjectDependency>) {
     private val existsDependencyDB: Map<String, ProjectDependency> =
-        dependGetter[context].associateBy({ it.toString() }, { it })
+        dependGetter().associateBy({ it.toString() }, { it })
     private val springbootDependency =
         existsDependencyDB["${ProjectDependency("org.springframework.boot", "spring-boot")}"]
 

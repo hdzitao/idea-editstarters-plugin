@@ -3,8 +3,11 @@ package hdzi.editstarters.springboot.bean
 /**
  * Created by taojinhou on 2019/1/15.
  */
-class ProjectDependency(val groupId: String, val artifactId: String, val version: String?) {
-
+class ProjectDependency(
+    override val groupId: String,
+    override val artifactId: String,
+    val version: String?
+) : Dependency {
     constructor(groupId: String, artifactId: String) : this(groupId, artifactId, null)
 
     override fun equals(other: Any?): Boolean {

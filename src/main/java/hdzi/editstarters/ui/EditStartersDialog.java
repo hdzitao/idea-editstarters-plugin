@@ -69,7 +69,6 @@ public class EditStartersDialog {
         });
 
         // 显示详细信息
-        Map<StarterInfo, String> toolTipTextCache = new WeakHashMap<>(); // 加个缓存
         MouseAdapter showDescAdapter = new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
@@ -78,8 +77,7 @@ public class EditStartersDialog {
                 int index = list.locationToIndex(e.getPoint());
                 if (index > -1) {
                     StarterInfo starter = (StarterInfo) model.getElementAt(index);
-                    String toolTipText = toolTipTextCache.computeIfAbsent(starter, StarterInfo::getDescDetails);
-                    list.setToolTipText(toolTipText);
+                    list.setToolTipText(getStarterInfoToolTipText(starter));
                 }
             }
         };
@@ -145,5 +143,28 @@ public class EditStartersDialog {
         this.frame.pack();
         this.frame.setLocationRelativeTo(null); // 中间显示
         this.frame.setVisible(true);
+    }
+
+
+    private Map<StarterInfo, String> toolTipTextCache = new WeakHashMap<>(); // 加个缓存
+
+    private String getStarterInfoToolTipText(StarterInfo starter) {
+        return toolTipTextCache.computeIfAbsent(starter, info -> {
+            StringBuilder buffer = new StringBuilder();
+            if (info.getGroupId() != null) {
+                buffer.append("groupId: ").append(info.getGroupId()).append("\n")
+                        .append("artifactId: ").append(info.getArtifactId()).append("\n")
+                        .append("scope: ").append(info.getScope()).append("\n");
+                if (info.getVersion() != null) {
+                    buffer.append("version: ").append(info.getVersion()).append("\n");
+                }
+            } else if (info.getVersionRange() != null) {
+                buffer.append("versionRange: ").append(info.getVersionRange()).append("\n");
+            }
+
+            buffer.append("desc: ").append(info.getDescription()).append("\n");
+
+            return buffer.toString();
+        });
     }
 }

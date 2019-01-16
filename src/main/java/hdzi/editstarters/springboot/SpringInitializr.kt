@@ -39,7 +39,7 @@ class SpringInitializr(url: String, currentVersion: String) {
     }
 
     fun addExistsStarter(depend: ProjectDependency) {
-        val starterInfo = this.anchorsMap[depName(depend.groupId, depend.artifactId)]
+        val starterInfo = this.anchorsMap[depend.point]
         if (starterInfo != null) {
             starterInfo.exist = true
             this.existStarters.add(starterInfo)
@@ -76,7 +76,7 @@ class SpringInitializr(url: String, currentVersion: String) {
     private fun parseDependencies(json: JsonObject) {
         // 仓库信息
         val depResponse = this.gson.fromJson(json, DepResponse::class.java)
-        depResponse.repositories!!.forEach { id, repository -> repository.id = id }
+        depResponse.repositories?.forEach { id, repository -> repository.id = id }
 
         // 合并信息
         for ((id, dependency) in depResponse.dependencies!!) {
@@ -87,18 +87,14 @@ class SpringInitializr(url: String, currentVersion: String) {
             starterInfo.version = dependency.version
             starterInfo.scope = dependency.scope
 
-            starterInfo.addRepository(depResponse.repositories!![dependency.repository])
-            val bom = depResponse.boms!![dependency.bom]
+            starterInfo.addRepository(depResponse.repositories?.get(dependency.repository))
+            val bom = depResponse.boms?.get(dependency.bom)
             if (bom != null) {
                 starterInfo.bom = bom
-                bom.repositories!!.forEach { rid -> starterInfo.addRepository(depResponse.repositories!![rid]) }
+                bom.repositories?.forEach { rid -> starterInfo.addRepository(depResponse.repositories?.get(rid)) }
             }
 
-            this.anchorsMap[depName(starterInfo.groupId!!, starterInfo.artifactId!!)] = starterInfo
+            this.anchorsMap[starterInfo.point] = starterInfo
         }
-    }
-
-    private fun depName(groupId: String, artifactId: String): String {
-        return "$groupId:$artifactId"
     }
 }

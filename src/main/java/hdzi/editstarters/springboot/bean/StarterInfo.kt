@@ -4,37 +4,20 @@ package hdzi.editstarters.springboot.bean
 /**
  * Created by taojinhou on 2018/12/21.
  */
-class StarterInfo {
+class StarterInfo : Dependency {
     // 基本信息
     var id: String? = null
     var name: String? = null
     var description: String? = null
     var versionRange: String? = null
     // 坐标信息
-    var groupId: String? = null
-    var artifactId: String? = null
+    override var groupId: String? = null
+    override var artifactId: String? = null
     var scope: String? = null
     var version: String? = null
     var repositories = mutableSetOf<DepResponse.Repository>()
     var bom: DepResponse.Bom? = null
     var exist = false
-
-    val descDetails: String
-        get() {
-            val buffer = StringBuffer()
-            if (groupId != null) {
-                buffer.append("groupId: ${groupId}\nartifactId: ${artifactId}\nscope: ${scope}\n")
-                if (version != null) {
-                    buffer.append("version: ${version}\n")
-                }
-            } else if (versionRange != null) {
-                buffer.append("versionRange: ${versionRange}\n")
-            }
-
-            buffer.append("desc: ${description}")
-
-            return buffer.toString()
-        }
 
     val searchKey: String
         get() = "${groupId}\t${artifactId}\t${name}\t${description}".toLowerCase()
