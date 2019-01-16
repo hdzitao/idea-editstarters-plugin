@@ -2,6 +2,7 @@ package hdzi.editstarters.maven
 
 import com.intellij.psi.xml.XmlFile
 import com.intellij.psi.xml.XmlTag
+import hdzi.editstarters.springboot.ProjectFile
 import hdzi.editstarters.springboot.bean.DepResponse
 import hdzi.editstarters.springboot.bean.StarterInfo
 import org.apache.commons.collections.CollectionUtils
@@ -11,16 +12,16 @@ import java.util.stream.Collectors
 /**
  * Created by taojinhou on 2018/12/24.
  */
-class PomXml(private val file: XmlFile) {
+class PomXml(file: XmlFile) : ProjectFile {
     /**
      * 根标签
      */
-    private val rootTag: XmlTag = this.file.document!!.rootTag!!
+    private val rootTag: XmlTag = file.document!!.rootTag!!
 
     /**
      * 删除依赖
      */
-    fun removeDependencies(dependencies: Collection<StarterInfo>) {
+    override fun removeDependencies(dependencies: Collection<StarterInfo>) {
         val dependenciesTag = getOrCreateXmlTag(this.rootTag, "dependencies")
         // 取已存在的依赖
         val extdeps = dependenciesTag.findSubTags("dependency")
@@ -39,7 +40,7 @@ class PomXml(private val file: XmlFile) {
     /**
      * 添加依赖
      */
-    fun addDependencies(dependencies: Collection<StarterInfo>) {
+    override fun addDependencies(dependencies: Collection<StarterInfo>) {
         val dependenciesTag = getOrCreateXmlTag(this.rootTag, "dependencies")
 
         for (info in dependencies) {

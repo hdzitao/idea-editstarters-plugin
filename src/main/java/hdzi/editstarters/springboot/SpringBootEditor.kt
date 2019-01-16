@@ -5,7 +5,6 @@ import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
 import hdzi.editstarters.springboot.bean.ProjectDependency
-import hdzi.editstarters.springboot.bean.StarterInfo
 import hdzi.editstarters.ui.EditStartersDialog
 import hdzi.editstarters.ui.InitializrUrlDialog
 
@@ -14,9 +13,15 @@ import hdzi.editstarters.ui.InitializrUrlDialog
  *
  * Created by taojinhou on 2019/1/11.
  */
-abstract class SpringBootEditor(val context: DataContext, dependGetter: () -> List<ProjectDependency>) {
+abstract class SpringBootEditor(
+    val context: DataContext,
+    projectFile: () -> ProjectFile,
+    dependGetter: () -> List<ProjectDependency>
+) : ProjectFile by projectFile() {
+
     private val existsDependencyDB: Map<String, ProjectDependency> =
         dependGetter().associateBy({ it.toString() }, { it })
+
     private val springbootDependency =
         existsDependencyDB["${ProjectDependency("org.springframework.boot", "spring-boot")}"]
 
@@ -54,8 +59,4 @@ abstract class SpringBootEditor(val context: DataContext, dependGetter: () -> Li
                 this.springInitializr!!.addExistsStarter(dep)
             }
         }, "Load ${url}", false, context.getData(DataKeys.PROJECT))
-
-    abstract fun addDependencies(starterInfos: Collection<StarterInfo>)
-
-    abstract fun removeDependencies(starterInfos: Collection<StarterInfo>)
 }
