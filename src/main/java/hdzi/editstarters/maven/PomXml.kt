@@ -7,7 +7,6 @@ import hdzi.editstarters.springboot.bean.DepResponse
 import hdzi.editstarters.springboot.bean.StarterInfo
 import org.apache.commons.collections.CollectionUtils
 import org.apache.commons.lang.StringUtils
-import java.util.stream.Collectors
 
 /**
  * Created by taojinhou on 2018/12/24.
@@ -26,9 +25,7 @@ class PomXml(file: XmlFile) : ProjectFile {
         // 取已存在的依赖
         val extdeps = dependenciesTag.findSubTags("dependency")
         // 转化待删除的依赖成字符串形式，方便对比
-        val removeDeps = dependencies.stream()
-            .map { info -> createPoint(info.groupId!!, info.artifactId!!) }
-            .collect(Collectors.toSet())
+        val removeDeps = dependencies.map { it.point }.toSet()
         // 遍历存在的依赖，如果待删除的依赖包含它，就删除
         for (extdep in extdeps) {
             if (removeDeps.contains(createPoint(getTagText(extdep, "groupId"), getTagText(extdep, "artifactId")))) {
@@ -68,14 +65,15 @@ class PomXml(file: XmlFile) : ProjectFile {
     private fun addRepositories(repositories: Set<DepResponse.Repository>) {
         val repositoriesTag = getOrCreateXmlTag(this.rootTag, "repositories")
 
-        val existingRepos = repositoriesTag.findSubTags("repository")
+        val existingRepos = repositoriesTag.findSubTags("repository").asSequence()
+            .map {
+                createPoint(getTagText(it, "id"), getTagText(it, "url"))
+            }.toSet()
+
         repositories.stream()
             .filter { repo ->
                 // 去重
-                val point = createPoint(repo.id!!, repo.url!!)
-                existingRepos.find { tag ->
-                    point == createPoint(getTagText(tag, "id"), getTagText(tag, "url"))
-                } == null
+                !existingRepos.contains(createPoint(repo.id!!, repo.url!!))
             }.forEach { repo ->
                 // 添加
                 val repositoryTag = createSubTag(repositoriesTag, "repository")

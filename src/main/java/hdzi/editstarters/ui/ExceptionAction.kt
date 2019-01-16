@@ -14,7 +14,8 @@ abstract class ExceptionAction : AnAction() {
                 """
                 Please check the network connection and try again.
                 If it fails again, please contact the author.
-                Details:${if (ex.javaClass === Exception::class.java) ex.message else ex}
+                Details:
+                ${if (ex.javaClass === Exception::class.java) ex.message else ex}
             """.trimIndent(),
                 "Edit Starters Error"
             )

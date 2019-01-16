@@ -22,7 +22,10 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
         val psiFile = context.getData(DataKeys.PSI_FILE)!!
         val fileName = psiFile.name
         when {
-            fileName.endsWith(".${GradleConstants.EXTENSION}") -> BuildGradle(psiFile)
+            fileName.endsWith(".${GradleConstants.EXTENSION}") -> BuildGradle(
+                context.getData(DataKeys.PROJECT)!!,
+                psiFile
+            )
             fileName.endsWith(".${GradleConstants.KOTLIN_DSL_SCRIPT_EXTENSION}") -> BuildGradleKts(psiFile)
             else -> throw Exception("Not support extension!")
         }
