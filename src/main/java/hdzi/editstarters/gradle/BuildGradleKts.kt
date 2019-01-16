@@ -1,8 +1,8 @@
 package hdzi.editstarters.gradle
 
 import com.intellij.psi.PsiFile
-import hdzi.editstarters.springboot.ProjectFile
-import hdzi.editstarters.springboot.bean.StarterInfo
+import hdzi.editstarters.ProjectFile
+import hdzi.editstarters.bean.StarterInfo
 
 /**
  * Created by taojinhou on 2019/1/16.

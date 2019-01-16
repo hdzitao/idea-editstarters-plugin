@@ -3,8 +3,8 @@ package hdzi.editstarters.maven
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.psi.xml.XmlFile
+import hdzi.editstarters.bean.project.ProjectDependency
 import hdzi.editstarters.springboot.SpringBootEditor
-import hdzi.editstarters.springboot.bean.ProjectDependency
 import org.jetbrains.idea.maven.utils.actions.MavenActionUtil
 
 /**

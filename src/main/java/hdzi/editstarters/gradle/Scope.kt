@@ -12,7 +12,7 @@ class Scope {
             "provided" to "compileOnly"
         )
 
-        fun mapScope(scope: String?): String =
+        fun map(scope: String?): String =
             if (scope == null) {
                 "implementation"
             } else {

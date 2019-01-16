@@ -3,10 +3,10 @@ package hdzi.editstarters.springboot
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.intellij.util.io.HttpRequests
-import hdzi.editstarters.springboot.bean.DepResponse
-import hdzi.editstarters.springboot.bean.ProjectDependency
-import hdzi.editstarters.springboot.bean.StarterInfo
-import hdzi.editstarters.springboot.bean.Version
+import hdzi.editstarters.bean.StarterInfo
+import hdzi.editstarters.bean.initializr.InitializrResponse
+import hdzi.editstarters.bean.initializr.InitializrVersion
+import hdzi.editstarters.bean.project.ProjectDependency
 
 /**
  * Created by taojinhou on 2018/12/21.
@@ -17,7 +17,7 @@ class SpringInitializr(url: String, currentVersion: String) {
     private val idsMap = hashMapOf<String, StarterInfo>()
     private val anchorsMap = hashMapOf<String, StarterInfo>()
     private val gson = Gson()
-    var version: Version
+    var version: InitializrVersion
     val existStarters = linkedSetOf<StarterInfo>()
 
     init {
@@ -35,7 +35,7 @@ class SpringInitializr(url: String, currentVersion: String) {
 
         parseDependencies(depsJSON)
 
-        this.version = this.gson.fromJson(baseInfoJSON.getAsJsonObject("bootVersion"), Version::class.java)
+        this.version = this.gson.fromJson(baseInfoJSON.getAsJsonObject("bootVersion"), InitializrVersion::class.java)
     }
 
     fun addExistsStarter(depend: ProjectDependency) {
@@ -75,7 +75,7 @@ class SpringInitializr(url: String, currentVersion: String) {
 
     private fun parseDependencies(json: JsonObject) {
         // 仓库信息
-        val depResponse = this.gson.fromJson(json, DepResponse::class.java)
+        val depResponse = this.gson.fromJson(json, InitializrResponse::class.java)
         depResponse.repositories?.forEach { id, repository -> repository.id = id }
 
         // 合并信息

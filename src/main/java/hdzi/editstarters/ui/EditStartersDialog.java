@@ -4,9 +4,9 @@ import com.intellij.openapi.actionSystem.DataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
+import hdzi.editstarters.bean.StarterInfo;
 import hdzi.editstarters.springboot.SpringBootEditor;
 import hdzi.editstarters.springboot.SpringInitializr;
-import hdzi.editstarters.springboot.bean.StarterInfo;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;

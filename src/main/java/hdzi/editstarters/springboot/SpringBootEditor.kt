@@ -4,7 +4,8 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
-import hdzi.editstarters.springboot.bean.ProjectDependency
+import hdzi.editstarters.ProjectFile
+import hdzi.editstarters.bean.project.ProjectDependency
 import hdzi.editstarters.ui.EditStartersDialog
 import hdzi.editstarters.ui.InitializrUrlDialog
 
@@ -23,7 +24,10 @@ abstract class SpringBootEditor(
         dependGetter().associateBy({ it.toString() }, { it })
 
     private val springbootDependency =
-        existsDependencyDB["${ProjectDependency("org.springframework.boot", "spring-boot")}"]
+        existsDependencyDB["${ProjectDependency(
+            "org.springframework.boot",
+            "spring-boot"
+        )}"]
 
     /**
      * 启动编辑器

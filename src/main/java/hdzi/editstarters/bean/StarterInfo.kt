@@ -1,5 +1,7 @@
-package hdzi.editstarters.springboot.bean
+package hdzi.editstarters.bean
 
+import hdzi.editstarters.bean.initializr.InitializrBom
+import hdzi.editstarters.bean.initializr.InitializrRepository
 
 /**
  * Created by taojinhou on 2018/12/21.
@@ -15,17 +17,17 @@ class StarterInfo : Dependency {
     override var artifactId: String? = null
     var scope: String? = null
     var version: String? = null
-    var repositories = mutableSetOf<DepResponse.Repository>()
-    var bom: DepResponse.Bom? = null
+    var repositories = mutableSetOf<InitializrRepository>()
+    var bom: InitializrBom? = null
     var exist = false
 
     val searchKey: String
-        get() = "${groupId}\t${artifactId}\t${name}\t${description}".toLowerCase()
+        get() = "$groupId\t$artifactId\t$name\t$description".toLowerCase()
 
     val canBeAdded: Boolean
         get() = groupId != null && artifactId != null
 
-    fun addRepository(repository: DepResponse.Repository?) {
+    fun addRepository(repository: InitializrRepository?) {
         if (repository != null) {
             this.repositories.add(repository)
         }

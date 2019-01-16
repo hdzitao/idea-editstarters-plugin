@@ -2,16 +2,20 @@ package hdzi.editstarters.maven
 
 import com.intellij.psi.xml.XmlFile
 import com.intellij.psi.xml.XmlTag
-import hdzi.editstarters.springboot.ProjectFile
-import hdzi.editstarters.springboot.bean.DepResponse
-import hdzi.editstarters.springboot.bean.StarterInfo
-import org.apache.commons.collections.CollectionUtils
+import hdzi.editstarters.DependSupport
+import hdzi.editstarters.ProjectFile
+import hdzi.editstarters.bean.StarterInfo
+import hdzi.editstarters.bean.initializr.InitializrBom
+import hdzi.editstarters.bean.initializr.InitializrRepository
+import hdzi.editstarters.bean.project.ProjectBom
+import hdzi.editstarters.bean.project.ProjectDependency
+import hdzi.editstarters.bean.project.ProjectRepository
 import org.apache.commons.lang.StringUtils
 
 /**
  * Created by taojinhou on 2018/12/24.
  */
-class PomXml(file: XmlFile) : ProjectFile {
+class PomXml(file: XmlFile) : ProjectFile, DependSupport {
     /**
      * 根标签
      */
@@ -28,7 +32,13 @@ class PomXml(file: XmlFile) : ProjectFile {
         val removeDeps = dependencies.map { it.point }.toSet()
         // 遍历存在的依赖，如果待删除的依赖包含它，就删除
         for (extdep in extdeps) {
-            if (removeDeps.contains(createPoint(getTagText(extdep, "groupId"), getTagText(extdep, "artifactId")))) {
+            if (removeDeps.contains(
+                    ProjectDependency(
+                        getTagText(extdep, "groupId"),
+                        getTagText(extdep, "artifactId")
+                    ).point
+                )
+            ) {
                 extdep.delete()
             }
         }
@@ -53,7 +63,7 @@ class PomXml(file: XmlFile) : ProjectFile {
                 addBom(info.bom!!)
             }
 
-            if (CollectionUtils.isNotEmpty(info.repositories)) {
+            if (!info.repositories.isEmpty()) {
                 addRepositories(info.repositories)
             }
         }
@@ -62,18 +72,17 @@ class PomXml(file: XmlFile) : ProjectFile {
     /**
      * 添加仓库信息
      */
-    private fun addRepositories(repositories: Set<DepResponse.Repository>) {
+    override fun addRepositories(repositories: Set<InitializrRepository>) {
         val repositoriesTag = getOrCreateXmlTag(this.rootTag, "repositories")
 
         val existingRepos = repositoriesTag.findSubTags("repository").asSequence()
-            .map {
-                createPoint(getTagText(it, "id"), getTagText(it, "url"))
-            }.toSet()
+            .map { ProjectRepository(getTagText(it, "url")).point }
+            .toSet()
 
         repositories.stream()
             .filter { repo ->
                 // 去重
-                !existingRepos.contains(createPoint(repo.id!!, repo.url!!))
+                !existingRepos.contains(repo.point)
             }.forEach { repo ->
                 // 添加
                 val repositoryTag = createSubTag(repositoriesTag, "repository")
@@ -88,21 +97,15 @@ class PomXml(file: XmlFile) : ProjectFile {
     }
 
     /**
-     * 获取标签里的值
-     */
-    private fun getTagText(parent: XmlTag, name: String): String =
-        parent.findFirstSubTag(name)?.value?.text!!
-
-    /**
      * 添加bom信息
      */
-    private fun addBom(bom: DepResponse.Bom) {
+    override fun addBom(bom: InitializrBom) {
         val dependencyManagementTag = getOrCreateXmlTag(this.rootTag, "dependencyManagement")
         val dependencies = getOrCreateXmlTag(dependencyManagementTag, "dependencies")
         // 去重
-        val point = createPoint(bom.groupId!!, bom.artifactId!!)
+        val point = bom.point
         for (sub in dependencies.findSubTags("dependency")) {
-            if (point == createPoint(getTagText(sub, "groupId"), getTagText(sub, "artifactId"))) {
+            if (point == ProjectBom(getTagText(sub, "groupId"), getTagText(sub, "artifactId")).point) {
                 return
             }
         }
@@ -114,6 +117,12 @@ class PomXml(file: XmlFile) : ProjectFile {
         addSubTagWithTextBody(dependencyTag, "type", "pom")
         addSubTagWithTextBody(dependencyTag, "scope", "import")
     }
+
+    /**
+     * 获取标签里的值
+     */
+    private fun getTagText(parent: XmlTag, name: String): String =
+        parent.findFirstSubTag(name)?.value?.text!!
 
     /**
      * 获取或者新建标签
@@ -141,10 +150,4 @@ class PomXml(file: XmlFile) : ProjectFile {
      */
     private fun createSubTag(parent: XmlTag, name: String): XmlTag =
         parent.addSubTag(parent.createChildTag(name, parent.namespace, null, false), false)
-
-    /**
-     * 生成标识字符串
-     */
-    private fun createPoint(vararg info: String): String = StringUtils.join(info, ":")
-
 }

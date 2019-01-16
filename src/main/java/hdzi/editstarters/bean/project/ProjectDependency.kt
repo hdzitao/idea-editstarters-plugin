@@ -1,4 +1,6 @@
-package hdzi.editstarters.springboot.bean
+package hdzi.editstarters.bean.project
+
+import hdzi.editstarters.bean.Dependency
 
 /**
  * Created by taojinhou on 2019/1/15.
