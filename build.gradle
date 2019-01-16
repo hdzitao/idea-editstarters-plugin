@@ -28,7 +28,7 @@ compileTestKotlin {
 }
 intellij {
     version '2018.3.3'
-    plugins = ['maven', 'gradle', 'Groovy', 'Kotlin']
+    plugins = ['maven', 'gradle', 'Groovy']
 }
 patchPluginXml {
     changeNotes """
