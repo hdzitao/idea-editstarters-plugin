@@ -5,8 +5,8 @@ import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
+import hdzi.editstarters.bean.project.ProjectDependency
 import hdzi.editstarters.springboot.SpringBootEditor
-import hdzi.editstarters.springboot.bean.ProjectDependency
 import org.gradle.tooling.model.idea.IdeaProject
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
 import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper
@@ -26,7 +26,9 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
                 context.getData(DataKeys.PROJECT)!!,
                 psiFile
             )
-            fileName.endsWith(".${GradleConstants.KOTLIN_DSL_SCRIPT_EXTENSION}") -> BuildGradleKts(psiFile)
+            fileName.endsWith(".${GradleConstants.KOTLIN_DSL_SCRIPT_EXTENSION}") -> BuildGradleKts(
+                psiFile
+            )
             else -> throw Exception("Not support extension!")
         }
     },
@@ -47,7 +49,11 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
                         .filter { it is IdeaSingleEntryLibraryDependency && it.gradleModuleVersion != null }
                         .map {
                             val moduleVersion = (it as IdeaSingleEntryLibraryDependency).gradleModuleVersion!!
-                            ProjectDependency(moduleVersion.group, moduleVersion.name, moduleVersion.version)
+                            ProjectDependency(
+                                moduleVersion.group,
+                                moduleVersion.name,
+                                moduleVersion.version
+                            )
                         }
                 }
             }, "Load Gradle Project", false, project)

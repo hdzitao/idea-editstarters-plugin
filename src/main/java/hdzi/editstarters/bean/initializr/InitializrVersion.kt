@@ -1,6 +1,6 @@
-package hdzi.editstarters.springboot.bean
+package hdzi.editstarters.bean.initializr
 
-class Version {
+class InitializrVersion {
     var default: String? = null
     var values: List<Value>? = null
 
