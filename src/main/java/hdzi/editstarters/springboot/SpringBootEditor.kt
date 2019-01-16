@@ -21,13 +21,13 @@ abstract class SpringBootEditor(
 ) : ProjectFile by projectFile() {
 
     private val existsDependencyDB: Map<String, ProjectDependency> =
-        dependGetter().associateBy({ it.toString() }, { it })
+        dependGetter().associateBy({ it.point }, { it })
 
     private val springbootDependency =
-        existsDependencyDB["${ProjectDependency(
+        existsDependencyDB[ProjectDependency(
             "org.springframework.boot",
             "spring-boot"
-        )}"]
+        ).point]
 
     /**
      * 启动编辑器

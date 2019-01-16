@@ -27,14 +27,10 @@ class BuildGradle(project: Project, private val buildFile: PsiFile) : ProjectFil
     override fun removeDependencies(dependencies: Collection<StarterInfo>) {
         val removeDeps = dependencies.map { it.point }.toSet()
         val dependenciesClosure = getOrCreateClosure(buildFile, "dependencies")
-        val depRegex = "^([^:]+):([^:]+)".toRegex()
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesClosure, GrMethodCall::class.java).forEach {
-            val match = depRegex.find(getMethodFirstStringParam(it) ?: "")
-            if (match != null) {
-                val (groupId, artifactId) = match.destructured
-                if (removeDeps.contains(ProjectDependency(groupId, artifactId).point)) {
-                    it.removeStatement()
-                }
+            val (groupId, artifactId) = getGroupName(it)
+            if (removeDeps.contains(ProjectDependency(groupId, artifactId).point)) {
+                it.removeStatement()
             }
         }
     }
@@ -58,7 +54,7 @@ class BuildGradle(project: Project, private val buildFile: PsiFile) : ProjectFil
         val repositoriesClosure = getOrCreateClosure(buildFile, "repositories")
         val mavenMethods = findAllMethod(repositoriesClosure, "maven")
         val extRepositories = mavenMethods.asSequence()
-            .map { ProjectRepository(getMethodFirstStringParam(findMethod(it.closureArguments[0], "url")) ?: "").point }
+            .map { ProjectRepository(getMethodFirstParam(findMethod(it.closureArguments[0], "url")) ?: "").point }
             .toSet()
 
         repositories.asSequence()
@@ -75,14 +71,10 @@ class BuildGradle(project: Project, private val buildFile: PsiFile) : ProjectFil
         val importsClosure = getOrCreateClosure(bomClosure, "imports")
 
         // 去重
-        val gradleBomRegex = "^([^:]+):([^:]+)".toRegex()
         findAllMethod(importsClosure, "mavenBom").forEach { mavenBom ->
-            val match = gradleBomRegex.find(getMethodFirstStringParam(mavenBom) ?: "")
-            if (match != null) {
-                val (groupId, artifactId) = match.destructured
-                if (bom.point == ProjectBom(groupId, artifactId).point) {
-                    return
-                }
+            val (groupId, artifactId) = getGroupNameByFirstParam(mavenBom)
+            if (bom.point == ProjectBom(groupId, artifactId).point) {
+                return
             }
         }
 
@@ -137,8 +129,26 @@ class BuildGradle(project: Project, private val buildFile: PsiFile) : ProjectFil
         }
     }
 
-    private fun getMethodFirstStringParam(method: GrMethodCall?): String? {
+    private fun getMethodFirstParam(method: GrMethodCall?): String? {
         val originText = method?.argumentList?.allArguments?.get(0)?.text
-        return originText?.trim('\'', '"')
+        return trimText(originText)
     }
+
+    private fun getGroupNameByFirstParam(method: GrMethodCall): Pair<String, String> {
+        val param = getMethodFirstParam(method) ?: ""
+        val group = "^([^:]+):([^:]+)".toRegex().find(param)?.groupValues
+        return Pair(group?.get(1) ?: "", group?.get(2) ?: "")
+    }
+
+    private fun getGroupName(method: GrMethodCall): Pair<String, String> {
+        val namedArguments = method.namedArguments
+        return if (namedArguments.isEmpty()) {
+            return getGroupNameByFirstParam(method)
+        } else {
+            val map = namedArguments.associateBy({ trimText(it.label?.text) }, { trimText(it.expression?.text) })
+            Pair(map["group"] ?: "", map["name"] ?: "")
+        }
+    }
+
+    private fun trimText(originText: String?) = originText?.trim('\'', '"')
 }
