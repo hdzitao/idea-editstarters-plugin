@@ -3,6 +3,8 @@ package hdzi.editstarters.gradle
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
+import com.intellij.openapi.progress.ProgressManager
+import com.intellij.openapi.util.ThrowableComputable
 import hdzi.editstarters.springboot.SpringBootEditor
 import hdzi.editstarters.springboot.bean.ProjectDependency
 import hdzi.editstarters.springboot.bean.StarterInfo
@@ -24,15 +26,18 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(context, {
         GradleConstants.SYSTEM_ID
     )
 
-    GradleExecutionHelper().execute(basePath, setting) { connect ->
-        val ideaModule = connect.getModel(IdeaProject::class.java).modules.getAt(0)
-        ideaModule.dependencies
-            .filter { it is IdeaSingleEntryLibraryDependency && it.gradleModuleVersion != null }
-            .map {
-                val moduleVersion = (it as IdeaSingleEntryLibraryDependency).gradleModuleVersion!!
-                ProjectDependency(moduleVersion.group, moduleVersion.name, moduleVersion.version)
+    ProgressManager.getInstance()
+        .runProcessWithProgressSynchronously(ThrowableComputable<List<ProjectDependency>, Exception> {
+            GradleExecutionHelper().execute(basePath, setting) { connect ->
+                val ideaModule = connect.getModel(IdeaProject::class.java).modules.getAt(0)
+                ideaModule.dependencies
+                    .filter { it is IdeaSingleEntryLibraryDependency && it.gradleModuleVersion != null }
+                    .map {
+                        val moduleVersion = (it as IdeaSingleEntryLibraryDependency).gradleModuleVersion!!
+                        ProjectDependency(moduleVersion.group, moduleVersion.name, moduleVersion.version)
+                    }
             }
-    }
+        }, "Load Gradle Project", false, project)
 }) {
 
     override fun addDependencies(starterInfos: Collection<StarterInfo>) {
