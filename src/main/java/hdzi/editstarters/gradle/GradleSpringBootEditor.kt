@@ -26,8 +26,10 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
                 context.getData(DataKeys.PROJECT)!!,
                 psiFile
             )
-            fileName.endsWith(".${GradleConstants.KOTLIN_DSL_SCRIPT_EXTENSION}") ->
-                throw Exception("Hasn't supported Kotlin DSL yet.")
+            fileName.endsWith(".${GradleConstants.KOTLIN_DSL_SCRIPT_EXTENSION}") -> BuildGradleKts(
+                context.getData(DataKeys.PROJECT)!!,
+                psiFile
+            )
             else -> throw Exception("Not support extension!")
         }
     },
