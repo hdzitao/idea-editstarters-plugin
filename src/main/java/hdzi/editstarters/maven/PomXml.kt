@@ -2,7 +2,6 @@ package hdzi.editstarters.maven
 
 import com.intellij.psi.xml.XmlFile
 import com.intellij.psi.xml.XmlTag
-import hdzi.editstarters.DependSupport
 import hdzi.editstarters.ProjectFile
 import hdzi.editstarters.bean.StarterInfo
 import hdzi.editstarters.bean.initializr.InitializrBom
@@ -15,107 +14,60 @@ import org.apache.commons.lang.StringUtils
 /**
  * Created by taojinhou on 2018/12/24.
  */
-class PomXml(file: XmlFile) : ProjectFile, DependSupport {
+class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
     /**
      * 根标签
      */
     private val rootTag: XmlTag = file.document!!.rootTag!!
 
-    /**
-     * 删除依赖
-     */
-    override fun removeDependencies(dependencies: Collection<StarterInfo>) {
-        val dependenciesTag = getOrCreateXmlTag(this.rootTag, "dependencies")
-        // 取已存在的依赖
-        val extdeps = dependenciesTag.findSubTags("dependency")
-        // 转化待删除的依赖成字符串形式，方便对比
-        val removeDeps = dependencies.map { it.point }.toSet()
-        // 遍历存在的依赖，如果待删除的依赖包含它，就删除
-        for (extdep in extdeps) {
-            if (removeDeps.contains(
-                    ProjectDependency(
-                        getTagText(extdep, "groupId"),
-                        getTagText(extdep, "artifactId")
-                    ).point
-                )
-            ) {
-                extdep.delete()
-            }
+    override fun getOrCreateDependenciesTag(): XmlTag = getOrCreateXmlTag(this.rootTag, "dependencies")
+
+    override fun findAllDependencies(dependenciesTag: XmlTag): Sequence<ProjectDependency> =
+        dependenciesTag.findSubTags("dependency").asSequence()
+            .map { ProjectDependency(getTagText(it, "groupId"), getTagText(it, "artifactId"), it) }
+
+    override fun createDependencyTag(dependenciesTag: XmlTag, info: StarterInfo) {
+        val dependency = createSubTag(dependenciesTag as XmlTag, "dependency")
+        addSubTagWithTextBody(dependency, "groupId", info.groupId)
+        addSubTagWithTextBody(dependency, "artifactId", info.artifactId)
+        if ("compile" != info.scope) {
+            addSubTagWithTextBody(dependency, "scope", info.scope)
         }
+        addSubTagWithTextBody(dependency, "version", info.version)
     }
 
-    /**
-     * 添加依赖
-     */
-    override fun addDependencies(dependencies: Collection<StarterInfo>) {
-        val dependenciesTag = getOrCreateXmlTag(this.rootTag, "dependencies")
+    override fun getOrCreateBomTag(): XmlTag =
+        getOrCreateXmlTag(getOrCreateXmlTag(this.rootTag, "dependencyManagement"), "dependencies")
 
-        for (info in dependencies) {
-            val dependency = createSubTag(dependenciesTag, "dependency")
-            addSubTagWithTextBody(dependency, "groupId", info.groupId)
-            addSubTagWithTextBody(dependency, "artifactId", info.artifactId)
-            if ("compile" != info.scope) {
-                addSubTagWithTextBody(dependency, "scope", info.scope)
-            }
-            addSubTagWithTextBody(dependency, "version", info.version)
 
-            if (info.bom != null) {
-                addBom(info.bom!!)
-            }
+    override fun findAllBom(bomTag: XmlTag): Sequence<ProjectBom> =
+        bomTag.findSubTags("dependency").asSequence()
+            .map { ProjectBom(getTagText(it, "groupId"), getTagText(it, "artifactId")) }
 
-            if (!info.repositories.isEmpty()) {
-                addRepositories(info.repositories)
-            }
-        }
-    }
-
-    /**
-     * 添加仓库信息
-     */
-    override fun addRepositories(repositories: Set<InitializrRepository>) {
-        val repositoriesTag = getOrCreateXmlTag(this.rootTag, "repositories")
-
-        val existingRepos = repositoriesTag.findSubTags("repository").asSequence()
-            .map { ProjectRepository(getTagText(it, "url")).point }
-            .toSet()
-
-        repositories.stream()
-            .filter { repo ->
-                // 去重
-                !existingRepos.contains(repo.point)
-            }.forEach { repo ->
-                // 添加
-                val repositoryTag = createSubTag(repositoriesTag, "repository")
-                addSubTagWithTextBody(repositoryTag, "id", repo.id)
-                addSubTagWithTextBody(repositoryTag, "name", repo.name)
-                addSubTagWithTextBody(repositoryTag, "url", repo.url)
-                if (repo.snapshotEnabled != null) {
-                    val snapshotsTag = createSubTag(repositoryTag, "snapshots")
-                    addSubTagWithTextBody(snapshotsTag, "enabled", repo.snapshotEnabled!!.toString())
-                }
-            }
-    }
-
-    /**
-     * 添加bom信息
-     */
-    override fun addBom(bom: InitializrBom) {
-        val dependencyManagementTag = getOrCreateXmlTag(this.rootTag, "dependencyManagement")
-        val dependencies = getOrCreateXmlTag(dependencyManagementTag, "dependencies")
-        // 去重
-        val point = bom.point
-        for (sub in dependencies.findSubTags("dependency")) {
-            if (point == ProjectBom(getTagText(sub, "groupId"), getTagText(sub, "artifactId")).point) {
-                return
-            }
-        }
-
-        val dependencyTag = createSubTag(dependencies, "dependency")
+    override fun createBomTag(bomTag: XmlTag, bom: InitializrBom) {
+        val dependencyTag = createSubTag(bomTag, "dependency")
         addSubTagWithTextBody(dependencyTag, "groupId", bom.groupId)
         addSubTagWithTextBody(dependencyTag, "artifactId", bom.artifactId)
         addSubTagWithTextBody(dependencyTag, "version", bom.version)
         addSubTagWithTextBody(dependencyTag, "type", "pom")
         addSubTagWithTextBody(dependencyTag, "scope", "import")
+    }
+
+    override fun getOrCreateRepositoriesTag(): XmlTag = getOrCreateXmlTag(this.rootTag, "repositories")
+
+    override fun findAllRepositories(repositoriesTag: XmlTag): Sequence<ProjectRepository> =
+        repositoriesTag.findSubTags("repository").asSequence()
+            .map { ProjectRepository(getTagText(it, "url")) }
+
+    override fun createRepositoriesTag(repositoriesTag: XmlTag, repository: InitializrRepository) {
+        val repositoryTag = createSubTag(repositoriesTag as XmlTag, "repository")
+        addSubTagWithTextBody(repositoryTag, "id", repository.id)
+        addSubTagWithTextBody(repositoryTag, "name", repository.name)
+        addSubTagWithTextBody(repositoryTag, "url", repository.url)
+        if (repository.snapshotEnabled != null) {
+            val snapshotsTag = createSubTag(repositoryTag, "snapshots")
+            addSubTagWithTextBody(snapshotsTag, "enabled", repository.snapshotEnabled!!.toString())
+        }
     }
 
     /**

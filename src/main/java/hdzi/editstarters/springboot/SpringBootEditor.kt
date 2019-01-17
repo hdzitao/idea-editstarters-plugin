@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
-import hdzi.editstarters.ProjectFile
+import hdzi.editstarters.EditStarters
 import hdzi.editstarters.bean.project.ProjectDependency
 import hdzi.editstarters.ui.EditStartersDialog
 import hdzi.editstarters.ui.InitializrUrlDialog
@@ -16,12 +16,12 @@ import hdzi.editstarters.ui.InitializrUrlDialog
  */
 abstract class SpringBootEditor(
     val context: DataContext,
-    projectFile: () -> ProjectFile,
-    dependGetter: () -> List<ProjectDependency>
-) : ProjectFile by projectFile() {
+    editStartersGetter: () -> EditStarters,
+    dependenciesGetter: () -> List<ProjectDependency>
+) : EditStarters by editStartersGetter() {
 
     private val existsDependencyDB: Map<String, ProjectDependency> =
-        dependGetter().associateBy({ it.point }, { it })
+        dependenciesGetter().associateBy({ it.point }, { it })
 
     private val springbootDependency =
         existsDependencyDB[ProjectDependency(

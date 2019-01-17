@@ -2,10 +2,8 @@ package hdzi.editstarters.gradle
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.containers.ContainerUtil
-import hdzi.editstarters.DependSupport
 import hdzi.editstarters.ProjectFile
 import hdzi.editstarters.bean.StarterInfo
 import hdzi.editstarters.bean.initializr.InitializrBom
@@ -13,93 +11,62 @@ import hdzi.editstarters.bean.initializr.InitializrRepository
 import hdzi.editstarters.bean.project.ProjectBom
 import hdzi.editstarters.bean.project.ProjectDependency
 import hdzi.editstarters.bean.project.ProjectRepository
+import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory
-import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrStatement
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.blocks.GrClosableBlock
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethodCall
 
 /**
  * Created by taojinhou on 2019/1/16.
  */
-class BuildGradle(project: Project, private val buildFile: PsiFile) : ProjectFile, DependSupport {
-    private val factory = GroovyPsiElementFactory.getInstance(project)
+class BuildGradle(project: Project, private val buildFile: GroovyFile) : ProjectFile<GrClosableBlock>() {
+    override fun getOrCreateDependenciesTag(): GrClosableBlock = getOrCreateClosure(buildFile, "dependencies")
 
-    override fun removeDependencies(dependencies: Collection<StarterInfo>) {
-        val removeDeps = dependencies.map { it.point }.toSet()
-        val dependenciesClosure = getOrCreateClosure(buildFile, "dependencies")
-        PsiTreeUtil.getChildrenOfTypeAsList(dependenciesClosure, GrMethodCall::class.java).forEach {
-            val (groupId, artifactId) = getGroupName(it)
-            if (removeDeps.contains(ProjectDependency(groupId, artifactId).point)) {
-                it.removeStatement()
-            }
-        }
-    }
-
-    override fun addDependencies(dependencies: Collection<StarterInfo>) {
-        val dependenciesClosure = getOrCreateClosure(buildFile, "dependencies")
-
-        for (depend in dependencies) {
-            dependenciesClosure.addStatementBefore(getDependStatement(depend), null)
-            if (depend.bom != null) {
-                addBom(depend.bom!!)
+    override fun findAllDependencies(dependenciesTag: GrClosableBlock): Sequence<ProjectDependency> =
+        PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall::class.java).asSequence()
+            .map {
+                val (groupId, artifactId) = getGroupName(it)
+                ProjectDependency(groupId, artifactId, it)
             }
 
-            if (!depend.repositories.isEmpty()) {
-                addRepositories(depend.repositories)
+    override fun createDependencyTag(dependenciesTag: GrClosableBlock, info: StarterInfo) {
+        val instantiation = Scope.map(info.scope)
+        val starter = "${info.groupId}:${info.artifactId}"
+        val version = if (info.version != null) ":${info.version}" else ""
+        val statement = factory.createStatementFromText("$instantiation '$starter$version'")
+        dependenciesTag.addStatementBefore(statement, null)
+    }
+
+    override fun getOrCreateBomTag(): GrClosableBlock =
+        getOrCreateClosure(getOrCreateClosure(buildFile, "dependencyManagement"), "imports")
+
+    override fun findAllBom(bomTag: GrClosableBlock): Sequence<ProjectBom> =
+        findAllMethod(bomTag, "mavenBom").asSequence()
+            .map {
+                val (groupId, artifactId) = getGroupNameByFirstParam(it)
+                ProjectBom(groupId, artifactId)
             }
-        }
-    }
 
-    override fun addRepositories(repositories: Set<InitializrRepository>) {
-        val repositoriesClosure = getOrCreateClosure(buildFile, "repositories")
-        val mavenMethods = findAllMethod(repositoriesClosure, "maven")
-        val extRepositories = mavenMethods.asSequence()
-            .map { ProjectRepository(getMethodFirstParam(findMethod(it.closureArguments[0], "url")) ?: "").point }
-            .toSet()
-
-        repositories.asSequence()
-            .filter {
-                //去重
-                !extRepositories.contains(it.point)
-            }.forEach { repo ->
-                repositoriesClosure.addStatementBefore(getRepoStatement(repo), null)
-            }
-    }
-
-    override fun addBom(bom: InitializrBom) {
-        val bomClosure = getOrCreateClosure(buildFile, "dependencyManagement")
-        val importsClosure = getOrCreateClosure(bomClosure, "imports")
-
-        // 去重
-        findAllMethod(importsClosure, "mavenBom").forEach { mavenBom ->
-            val (groupId, artifactId) = getGroupNameByFirstParam(mavenBom)
-            if (bom.point == ProjectBom(groupId, artifactId).point) {
-                return
-            }
-        }
-
-        importsClosure.addStatementBefore(getBomStatement(bom), null)
-    }
-
-    private fun getDependStatement(depend: StarterInfo): GrStatement {
-        val instantiation = Scope.map(depend.scope)
-        val starter = "${depend.groupId}:${depend.artifactId}"
-        val version = if (depend.version != null) ":${depend.version}" else ""
-
-        return factory.createStatementFromText("$instantiation '$starter$version'")
-    }
-
-    private fun getRepoStatement(repo: InitializrRepository) =
-        factory.createStatementFromText("maven { url '${repo.url}' }")
-
-    private fun getBomStatement(bom: InitializrBom): GrStatement {
+    override fun createBomTag(bomTag: GrClosableBlock, bom: InitializrBom) {
         val instantiation = "mavenBom"
         val point = "${bom.groupId}:${bom.artifactId}"
         val version = if (bom.version != null) ":${bom.version}" else ""
-
-        return factory.createStatementFromText("$instantiation '$point$version'")
+        val statement = factory.createStatementFromText("$instantiation '$point$version'")
+        bomTag.addStatementBefore(statement, null)
     }
 
+    override fun getOrCreateRepositoriesTag(): GrClosableBlock = getOrCreateClosure(buildFile, "repositories")
+
+    override fun findAllRepositories(repositoriesTag: GrClosableBlock): Sequence<ProjectRepository> =
+        findAllMethod(repositoriesTag, "maven").asSequence()
+            .map { ProjectRepository(getMethodFirstParam(findMethod(it.closureArguments[0], "url")) ?: "") }
+
+    override fun createRepositoriesTag(repositoriesTag: GrClosableBlock, repository: InitializrRepository) {
+        val statement = factory.createStatementFromText("maven { url '${repository.url}' }")
+        repositoriesTag.addStatementBefore(statement, null)
+    }
+
+    private val factory = GroovyPsiElementFactory.getInstance(project)
 
     private fun getOrCreateClosure(element: PsiElement, name: String): GrClosableBlock {
         var block = findMethod(element, name)

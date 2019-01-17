@@ -9,9 +9,11 @@ import hdzi.editstarters.bean.project.ProjectDependency
 import hdzi.editstarters.springboot.SpringBootEditor
 import org.gradle.tooling.model.idea.IdeaProject
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
+import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper
 import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings
 import org.jetbrains.plugins.gradle.util.GradleConstants
+import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
 
 /**
  * Created by taojinhou on 2019/1/14.
@@ -24,11 +26,11 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
         when {
             fileName.endsWith(".${GradleConstants.EXTENSION}") -> BuildGradle(
                 context.getData(DataKeys.PROJECT)!!,
-                psiFile
+                psiFile as GroovyFile
             )
             fileName.endsWith(".${GradleConstants.KOTLIN_DSL_SCRIPT_EXTENSION}") -> BuildGradleKts(
                 context.getData(DataKeys.PROJECT)!!,
-                psiFile
+                psiFile as KtFile
             )
             else -> throw Exception("Not support extension!")
         }

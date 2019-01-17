@@ -1,5 +1,6 @@
 package hdzi.editstarters.bean.project
 
+import com.intellij.psi.PsiElement
 import hdzi.editstarters.bean.Dependency
 
 /**
@@ -11,6 +12,13 @@ class ProjectDependency(
     val version: String?
 ) : Dependency {
     constructor(groupId: String, artifactId: String) : this(groupId, artifactId, null)
+
+    constructor(groupId: String, artifactId: String, element: PsiElement) : this(groupId, artifactId) {
+        this.element = element
+    }
+
+    // 依赖的位置
+    var element: PsiElement? = null
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
