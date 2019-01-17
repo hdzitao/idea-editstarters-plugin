@@ -82,10 +82,9 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
     private fun getOrCreateXmlTag(parent: XmlTag, name: String): XmlTag {
         var subTag = parent.findFirstSubTag(name)
         if (subTag == null) {
-            createSubTag(parent, name)
-            subTag = parent.findFirstSubTag(name)
+            subTag = createSubTag(parent, name)
         }
-        return subTag!!
+        return subTag
     }
 
     /**

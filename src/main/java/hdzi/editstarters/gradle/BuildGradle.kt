@@ -72,14 +72,13 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
         var block = findMethod(element, name)
         if (block == null) {
             val statement = factory.createStatementFromText("$name {\n}")
-            when (element) {
+            block = when (element) {
                 is GrClosableBlock -> element.addStatementBefore(statement, null)
                 else -> element.add(statement)
-            }
-            block = findMethod(element, name)
+            } as GrMethodCall
         }
 
-        return block!!.closureArguments[0]
+        return block.closureArguments[0]
     }
 
     private fun findMethod(element: PsiElement, name: String): GrMethodCall? {
