@@ -19,7 +19,7 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethod
 /**
  * Created by taojinhou on 2019/1/16.
  */
-class BuildGradle(project: Project, private val buildFile: GroovyFile) : ProjectFile<GrClosableBlock>() {
+class BuildGradle(project: Project, private val buildFile: GroovyFile) : ProjectFile<GrClosableBlock>(), GradleSyntax {
     override fun getOrCreateDependenciesTag(): GrClosableBlock = getOrCreateClosure(buildFile, "dependencies")
 
     override fun findAllDependencies(dependenciesTag: GrClosableBlock): Sequence<ProjectDependency> =
@@ -30,7 +30,7 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
             }
 
     override fun createDependencyTag(dependenciesTag: GrClosableBlock, info: StarterInfo) {
-        val (instantiation, point) = getDependencySyntax(info)
+        val (instantiation, point) = dependencyInstruction(info)
         val statement = factory.createStatementFromText("$instantiation '$point'")
         dependenciesTag.addStatementBefore(statement, null)
     }
@@ -46,7 +46,7 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
             }
 
     override fun createBomTag(bomTag: GrClosableBlock, bom: InitializrBom) {
-        val (instantiation, point) = getBomSyntax(bom)
+        val (instantiation, point) = bomInstruction(bom)
         val statement = factory.createStatementFromText("$instantiation '$point'")
         bomTag.addStatementBefore(statement, null)
     }
@@ -58,7 +58,8 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
             .map { ProjectRepository(getMethodFirstParam(findMethod(it.closureArguments[0], "url")) ?: "") }
 
     override fun createRepositoriesTag(repositoriesTag: GrClosableBlock, repository: InitializrRepository) {
-        val statement = factory.createStatementFromText("maven { url '${repository.url}' }")
+        val (instantiation, point) = repositoryInstruction(repository)
+        val statement = factory.createStatementFromText("$instantiation $point")
         repositoriesTag.addStatementBefore(statement, null)
     }
 

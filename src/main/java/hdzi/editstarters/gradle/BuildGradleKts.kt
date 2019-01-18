@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.psi.*
  *
  * Created by taojinhou on 2019/1/17.
  */
-class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectFile<KtBlockExpression>() {
+class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectFile<KtBlockExpression>(), GradleSyntax {
     override fun getOrCreateDependenciesTag(): KtBlockExpression = getOrCreateTopBlock("dependencies")
 
     override fun findAllDependencies(dependenciesTag: KtBlockExpression): Sequence<ProjectDependency> =
@@ -29,7 +29,7 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
             }
 
     override fun createDependencyTag(dependenciesTag: KtBlockExpression, info: StarterInfo) {
-        val (instantiation, point) = getDependencySyntax(info)
+        val (instantiation, point) = dependencyInstruction(info)
         dependenciesTag.addExpression("$instantiation(\"$point\")")
     }
 
@@ -44,7 +44,7 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
             }
 
     override fun createBomTag(bomTag: KtBlockExpression, bom: InitializrBom) {
-        val (instantiation, point) = getBomSyntax(bom)
+        val (instantiation, point) = bomInstruction(bom)
         bomTag.addExpression("$instantiation(\"$point\")")
     }
 
@@ -55,8 +55,12 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
             .map { ProjectRepository(getCallFirstParam(it) ?: "") }
 
     override fun createRepositoriesTag(repositoriesTag: KtBlockExpression, repository: InitializrRepository) {
-        repositoriesTag.addExpression("maven(\"${repository.url}\")")
+        val (instantiation, point) = repositoryInstruction(repository)
+        repositoriesTag.addExpression("$instantiation(\"$point\")")
     }
+
+    override fun repositoryInstruction(repository: InitializrRepository) =
+        GradleInstruction("maven", repository.url!!)
 
     private val factory = KtPsiFactory(project)
 
