@@ -88,7 +88,7 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
         }
     }
 
-    private fun findAllMethod(element: PsiElement, name: String): MutableList<out GrMethodCall> {
+    private fun findAllMethod(element: PsiElement, name: String): List<GrMethodCall> {
         val closableBlocks = PsiTreeUtil.getChildrenOfTypeAsList(element, GrMethodCall::class.java)
         return ContainerUtil.findAll(closableBlocks) { call ->
             name == call.invokedExpression.text
