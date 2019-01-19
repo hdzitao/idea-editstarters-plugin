@@ -4,7 +4,8 @@
     <vendor email="taojinhou@qq.com" url="http://github.com/Hdzi">Hdzi</vendor>
 
     <description><![CDATA[
-    This plugin provides the ability to modify Spring Boot Starters.
+    <p>This plugin provides the ability to modify Spring Boot Starters.</p>
+    <p>If the latest version is reviewing, you can download it on <a href="https://github.com/Hdzi/idea-editstarters-plugin/releases">Github</a></p>
     ]]></description>
 
     <idea-version since-build="183.4588"/>
