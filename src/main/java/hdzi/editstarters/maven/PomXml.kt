@@ -27,7 +27,7 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
             .map { ProjectDependency(getTagText(it, "groupId"), getTagText(it, "artifactId"), it) }
 
     override fun createDependencyTag(dependenciesTag: XmlTag, info: StarterInfo) {
-        val dependency = createSubTag(dependenciesTag as XmlTag, "dependency")
+        val dependency = createSubTag(dependenciesTag, "dependency")
         addSubTagWithTextBody(dependency, "groupId", info.groupId)
         addSubTagWithTextBody(dependency, "artifactId", info.artifactId)
         if ("compile" != info.scope) {
@@ -59,8 +59,8 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
         repositoriesTag.findSubTags("repository").asSequence()
             .map { ProjectRepository(getTagText(it, "url")) }
 
-    override fun createRepositoriesTag(repositoriesTag: XmlTag, repository: InitializrRepository) {
-        val repositoryTag = createSubTag(repositoriesTag as XmlTag, "repository")
+    override fun createRepositoryTag(repositoriesTag: XmlTag, repository: InitializrRepository) {
+        val repositoryTag = createSubTag(repositoriesTag, "repository")
         addSubTagWithTextBody(repositoryTag, "id", repository.id)
         addSubTagWithTextBody(repositoryTag, "name", repository.name)
         addSubTagWithTextBody(repositoryTag, "url", repository.url)

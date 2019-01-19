@@ -50,7 +50,7 @@ abstract class ProjectFile<T : PsiElement> : EditStarters {
         val repositoriesTag = getOrCreateRepositoriesTag()
         val existingRepos = findAllRepositories(repositoriesTag).map { it.point }.toSet()
         repositories.forEach {
-            if (!existingRepos.contains(it.point)) createRepositoriesTag(repositoriesTag, it)
+            if (!existingRepos.contains(it.point)) createRepositoryTag(repositoriesTag, it)
         }
     }
 
@@ -70,5 +70,5 @@ abstract class ProjectFile<T : PsiElement> : EditStarters {
 
     protected abstract fun findAllRepositories(repositoriesTag: T): Sequence<ProjectRepository>
 
-    protected abstract fun createRepositoriesTag(repositoriesTag: T, repository: InitializrRepository)
+    protected abstract fun createRepositoryTag(repositoriesTag: T, repository: InitializrRepository)
 }

@@ -54,7 +54,7 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
         findAllCallExpression(repositoriesTag, "maven").asSequence()
             .map { ProjectRepository(getCallFirstParam(it) ?: "") }
 
-    override fun createRepositoriesTag(repositoriesTag: KtBlockExpression, repository: InitializrRepository) {
+    override fun createRepositoryTag(repositoriesTag: KtBlockExpression, repository: InitializrRepository) {
         val (instantiation, point) = repositoryInstruction(repository)
         repositoriesTag.addExpression("$instantiation(\"$point\")")
     }

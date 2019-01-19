@@ -57,7 +57,7 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
         findAllMethod(repositoriesTag, "maven").asSequence()
             .map { ProjectRepository(getMethodFirstParam(findMethod(it.closureArguments[0], "url")) ?: "") }
 
-    override fun createRepositoriesTag(repositoriesTag: GrClosableBlock, repository: InitializrRepository) {
+    override fun createRepositoryTag(repositoriesTag: GrClosableBlock, repository: InitializrRepository) {
         val (instantiation, point) = repositoryInstruction(repository)
         val statement = factory.createStatementFromText("$instantiation $point")
         repositoriesTag.addStatementBefore(statement, null)
