@@ -24,25 +24,18 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
         val psiFile = context.getData(DataKeys.PSI_FILE)!!
         val fileName = psiFile.name
         when {
-            fileName.endsWith(".${GradleConstants.EXTENSION}") -> BuildGradle(
-                context.getData(DataKeys.PROJECT)!!,
-                psiFile as GroovyFile
-            )
-            fileName.endsWith(".${GradleConstants.KOTLIN_DSL_SCRIPT_EXTENSION}") -> BuildGradleKts(
-                context.getData(DataKeys.PROJECT)!!,
-                psiFile as KtFile
-            )
+            fileName.endsWith(".${GradleConstants.EXTENSION}") ->
+                BuildGradle(context.getData(DataKeys.PROJECT)!!, psiFile as GroovyFile)
+            fileName.endsWith(".${GradleConstants.KOTLIN_DSL_SCRIPT_EXTENSION}") ->
+                BuildGradleKts(context.getData(DataKeys.PROJECT)!!, psiFile as KtFile)
             else -> throw Exception("Not support extension!")
         }
     },
     {
         val project = context.getData(DataKeys.PROJECT)!!
         val basePath = context.getData(DataKeys.VIRTUAL_FILE)!!.parent!!.path
-        val setting: GradleExecutionSettings = ExternalSystemApiUtil.getExecutionSettings(
-            project,
-            basePath,
-            GradleConstants.SYSTEM_ID
-        )
+        val setting: GradleExecutionSettings =
+            ExternalSystemApiUtil.getExecutionSettings(project, basePath, GradleConstants.SYSTEM_ID)
 
         ProgressManager.getInstance()
             .runProcessWithProgressSynchronously(ThrowableComputable<List<ProjectDependency>, Exception> {
@@ -52,11 +45,7 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
                         .filter { it is IdeaSingleEntryLibraryDependency && it.gradleModuleVersion != null }
                         .map {
                             val moduleVersion = (it as IdeaSingleEntryLibraryDependency).gradleModuleVersion!!
-                            ProjectDependency(
-                                moduleVersion.group,
-                                moduleVersion.name,
-                                moduleVersion.version
-                            )
+                            ProjectDependency(moduleVersion.group, moduleVersion.name, moduleVersion.version)
                         }
                 }
             }, "Load Gradle Project", false, project)

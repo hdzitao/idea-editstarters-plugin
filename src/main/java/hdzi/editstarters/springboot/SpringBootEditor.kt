@@ -24,10 +24,7 @@ abstract class SpringBootEditor(
         dependenciesGetter().associateBy({ it.point }, { it })
 
     private val springbootDependency =
-        existsDependencyDB[ProjectDependency(
-            "org.springframework.boot",
-            "spring-boot"
-        ).point]
+        existsDependencyDB[ProjectDependency("org.springframework.boot", "spring-boot").point]
 
     /**
      * 启动编辑器
