@@ -53,11 +53,14 @@ abstract class SpringBootEditor(
     /**
      * 初始化Initializr
      */
-    private fun initSpringInitializr(url: String) =
-        ProgressManager.getInstance().runProcessWithProgressSynchronously(ThrowableComputable<Unit, Exception> {
+    private fun initSpringInitializr(url: String) {
+        val progressManager = ProgressManager.getInstance()
+        progressManager.runProcessWithProgressSynchronously(ThrowableComputable<Unit, Exception> {
+            progressManager.progressIndicator.isIndeterminate = true
             springInitializr = SpringInitializr(url, currentVersion!!)
             existsDependencyDB.values.forEach { dep ->
                 this.springInitializr!!.addExistsStarter(dep)
             }
         }, "Load ${url}", false, context.getData(DataKeys.PROJECT))
+    }
 }

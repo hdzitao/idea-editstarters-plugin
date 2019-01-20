@@ -37,8 +37,10 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
         val setting: GradleExecutionSettings =
             ExternalSystemApiUtil.getExecutionSettings(project, basePath, GradleConstants.SYSTEM_ID)
 
-        ProgressManager.getInstance()
-            .runProcessWithProgressSynchronously(ThrowableComputable<List<ProjectDependency>, Exception> {
+        val progressManager = ProgressManager.getInstance()
+        progressManager.runProcessWithProgressSynchronously(
+            ThrowableComputable<List<ProjectDependency>, Exception> {
+                progressManager.progressIndicator.isIndeterminate = true
                 GradleExecutionHelper().execute(basePath, setting) { connect ->
                     val ideaModule = connect.getModel(IdeaProject::class.java).modules.getAt(0)
                     ideaModule.dependencies
