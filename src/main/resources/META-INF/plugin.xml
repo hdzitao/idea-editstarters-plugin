@@ -27,7 +27,6 @@
         <!-- Add your actions here -->
         <action id="EditStarters.MavenButton" class="hdzi.editstarters.ui.MavenButtonAction" text="Edit Starters"
                 description="edit maven spring boot starters" icon="/icons/button.png">
-            <add-to-group group-id="Maven.BaseProjectMenu" anchor="first"/>
             <add-to-group group-id="GenerateGroup" anchor="first"/>
         </action>
         <action id="EditStarters.GradleButton" class="hdzi.editstarters.ui.GradleButtonAction" text="Edit Starters"
