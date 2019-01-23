@@ -6,7 +6,7 @@ You can download [here](https://github.com/Hdzi/idea-editstarters-plugin/release
 
 ## With Maven
 
-![img loading...](https://user-images.githubusercontent.com/12962462/51378337-019a5e80-1b48-11e9-998f-13f8df7ccc07.gif)
+![img loading...](https://user-images.githubusercontent.com/12962462/51593574-734e2000-1f2d-11e9-88a0-9d43f7877131.gif)
 
 ## With Gradle
 
