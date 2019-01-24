@@ -33,19 +33,19 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
         dependenciesTag.addExpression("$instantiation(\"$point\")")
     }
 
-    override fun getOrCreateBomTag(): KtBlockExpression =
+    override fun getOrCreateBomsTag(): KtBlockExpression =
         getOrCreateBlock(getOrCreateTopBlock("dependencyManagement"), "imports")
 
-    override fun findAllBom(bomTag: KtBlockExpression): Sequence<ProjectBom> =
-        findAllCallExpression(bomTag, "mavenBom").asSequence()
+    override fun findAllBoms(bomsTag: KtBlockExpression): Sequence<ProjectBom> =
+        findAllCallExpression(bomsTag, "mavenBom").asSequence()
             .map {
                 val (groupId, artifactId) = getCallGroupNameByFirstParam(it)
                 ProjectBom(groupId, artifactId)
             }
 
-    override fun createBomTag(bomTag: KtBlockExpression, bom: InitializrBom) {
+    override fun createBomTag(bomsTag: KtBlockExpression, bom: InitializrBom) {
         val (instantiation, point) = bomInstruction(bom)
-        bomTag.addExpression("$instantiation(\"$point\")")
+        bomsTag.addExpression("$instantiation(\"$point\")")
     }
 
     override fun getOrCreateRepositoriesTag(): KtBlockExpression = getOrCreateTopBlock("repositories")

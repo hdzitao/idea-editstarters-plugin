@@ -38,9 +38,9 @@ abstract class ProjectFile<T : PsiElement> : EditStarters {
      * 添加bom信息
      */
     private fun addBom(bom: InitializrBom) {
-        val bomTag = getOrCreateBomTag()
+        val bomTag = getOrCreateBomsTag()
         // 去重后新建
-        findAllBom(bomTag).find { bom.point == it.point } ?: createBomTag(bomTag, bom)
+        findAllBoms(bomTag).find { bom.point == it.point } ?: createBomTag(bomTag, bom)
     }
 
     /**
@@ -60,11 +60,11 @@ abstract class ProjectFile<T : PsiElement> : EditStarters {
 
     protected abstract fun createDependencyTag(dependenciesTag: T, info: StarterInfo)
 
-    protected abstract fun getOrCreateBomTag(): T
+    protected abstract fun getOrCreateBomsTag(): T
 
-    protected abstract fun findAllBom(bomTag: T): Sequence<ProjectBom>
+    protected abstract fun findAllBoms(bomsTag: T): Sequence<ProjectBom>
 
-    protected abstract fun createBomTag(bomTag: T, bom: InitializrBom)
+    protected abstract fun createBomTag(bomsTag: T, bom: InitializrBom)
 
     protected abstract fun getOrCreateRepositoriesTag(): T
 

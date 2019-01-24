@@ -36,16 +36,16 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
         addSubTagWithTextBody(dependency, "version", info.version)
     }
 
-    override fun getOrCreateBomTag(): XmlTag =
+    override fun getOrCreateBomsTag(): XmlTag =
         getOrCreateXmlTag(getOrCreateXmlTag(this.rootTag, "dependencyManagement"), "dependencies")
 
 
-    override fun findAllBom(bomTag: XmlTag): Sequence<ProjectBom> =
-        bomTag.findSubTags("dependency").asSequence()
+    override fun findAllBoms(bomsTag: XmlTag): Sequence<ProjectBom> =
+        bomsTag.findSubTags("dependency").asSequence()
             .map { ProjectBom(getTagText(it, "groupId"), getTagText(it, "artifactId")) }
 
-    override fun createBomTag(bomTag: XmlTag, bom: InitializrBom) {
-        val dependencyTag = createSubTag(bomTag, "dependency")
+    override fun createBomTag(bomsTag: XmlTag, bom: InitializrBom) {
+        val dependencyTag = createSubTag(bomsTag, "dependency")
         addSubTagWithTextBody(dependencyTag, "groupId", bom.groupId)
         addSubTagWithTextBody(dependencyTag, "artifactId", bom.artifactId)
         addSubTagWithTextBody(dependencyTag, "version", bom.version)

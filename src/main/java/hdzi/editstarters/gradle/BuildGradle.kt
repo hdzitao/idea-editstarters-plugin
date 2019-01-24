@@ -35,20 +35,20 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
         dependenciesTag.addStatementBefore(statement, null)
     }
 
-    override fun getOrCreateBomTag(): GrClosableBlock =
+    override fun getOrCreateBomsTag(): GrClosableBlock =
         getOrCreateClosure(getOrCreateClosure(buildFile, "dependencyManagement"), "imports")
 
-    override fun findAllBom(bomTag: GrClosableBlock): Sequence<ProjectBom> =
-        findAllMethod(bomTag, "mavenBom").asSequence()
+    override fun findAllBoms(bomsTag: GrClosableBlock): Sequence<ProjectBom> =
+        findAllMethod(bomsTag, "mavenBom").asSequence()
             .map {
                 val (groupId, artifactId) = getMethodGroupNameByFirstParam(it)
                 ProjectBom(groupId, artifactId)
             }
 
-    override fun createBomTag(bomTag: GrClosableBlock, bom: InitializrBom) {
+    override fun createBomTag(bomsTag: GrClosableBlock, bom: InitializrBom) {
         val (instantiation, point) = bomInstruction(bom)
         val statement = factory.createStatementFromText("$instantiation '$point'")
-        bomTag.addStatementBefore(statement, null)
+        bomsTag.addStatementBefore(statement, null)
     }
 
     override fun getOrCreateRepositoriesTag(): GrClosableBlock = getOrCreateClosure(buildFile, "repositories")
