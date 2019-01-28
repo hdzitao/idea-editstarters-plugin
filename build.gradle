@@ -4,10 +4,6 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.11'
 }
 
-ext {
-    pluginVersion = '2.1'
-}
-
 group 'hdzi'
 version pluginVersion
 
