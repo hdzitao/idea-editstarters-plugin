@@ -1,5 +1,8 @@
 # Change Log
 
+## v2.2
+* 2019/2/20 Convert all code to Kotlin
+
 ## v2.1
 * 2019/1/23 fix the bug that "Edit Starters" is in all "Generate" meun
 * 2019/1/23 maven's "Edit Starters" move to "Generate"

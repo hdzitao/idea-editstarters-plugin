@@ -34,8 +34,7 @@ patchPluginXml {
     changeNotes """
 <p>v${pluginVersion}</p>
 <ul>
-<li>2019/1/23 fix the bug that "Edit Starters" is in all "Generate" meun</li>
-<li>2019/1/23 maven's "Edit Starters" move to "Generate"</li>
+<li>2019/2/20 Convert all code to Kotlin</li>
 </ul>
 <a href="https://github.com/Hdzi/idea-editstarters-plugin/blob/2.x/CHANGELOG.md">All Changes</a>
       """
