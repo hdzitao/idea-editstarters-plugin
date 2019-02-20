@@ -1,9 +1,9 @@
 package hdzi.editstarters.bean.initializr
 
-class InitializrVersion {
-    var default: String? = null
-    var values: List<Value>? = null
-
+class InitializrVersion(
+    var default: String?,
+    var values: List<Value>?
+) {
     class Value {
         var id: String? = null
         var name: String? = null

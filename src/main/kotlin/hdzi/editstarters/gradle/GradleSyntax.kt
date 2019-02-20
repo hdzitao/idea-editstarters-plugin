@@ -29,21 +29,21 @@ interface GradleSyntax {
         return Pair(group?.get(1) ?: "", group?.get(2) ?: "")
     }
 
-    fun splitGroupName(namedArguments: Map<String?, String?>): Pair<String, String> =
+    fun splitGroupName(namedArguments: Map<String?, String?>) =
         Pair(namedArguments["group"] ?: "", namedArguments["name"] ?: "")
 
     companion object {
-        private val scopeConversion = mapOf(
+        val scopeConversion = mapOf(
             "compile" to "implementation",
             "test" to "testImplementation",
             "provided" to "compileOnly"
         )
-    }
 
-    private fun mapScope(scope: String?): String =
-        if (scope == null) {
-            "implementation"
-        } else {
-            scopeConversion.getOrDefault(scope, scope)
-        }
+        fun mapScope(scope: String?): String =
+            if (scope == null) {
+                "implementation"
+            } else {
+                scopeConversion.getOrDefault(scope, scope)
+            }
+    }
 }

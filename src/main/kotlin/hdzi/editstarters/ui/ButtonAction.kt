@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.ui.Messages
 
 
-abstract class EditButtonAction : AnAction() {
+abstract class ButtonAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
         try {
             invoke(e)

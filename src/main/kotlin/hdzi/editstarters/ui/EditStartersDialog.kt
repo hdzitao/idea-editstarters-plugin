@@ -23,23 +23,21 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
     private lateinit var starterList: JList<StarterInfo>
     private lateinit var selectList: JList<StarterInfo>
     private lateinit var searchField: JTextField
-    private var frame: JFrame
-    private var title = "Edit Starters"
-    private var addStarters = HashSet<StarterInfo>(64)
-    private var removeStarters = HashSet<StarterInfo>(64)
-
-
+    private val frame: JFrame
+    private val title = "Edit Starters"
+    private val addStarters = HashSet<StarterInfo>(64)
+    private val removeStarters = HashSet<StarterInfo>(64)
     private val toolTipTextCache = WeakHashMap<StarterInfo, String>() // 加个缓存
 
     init {
-        val initializr = springBoot.springInitializr
+        val initializr = springBoot.springInitializr!!
 
         this.frame = JFrame(this.title)
         this.frame.contentPane = this.root
 
         // boot版本选框
         this.versionComboBox.model = CollectionComboBoxModel(
-            initializr!!.version.values!!.map { it.name },
+            initializr.version.values!!.map { it.name },
             springBoot.currentVersion
         )
         this.versionComboBox.isEnabled = false
@@ -61,9 +59,9 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
         // Module列表
         this.moduleList.model = CollectionListModel(modulesMap.keys)
         this.moduleList.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(e: MouseEvent?) {
+            override fun mouseClicked(e: MouseEvent) {
                 searchField.text = ""
-                val name = moduleList.selectedValue as String
+                val name = moduleList.selectedValue
                 starterList.model = CollectionListModel(modulesMap[name]!!)
             }
         })
@@ -71,11 +69,10 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
         // 显示详细信息
         val showDescAdapter = object : MouseAdapter() {
             override fun mouseMoved(e: MouseEvent) {
-                val list = e.source as JList<*>
-                val model = list.model
+                val list = e.source as JList<StarterInfo>
                 val index = list.locationToIndex(e.point)
                 if (index > -1) {
-                    val starter = model.getElementAt(index) as StarterInfo
+                    val starter = list.model.getElementAt(index)
                     list.toolTipText = getStarterInfoToolTipText(starter)
                 }
             }
@@ -83,9 +80,9 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
 
         // Starter列表
         this.starterList.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(e: MouseEvent?) {
-                if (e!!.clickCount == 2) { // 按两下选择
-                    val starterInfo = starterList.selectedValue as StarterInfo
+            override fun mouseClicked(e: MouseEvent) {
+                if (e.clickCount == 2) { // 按两下选择
+                    val starterInfo = starterList.selectedValue
                     if (!starterInfo.canBeAdded) return  // 检查一下是否允许添加
                     if (starterInfo.exist) { // 对于已存在的starter，添加就是从删除列表里删除
                         removeStarters.remove(starterInfo)
@@ -105,9 +102,9 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
         // selected列表
         this.selectList.model = CollectionListModel(initializr.existStarters)
         this.selectList.addMouseListener(object : MouseAdapter() {
-            override fun mouseClicked(e: MouseEvent?) {
-                if (e!!.clickCount == 2) { // 按两下删除
-                    val starterInfo = selectList.selectedValue as StarterInfo
+            override fun mouseClicked(e: MouseEvent) {
+                if (e.clickCount == 2) { // 按两下删除
+                    val starterInfo = selectList.selectedValue
                     if (starterInfo.exist) { // 对于已存在的starter，删除就是加入删除列表
                         removeStarters.add(starterInfo)
                     } else { // 对于不存在的starter，删除是从添加列表里删除
@@ -122,7 +119,7 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
 
         // 搜索框
         this.searchField.addKeyListener(object : KeyAdapter() {
-            override fun keyReleased(e: KeyEvent?) {
+            override fun keyReleased(e: KeyEvent) {
                 moduleList.clearSelection()
                 val searchKey = searchField.text.toLowerCase()
                 val result = initializr.searchDB.asSequence()
@@ -152,7 +149,7 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
                     buffer.append("version: ").append(info.version).append("\n")
                 }
             } else if (info.versionRange != null) {
-                buffer.append("versionRange: ").append(info.versionRange).append("\n")
+                buffer.append("version range: ").append(info.versionRange).append("\n")
             }
 
             buffer.append("desc: ").append(info.description).append("\n")
