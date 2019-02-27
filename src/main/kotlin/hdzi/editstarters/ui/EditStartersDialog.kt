@@ -142,17 +142,17 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
         return toolTipTextCache.computeIfAbsent(starter) { info ->
             val buffer = StringBuilder()
             if (info.groupId != null) {
-                buffer.append("groupId: ").append(info.groupId).append("\n")
-                    .append("artifactId: ").append(info.artifactId).append("\n")
-                    .append("scope: ").append(info.scope).append("\n")
+                buffer.append("GroupId: ").append(info.groupId).append("\n")
+                    .append("ArtifactId: ").append(info.artifactId).append("\n")
+                    .append("Scope: ").append(info.scope).append("\n")
                 if (info.version != null) {
-                    buffer.append("version: ").append(info.version).append("\n")
+                    buffer.append("Version: ").append(info.version).append("\n")
                 }
             } else if (info.versionRange != null) {
-                buffer.append("version range: ").append(info.versionRange).append("\n")
+                buffer.append("VersionRange: ").append(info.versionRange).append("\n")
             }
 
-            buffer.append("desc: ").append(info.description).append("\n")
+            buffer.append("Desc: ").append(info.description).append("\n")
 
             buffer.toString()
         }
