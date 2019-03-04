@@ -69,6 +69,7 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
         // 显示详细信息
         val showDescAdapter = object : MouseAdapter() {
             override fun mouseMoved(e: MouseEvent) {
+                @Suppress("unchecked_cast")
                 val list = e.source as JList<StarterInfo>
                 val index = list.locationToIndex(e.point)
                 if (index > -1) {
