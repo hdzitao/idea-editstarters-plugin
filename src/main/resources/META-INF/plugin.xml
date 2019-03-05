@@ -8,7 +8,7 @@
     <p>If the latest version is reviewing, you can download it on <a href="https://github.com/Hdzi/idea-editstarters-plugin/releases">Github</a></p>
     ]]></description>
 
-    <idea-version since-build="183.4588"/>
+    <idea-version since-build="181"/>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->

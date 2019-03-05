@@ -23,14 +23,14 @@ class SpringInitializr(url: String, currentVersion: String) {
     init {
         // 请求initurl
         val baseInfoJSON = HttpRequests.request(url).accept("application/json").connect {
-            this.gson.fromJson(it.readString(), JsonObject::class.java)
+            this.gson.fromJson(it.readString(null), JsonObject::class.java)
         }
 
         parseSpringBootModules(baseInfoJSON)
 
         val dependenciesUrl = parseDependenciesUrl(baseInfoJSON, currentVersion)
         val depsJSON = HttpRequests.request(dependenciesUrl).connect {
-            this.gson.fromJson(it.readString(), JsonObject::class.java)
+            this.gson.fromJson(it.readString(null), JsonObject::class.java)
         }
 
         parseDependencies(depsJSON)
