@@ -20,12 +20,12 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethod
  * Created by taojinhou on 2019/1/16.
  */
 class BuildGradle(project: Project, private val buildFile: GroovyFile) : ProjectFile<GrClosableBlock>(), GradleSyntax {
-    override fun getOrCreateDependenciesTag(): GrClosableBlock = getOrCreateClosure(buildFile, "dependencies")
+    override fun getOrCreateDependenciesTag(): GrClosableBlock = buildFile.getOrCreateClosure("dependencies")
 
     override fun findAllDependencies(dependenciesTag: GrClosableBlock): Sequence<ProjectDependency> =
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall::class.java).asSequence()
             .map {
-                val (groupId, artifactId) = getMethodGroupName(it)
+                val (groupId, artifactId) = it.getMethodGroupName()
                 ProjectDependency(groupId, artifactId, it)
             }
 
@@ -36,12 +36,12 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
     }
 
     override fun getOrCreateBomsTag(): GrClosableBlock =
-        getOrCreateClosure(getOrCreateClosure(buildFile, "dependencyManagement"), "imports")
+        buildFile.getOrCreateClosure("dependencyManagement").getOrCreateClosure("imports")
 
     override fun findAllBoms(bomsTag: GrClosableBlock): Sequence<ProjectBom> =
-        findAllMethod(bomsTag, "mavenBom").asSequence()
+        bomsTag.findAllMethod("mavenBom").asSequence()
             .map {
-                val (groupId, artifactId) = getMethodGroupNameByFirstParam(it)
+                val (groupId, artifactId) = it.getMethodGroupNameByFirstParam()
                 ProjectBom(groupId, artifactId)
             }
 
@@ -51,11 +51,11 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
         bomsTag.addStatementBefore(statement, null)
     }
 
-    override fun getOrCreateRepositoriesTag(): GrClosableBlock = getOrCreateClosure(buildFile, "repositories")
+    override fun getOrCreateRepositoriesTag(): GrClosableBlock = buildFile.getOrCreateClosure("repositories")
 
     override fun findAllRepositories(repositoriesTag: GrClosableBlock): Sequence<ProjectRepository> =
-        findAllMethod(repositoriesTag, "maven").asSequence()
-            .map { ProjectRepository(getMethodFirstParam(findMethod(it.closureArguments[0], "url")) ?: "") }
+        repositoriesTag.findAllMethod("maven").asSequence()
+            .map { ProjectRepository(it.closureArguments[0].findMethod("url")?.getMethodFirstParam() ?: "") }
 
     override fun createRepositoryTag(repositoriesTag: GrClosableBlock, repository: InitializrRepository) {
         val (instantiation, point) = repositoryInstruction(repository)
@@ -65,50 +65,46 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
 
     private val factory = GroovyPsiElementFactory.getInstance(project)
 
-    private fun getOrCreateClosure(element: PsiElement, name: String): GrClosableBlock {
-        var closure = findMethod(element, name)
+    private fun PsiElement.getOrCreateClosure(name: String): GrClosableBlock {
+        var closure = findMethod(name)
         if (closure == null) {
             val statement = factory.createStatementFromText("$name {\n}")
-            closure = when (element) {
-                is GrClosableBlock -> element.addStatementBefore(statement, null)
-                else -> element.add(statement)
+            closure = when (this) {
+                is GrClosableBlock -> addStatementBefore(statement, null)
+                else -> add(statement)
             } as GrMethodCall
         }
 
         return closure.closureArguments[0]
     }
 
-    private fun findMethod(element: PsiElement, name: String): GrMethodCall? {
-        return PsiTreeUtil.getChildrenOfTypeAsList(element, GrMethodCall::class.java)
+    private fun PsiElement.findMethod(name: String): GrMethodCall? =
+        PsiTreeUtil.getChildrenOfTypeAsList(this, GrMethodCall::class.java)
             .find { name == it.invokedExpression.text }
-    }
 
-    private fun findAllMethod(element: PsiElement, name: String): List<GrMethodCall> {
-        val closableBlocks = PsiTreeUtil.getChildrenOfTypeAsList(element, GrMethodCall::class.java)
+    private fun PsiElement.findAllMethod(name: String): List<GrMethodCall> {
+        val closableBlocks = PsiTreeUtil.getChildrenOfTypeAsList(this, GrMethodCall::class.java)
         return ContainerUtil.findAll(closableBlocks) { name == it.invokedExpression.text }
     }
 
-    private fun getMethodFirstParam(method: GrMethodCall?): String? {
-        val originText = method?.argumentList?.allArguments?.get(0)?.text
-        return trimText(originText)
-    }
+    private fun GrMethodCall.getMethodFirstParam(): String? =
+        this.argumentList.allArguments[0]?.text?.trimText()
 
-    private fun getMethodGroupNameByFirstParam(method: GrMethodCall): Pair<String, String> {
-        return splitGroupName(getMethodFirstParam(method) ?: "")
-    }
+    private fun GrMethodCall.getMethodGroupNameByFirstParam(): Pair<String, String> =
+        splitGroupName(getMethodFirstParam() ?: "")
 
-    private fun getMethodGroupName(method: GrMethodCall): Pair<String, String> {
-        val namedArguments = method.namedArguments.associateBy(
-            { trimText(it.label?.text) },
-            { trimText(it.expression?.text) }
+    private fun GrMethodCall.getMethodGroupName(): Pair<String, String> {
+        val namedArguments = this.namedArguments.associateBy(
+            { it.label?.text?.trimText() },
+            { it.expression?.text?.trimText() }
         )
 
         return if (namedArguments.isEmpty()) {
-            getMethodGroupNameByFirstParam(method)
+            getMethodGroupNameByFirstParam()
         } else {
             splitGroupName(namedArguments)
         }
     }
 
-    private fun trimText(originText: String?) = originText?.trim('\'', '"')
+    private fun String.trimText(): String = trim('\'', '"')
 }

@@ -61,6 +61,6 @@ abstract class SpringBootEditor(
             existsDependencyDB.values.forEach { dep ->
                 this.springInitializr!!.addExistsStarter(dep)
             }
-        }, "Load ${url}", false, context.getData(DataKeys.PROJECT))
+        }, "Load $url", false, context.getData(DataKeys.PROJECT))
     }
 }

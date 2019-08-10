@@ -22,8 +22,7 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
     context,
     {
         val psiFile = context.getData(DataKeys.PSI_FILE)!!
-        val fileName = psiFile.name
-        when (fileName) {
+        when (psiFile.name) {
             GradleConstants.DEFAULT_SCRIPT_NAME ->
                 BuildGradle(context.getData(DataKeys.PROJECT)!!, psiFile as GroovyFile)
             GradleConstants.KOTLIN_DSL_SCRIPT_NAME ->

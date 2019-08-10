@@ -66,12 +66,11 @@ class SpringInitializr(url: String, currentVersion: String) {
         }
     }
 
-    private fun parseDependenciesUrl(json: JsonObject, version: String): String {
-        return json.getAsJsonObject("_links")
+    private fun parseDependenciesUrl(json: JsonObject, version: String): String =
+        json.getAsJsonObject("_links")
             .getAsJsonObject("dependencies")
             .get("href").asString
             .replace("{?bootVersion}", "?bootVersion=$version")
-    }
 
     private fun parseDependencies(json: JsonObject) {
         // 仓库信息

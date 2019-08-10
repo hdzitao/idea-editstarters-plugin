@@ -10,7 +10,7 @@ import hdzi.editstarters.bean.project.ProjectRepository
 
 abstract class ProjectFile<T : PsiElement> : EditStarters {
 
-    override fun removeDependencies(dependencies: Collection<StarterInfo>) {
+    override fun removeStarters(dependencies: Collection<StarterInfo>) {
         val dependenciesTag = getOrCreateDependenciesTag()
         // 取已存在的依赖
         val extDependencies = findAllDependencies(dependenciesTag)
@@ -24,7 +24,7 @@ abstract class ProjectFile<T : PsiElement> : EditStarters {
         }
     }
 
-    override fun addDependencies(dependencies: Collection<StarterInfo>) {
+    override fun addStarters(dependencies: Collection<StarterInfo>) {
         val dependenciesTag = getOrCreateDependenciesTag()
 
         dependencies.forEach {

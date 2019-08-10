@@ -8,13 +8,9 @@ class InitializrUrlDialog {
     private val urlVerifier = object : InputValidator {
         private val URL_PATTERN = "^https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]".toRegex()
 
-        override fun checkInput(inputString: String): Boolean {
-            return inputString.matches(this.URL_PATTERN)
-        }
+        override fun checkInput(inputString: String): Boolean = inputString.matches(this.URL_PATTERN)
 
-        override fun canClose(inputString: String): Boolean {
-            return true
-        }
+        override fun canClose(inputString: String) = true
     }
 
     var url: String? = "https://start.spring.io/"

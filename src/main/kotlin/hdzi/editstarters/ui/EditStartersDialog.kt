@@ -48,8 +48,8 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
         // ok按钮
         this.buttonOK.addActionListener {
             WriteCommandAction.runWriteCommandAction(springBoot.context.getData<Project>(DataKeys.PROJECT)) {
-                springBoot.addDependencies(this.addStarters)
-                springBoot.removeDependencies(this.removeStarters)
+                springBoot.addStarters(this.addStarters)
+                springBoot.removeStarters(this.removeStarters)
             }
             this.frame.dispose()
         }
@@ -74,7 +74,7 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
                 val index = list.locationToIndex(e.point)
                 if (index > -1) {
                     val starter = list.model.getElementAt(index)
-                    list.toolTipText = getStarterInfoToolTipText(starter)
+                    list.toolTipText = starter.getStarterInfoToolTipText()
                 }
             }
         }
@@ -139,23 +139,22 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
         this.frame.isVisible = true
     }
 
-    private fun getStarterInfoToolTipText(starter: StarterInfo): String {
-        return toolTipTextCache.computeIfAbsent(starter) { info ->
-            val buffer = StringBuilder()
-            if (info.groupId != null) {
-                buffer.append("GroupId: ").append(info.groupId).append("\n")
-                    .append("ArtifactId: ").append(info.artifactId).append("\n")
-                    .append("Scope: ").append(info.scope).append("\n")
-                if (info.version != null) {
-                    buffer.append("Version: ").append(info.version).append("\n")
-                }
-            } else if (info.versionRange != null) {
-                buffer.append("VersionRange: ").append(info.versionRange).append("\n")
+    private fun StarterInfo.getStarterInfoToolTipText(): String =
+        toolTipTextCache.computeIfAbsent(this) { info ->
+        val buffer = StringBuilder()
+        if (info.groupId != null) {
+            buffer.append("GroupId: ").append(info.groupId).append("\n")
+                .append("ArtifactId: ").append(info.artifactId).append("\n")
+                .append("Scope: ").append(info.scope).append("\n")
+            if (info.version != null) {
+                buffer.append("Version: ").append(info.version).append("\n")
             }
-
-            buffer.append("Desc: ").append(info.description).append("\n")
-
-            buffer.toString()
+        } else if (info.versionRange != null) {
+            buffer.append("VersionRange: ").append(info.versionRange).append("\n")
         }
+
+        buffer.append("Desc: ").append(info.description).append("\n")
+
+        buffer.toString()
     }
 }

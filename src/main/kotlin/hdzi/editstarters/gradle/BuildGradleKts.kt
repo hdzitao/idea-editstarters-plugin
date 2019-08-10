@@ -19,12 +19,12 @@ import org.jetbrains.kotlin.psi.*
  * Created by taojinhou on 2019/1/17.
  */
 class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectFile<KtBlockExpression>(), GradleSyntax {
-    override fun getOrCreateDependenciesTag(): KtBlockExpression = getOrCreateTopBlock("dependencies")
+    override fun getOrCreateDependenciesTag(): KtBlockExpression = "dependencies".getOrCreateTopBlock()
 
     override fun findAllDependencies(dependenciesTag: KtBlockExpression): Sequence<ProjectDependency> =
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, KtCallExpression::class.java).asSequence()
             .map {
-                val (groupId, artifactId) = getCallGroupName(it)
+                val (groupId, artifactId) = it.getCallGroupName()
                 ProjectDependency(groupId, artifactId, it)
             }
 
@@ -34,12 +34,12 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
     }
 
     override fun getOrCreateBomsTag(): KtBlockExpression =
-        getOrCreateBlock(getOrCreateTopBlock("dependencyManagement"), "imports")
+        "dependencyManagement".getOrCreateTopBlock().getOrCreateBlock("imports")
 
     override fun findAllBoms(bomsTag: KtBlockExpression): Sequence<ProjectBom> =
-        findAllCallExpression(bomsTag, "mavenBom").asSequence()
+        bomsTag.findAllCallExpression("mavenBom").asSequence()
             .map {
-                val (groupId, artifactId) = getCallGroupNameByFirstParam(it)
+                val (groupId, artifactId) = it.getCallGroupNameByFirstParam()
                 ProjectBom(groupId, artifactId)
             }
 
@@ -48,83 +48,81 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
         bomsTag.addExpression("$instantiation(\"$point\")")
     }
 
-    override fun getOrCreateRepositoriesTag(): KtBlockExpression = getOrCreateTopBlock("repositories")
+    override fun getOrCreateRepositoriesTag(): KtBlockExpression = "repositories".getOrCreateTopBlock()
 
     override fun findAllRepositories(repositoriesTag: KtBlockExpression): Sequence<ProjectRepository> =
-        findAllCallExpression(repositoriesTag, "maven").asSequence()
-            .map { ProjectRepository(getCallFirstParam(it) ?: "") }
+        repositoriesTag.findAllCallExpression("maven").asSequence()
+            .map { ProjectRepository(it.getCallFirstParam() ?: "") }
 
     override fun createRepositoryTag(repositoriesTag: KtBlockExpression, repository: InitializrRepository) {
         val (instantiation, point) = repositoryInstruction(repository)
         repositoriesTag.addExpression("$instantiation(\"$point\")")
     }
 
-    override fun repositoryInstruction(repository: InitializrRepository) =
-        GradleInstruction("maven", repository.url!!)
+    override fun repositoryInstruction(repository: InitializrRepository) = GradleInstruction("maven", repository.url!!)
 
     private val factory = KtPsiFactory(project)
 
-    private fun getOrCreateTopBlock(name: String): KtBlockExpression {
-        val regex = callNameRegex(name)
+    private fun String.getOrCreateTopBlock(): KtBlockExpression {
+        val regex = callNameRegex()
         val initializer = PsiTreeUtil.findChildrenOfAnyType(buildFile, KtScriptInitializer::class.java).find {
             regex.find(it.text) != null
         }
 
         return (if (initializer == null) {
-            buildFile.addExpression("$name {\n}") as KtCallExpression
+            buildFile.addExpression("$this {\n}") as KtCallExpression
         } else {
             PsiTreeUtil.findChildOfType(initializer, KtCallExpression::class.java)
         }!!.lambdaArguments[0].getArgumentExpression() as KtLambdaExpression).bodyExpression!!
     }
 
-    private fun getOrCreateBlock(element: PsiElement, name: String): KtBlockExpression {
-        var block = findCallExpression(element, name)
+    private fun PsiElement.getOrCreateBlock(name: String): KtBlockExpression {
+        var block = findCallExpression(name)
         if (block == null) {
-            block = element.addExpression("$name {\n}") as KtCallExpression
+            block = addExpression("$name {\n}") as KtCallExpression
         }
 
         return (block.lambdaArguments[0].getArgumentExpression() as KtLambdaExpression).bodyExpression!!
     }
 
-    private fun findCallExpression(element: PsiElement, name: String): KtCallExpression? {
-        val regex = callNameRegex(name)
-        return PsiTreeUtil.getChildrenOfTypeAsList(element, KtCallExpression::class.java)
+    private fun PsiElement.findCallExpression(name: String): KtCallExpression? {
+        val regex = name.callNameRegex()
+        return PsiTreeUtil.getChildrenOfTypeAsList(this, KtCallExpression::class.java)
             .find { regex.find(it.text) != null }
     }
 
-    private fun findAllCallExpression(element: PsiElement, name: String): List<KtCallExpression> {
-        val regex = callNameRegex(name)
-        val blocks = PsiTreeUtil.getChildrenOfTypeAsList(element, KtCallExpression::class.java)
+    private fun PsiElement.findAllCallExpression(name: String): List<KtCallExpression> {
+        val regex = name.callNameRegex()
+        val blocks = PsiTreeUtil.getChildrenOfTypeAsList(this, KtCallExpression::class.java)
         return ContainerUtil.findAll(blocks) { regex.find(it.text) != null }
     }
 
-    private fun callNameRegex(name: String) = "^$name\\W".toRegex()
+    private fun String.callNameRegex() = "^$this\\W".toRegex()
 
-    private fun getCallFirstParam(method: KtCallExpression?): String? {
-        val originText = method?.valueArguments?.get(0)?.getArgumentExpression()?.text
-        return trimText(originText)
-    }
+    private fun KtCallExpression.getCallFirstParam(): String? =
+        this.valueArguments[0]?.getArgumentExpression()?.text?.trimText()
 
-    private fun getCallGroupNameByFirstParam(method: KtCallExpression): Pair<String, String> {
-        return splitGroupName(getCallFirstParam(method) ?: "")
-    }
 
-    private fun getCallGroupName(method: KtCallExpression): Pair<String, String> {
-        val namedArguments = method.valueArguments.associateBy(
-            { trimText(it.getArgumentName()?.text) },
-            { trimText(it.getArgumentExpression()?.text) })
+    private fun KtCallExpression.getCallGroupNameByFirstParam(): Pair<String, String> =
+        splitGroupName(getCallFirstParam() ?: "")
+
+
+    private fun KtCallExpression.getCallGroupName(): Pair<String, String> {
+        val namedArguments = this.valueArguments.associateBy(
+            { it.getArgumentName()?.text?.trimText() },
+            { it.getArgumentExpression()?.text?.trimText() })
             .filter { it.key != null }
 
         return if (namedArguments.isEmpty()) {
-            getCallGroupNameByFirstParam(method)
+            getCallGroupNameByFirstParam()
         } else {
             splitGroupName(namedArguments)
         }
     }
 
-    private fun trimText(originText: String?) = originText?.trim('"')
+    private fun String.trimText() = this.trim('"')
 
-    private fun PsiElement.addExpression(text: String) =
+    private fun PsiElement.addExpression(text: String): PsiElement =
         add(factory.createExpression(text)).apply {
             // 是否要加换行符
             if (prevSibling != null && prevSibling.text.isNotBlank()) {
