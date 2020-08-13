@@ -7,6 +7,7 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
 import hdzi.editstarters.bean.project.ProjectDependency
 import hdzi.editstarters.springboot.SpringBootEditor
+import hdzi.editstarters.ui.ShowErrorException
 import org.gradle.tooling.model.idea.IdeaProject
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
 import org.jetbrains.kotlin.psi.KtFile
@@ -27,7 +28,7 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
                 BuildGradle(context.getData(DataKeys.PROJECT)!!, psiFile as GroovyFile)
             GradleConstants.KOTLIN_DSL_SCRIPT_NAME ->
                 BuildGradleKts(context.getData(DataKeys.PROJECT)!!, psiFile as KtFile)
-            else -> throw Exception("Not support extension!")
+            else -> throw ShowErrorException("Not support extension!")
         }
     },
     {
@@ -49,5 +50,6 @@ class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
                             ProjectDependency(moduleVersion.group, moduleVersion.name, moduleVersion.version)
                         }
                 }
-            }, "Load Gradle Project", false, project)
+            }, "Load Gradle Project", false, project
+        )
     })

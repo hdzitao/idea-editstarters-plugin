@@ -8,6 +8,7 @@ import hdzi.editstarters.EditStarters
 import hdzi.editstarters.bean.project.ProjectDependency
 import hdzi.editstarters.ui.EditStartersDialog
 import hdzi.editstarters.ui.InitializrUrlDialog
+import hdzi.editstarters.ui.ShowErrorException
 
 /**
  * 编辑器
@@ -38,7 +39,7 @@ abstract class SpringBootEditor(
                 initSpringInitializr(dialog.url!!)
                 EditStartersDialog(this).show()
             }
-        } else throw Exception("Not a Spring Boot Project!")
+        } else throw ShowErrorException("Not a Spring Boot Project!")
     }
 
     var springInitializr: SpringInitializr? = null

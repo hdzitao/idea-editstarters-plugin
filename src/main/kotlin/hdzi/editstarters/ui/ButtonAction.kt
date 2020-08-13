@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.ui.Messages
+import hdzi.editstarters.ui.ShowErrorException
 
 
 abstract class ButtonAction : AnAction() {
@@ -12,12 +13,9 @@ abstract class ButtonAction : AnAction() {
             invoke(e)
         } catch (ex: Exception) {
             Messages.showErrorDialog(
-                """
-                Please check the network connection and try again.
-                If it fails again, please contact the author.
-                Details:
-                ${if (ex.javaClass === Exception::class.java) ex.message else ex}
-            """.trimIndent(),
+                "Please check the network and try again. " +
+                        "If it fails again, please contact the author. Details:\n" +
+                        if (ex is ShowErrorException) ex.error else ex,
                 "Edit Starters Error"
             )
         }

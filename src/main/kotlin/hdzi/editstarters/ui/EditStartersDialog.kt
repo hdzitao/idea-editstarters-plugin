@@ -141,20 +141,20 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
 
     private fun StarterInfo.getStarterInfoToolTipText(): String =
         toolTipTextCache.computeIfAbsent(this) { info ->
-        val buffer = StringBuilder()
-        if (info.groupId != null) {
-            buffer.append("GroupId: ").append(info.groupId).append("\n")
-                .append("ArtifactId: ").append(info.artifactId).append("\n")
-                .append("Scope: ").append(info.scope).append("\n")
-            if (info.version != null) {
-                buffer.append("Version: ").append(info.version).append("\n")
+            val buffer = StringBuilder()
+            if (info.groupId != null) {
+                buffer.append("GroupId: ").append(info.groupId).append("\n")
+                    .append("ArtifactId: ").append(info.artifactId).append("\n")
+                    .append("Scope: ").append(info.scope).append("\n")
+                if (info.version != null) {
+                    buffer.append("Version: ").append(info.version).append("\n")
+                }
+            } else if (info.versionRange != null) {
+                buffer.append("VersionRange: ").append(info.versionRange).append("\n")
             }
-        } else if (info.versionRange != null) {
-            buffer.append("VersionRange: ").append(info.versionRange).append("\n")
+
+            buffer.append("Desc: ").append(info.description).append("\n")
+
+            buffer.toString()
         }
-
-        buffer.append("Desc: ").append(info.description).append("\n")
-
-        buffer.toString()
-    }
 }

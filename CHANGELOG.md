@@ -1,5 +1,8 @@
 # Change Log
 
+## v2.2.1
+* 2020/8/13 update error message
+
 ## v2.2
 * 2019/2/20 Convert all code to Kotlin
 * 2019/3/5  support idea version since 181.*

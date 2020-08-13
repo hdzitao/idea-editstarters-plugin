@@ -12,6 +12,7 @@ class StarterInfo : Dependency {
     var name: String? = null
     var description: String? = null
     var versionRange: String? = null
+
     // 坐标信息
     override var groupId: String? = null
     override var artifactId: String? = null

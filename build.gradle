@@ -33,8 +33,7 @@ patchPluginXml {
     
     changeNotes """
 <ul>
-<li>2019/2/20 Convert all code to Kotlin</li>
-<li>2019/3/5  support idea version since 181.*</li>
+<li>* 2020/8/13 update error message</li>
 </ul>
 <a href="https://github.com/Hdzi/idea-editstarters-plugin/blob/2.x/CHANGELOG.md">All Changes</a>
       """

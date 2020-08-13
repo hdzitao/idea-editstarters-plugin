@@ -7,6 +7,7 @@ import hdzi.editstarters.bean.StarterInfo
 import hdzi.editstarters.bean.initializr.InitializrResponse
 import hdzi.editstarters.bean.initializr.InitializrVersion
 import hdzi.editstarters.bean.project.ProjectDependency
+import hdzi.editstarters.ui.ShowErrorException
 
 /**
  * Created by taojinhou on 2018/12/21.
@@ -25,6 +26,15 @@ class SpringInitializr(url: String, currentVersion: String) {
         val baseInfoJSON = HttpRequests.request(url).accept("application/json").connect {
             this.gson.fromJson(it.readString(null), JsonObject::class.java)
         }
+        this.version = this.gson.fromJson(baseInfoJSON.getAsJsonObject("bootVersion"), InitializrVersion::class.java)
+        // 检查版本
+        val versions = this.version.values?.map { it.id }
+        if (versions == null || versions.none { it == currentVersion }) {
+            throw ShowErrorException(
+                "Unsupported version: ${currentVersion}. Supported versions:\n" +
+                        versions!!.joinToString("\n")
+            )
+        }
 
         parseSpringBootModules(baseInfoJSON)
 
@@ -34,8 +44,6 @@ class SpringInitializr(url: String, currentVersion: String) {
         }
 
         parseDependencies(depsJSON)
-
-        this.version = this.gson.fromJson(baseInfoJSON.getAsJsonObject("bootVersion"), InitializrVersion::class.java)
     }
 
     fun addExistsStarter(depend: ProjectDependency) {
