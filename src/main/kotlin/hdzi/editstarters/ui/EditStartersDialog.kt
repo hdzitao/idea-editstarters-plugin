@@ -1,6 +1,6 @@
 package hdzi.editstarters.ui
 
-import com.intellij.openapi.actionSystem.DataKeys
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.ui.CollectionComboBoxModel
@@ -47,7 +47,7 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
 
         // ok按钮
         this.buttonOK.addActionListener {
-            WriteCommandAction.runWriteCommandAction(springBoot.context.getData<Project>(DataKeys.PROJECT)) {
+            WriteCommandAction.runWriteCommandAction(springBoot.context.getData<Project>(CommonDataKeys.PROJECT)) {
                 springBoot.addStarters(this.addStarters)
                 springBoot.removeStarters(this.removeStarters)
             }

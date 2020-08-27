@@ -2,7 +2,7 @@ package hdzi.editstarters.ui.dialog
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.actionSystem.DataKeys
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.ui.Messages
 import hdzi.editstarters.ui.ShowErrorException
 
@@ -22,7 +22,7 @@ abstract class ButtonAction : AnAction() {
     }
 
     override fun update(e: AnActionEvent) {
-        val name = e.getData(DataKeys.PSI_FILE)?.name
+        val name = e.getData(CommonDataKeys.PSI_FILE)?.name
 
         e.presentation.isEnabled = isMatchFile(name)
     }

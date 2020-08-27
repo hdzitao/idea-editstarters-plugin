@@ -1,7 +1,7 @@
 package hdzi.editstarters.gradle
 
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
@@ -22,18 +22,18 @@ import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
 class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
     context,
     {
-        val psiFile = context.getData(DataKeys.PSI_FILE)!!
+        val psiFile = context.getData(CommonDataKeys.PSI_FILE)!!
         when (psiFile.name) {
             GradleConstants.DEFAULT_SCRIPT_NAME ->
-                BuildGradle(context.getData(DataKeys.PROJECT)!!, psiFile as GroovyFile)
+                BuildGradle(context.getData(CommonDataKeys.PROJECT)!!, psiFile as GroovyFile)
             GradleConstants.KOTLIN_DSL_SCRIPT_NAME ->
-                BuildGradleKts(context.getData(DataKeys.PROJECT)!!, psiFile as KtFile)
+                BuildGradleKts(context.getData(CommonDataKeys.PROJECT)!!, psiFile as KtFile)
             else -> throw ShowErrorException("Not support extension!")
         }
     },
     {
-        val project = context.getData(DataKeys.PROJECT)!!
-        val basePath = context.getData(DataKeys.VIRTUAL_FILE)!!.parent!!.path
+        val project = context.getData(CommonDataKeys.PROJECT)!!
+        val basePath = context.getData(CommonDataKeys.VIRTUAL_FILE)!!.parent!!.path
         val setting: GradleExecutionSettings =
             ExternalSystemApiUtil.getExecutionSettings(project, basePath, GradleConstants.SYSTEM_ID)
 

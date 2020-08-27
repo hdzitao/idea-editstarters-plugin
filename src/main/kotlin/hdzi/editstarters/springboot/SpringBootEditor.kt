@@ -1,7 +1,7 @@
 package hdzi.editstarters.springboot
 
+import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.DataContext
-import com.intellij.openapi.actionSystem.DataKeys
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
 import hdzi.editstarters.EditStarters
@@ -62,6 +62,6 @@ abstract class SpringBootEditor(
             existsDependencyDB.values.forEach { dep ->
                 this.springInitializr!!.addExistsStarter(dep)
             }
-        }, "Load $url", false, context.getData(DataKeys.PROJECT))
+        }, "Load $url", false, context.getData(CommonDataKeys.PROJECT))
     }
 }
