@@ -1,8 +1,10 @@
 # Change Log
 
 ## 2.3
-* 2020/9/29 Fix a big bug. All previous versions are invalid
-* 2020/9/29 Fix github url
+* 修复maven添加bom时dependencyManagement和dependencies标签弄反的错误
+* 修复新版本中依赖描述不换行的错误，修改错误提示模板
+* 添加对gradle kotlin dsl中maven标签新语法的支持
+* 修改boot版本是否支持的逻辑：按boot三位数字版本号请求，只要正常返回即认为是支持版本
 
 ## v2.2.1
 * 2020/8/13 update error message
