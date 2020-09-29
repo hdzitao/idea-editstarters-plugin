@@ -1,5 +1,9 @@
 # Change Log
 
+## 2.3
+* 2020/9/29 Fix a big bug. All previous versions are invalid
+* 2020/9/29 Fix github url
+
 ## v2.2.1
 * 2020/8/13 update error message
 
