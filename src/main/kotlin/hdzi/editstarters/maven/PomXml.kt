@@ -37,7 +37,7 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
     }
 
     override fun getOrCreateBomsTag(): XmlTag =
-        this.rootTag.getOrCreateXmlTag("dependencies").getOrCreateXmlTag("dependencyManagement")
+        this.rootTag.getOrCreateXmlTag("dependencyManagement").getOrCreateXmlTag("dependencies")
 
 
     override fun findAllBoms(bomsTag: XmlTag): Sequence<ProjectBom> =
