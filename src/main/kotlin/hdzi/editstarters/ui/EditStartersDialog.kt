@@ -37,8 +37,8 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
 
         // boot版本选框
         this.versionComboBox.model = CollectionComboBoxModel(
-            initializr.version.values!!.map { it.name },
-            springBoot.currentVersion
+            initializr.version.values!!.map { it.id },
+            initializr.currentVersionID
         )
         this.versionComboBox.isEnabled = false
 

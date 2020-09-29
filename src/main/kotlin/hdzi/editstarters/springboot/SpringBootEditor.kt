@@ -44,8 +44,6 @@ abstract class SpringBootEditor(
 
     var springInitializr: SpringInitializr? = null
 
-    val currentVersion: String? = springbootDependency?.version
-
     /**
      * 判断是否是spring boot项目
      */
@@ -58,10 +56,10 @@ abstract class SpringBootEditor(
         val progressManager = ProgressManager.getInstance()
         progressManager.runProcessWithProgressSynchronously(ThrowableComputable<Unit, Exception> {
             progressManager.progressIndicator.isIndeterminate = true
-            springInitializr = SpringInitializr(url, currentVersion!!)
+            springInitializr = SpringInitializr(url, springbootDependency!!.version!!)
             existsDependencyDB.values.forEach { dep ->
                 this.springInitializr!!.addExistsStarter(dep)
             }
-        }, "Load $url", false, context.getData(CommonDataKeys.PROJECT))
+        }, "Loading $url", false, context.getData(CommonDataKeys.PROJECT))
     }
 }

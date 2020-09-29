@@ -12,7 +12,7 @@ import hdzi.editstarters.ui.ShowErrorException
 /**
  * Created by taojinhou on 2018/12/21.
  */
-class SpringInitializr(url: String, currentVersion: String) {
+class SpringInitializr(url: String, bootVersion: String) {
     val modulesMap = linkedMapOf<String, List<StarterInfo>>()
     val searchDB = linkedMapOf<String, StarterInfo>()
     private val idsMap = hashMapOf<String, StarterInfo>()
@@ -20,6 +20,7 @@ class SpringInitializr(url: String, currentVersion: String) {
     private val gson = Gson()
     var version: InitializrVersion
     val existStarters = linkedSetOf<StarterInfo>()
+    val currentVersionID: String
 
     init {
         // 请求initurl
@@ -27,20 +28,18 @@ class SpringInitializr(url: String, currentVersion: String) {
             this.gson.fromJson(it.readString(null), JsonObject::class.java)
         }
         this.version = this.gson.fromJson(baseInfoJSON.getAsJsonObject("bootVersion"), InitializrVersion::class.java)
-        // 检查版本
-        val versions = this.version.values?.map { it.id }
-        if (versions == null || versions.none { it == currentVersion }) {
-            throw ShowErrorException(
-                "Unsupported version: ${currentVersion}. Supported versions:\n" +
-                        versions!!.joinToString("\n")
-            )
-        }
+        this.currentVersionID = bootVersion.versionNum()
 
         parseSpringBootModules(baseInfoJSON)
 
-        val dependenciesUrl = parseDependenciesUrl(baseInfoJSON, currentVersion)
+        val dependenciesUrl = parseDependenciesUrl(baseInfoJSON, this.currentVersionID)
         val depsJSON = HttpRequests.request(dependenciesUrl).connect {
-            this.gson.fromJson(it.readString(null), JsonObject::class.java)
+            val res = it.readString(null)
+            // 检查版本
+            if (res.isEmpty()) {
+                throw ShowErrorException("Unsupported version: ${currentVersionID}, check the site($url) please.")
+            }
+            this.gson.fromJson(res, JsonObject::class.java)
         }
 
         parseDependencies(depsJSON)
@@ -104,4 +103,6 @@ class SpringInitializr(url: String, currentVersion: String) {
             this.anchorsMap[starterInfo.point] = starterInfo
         }
     }
+
+    private fun String.versionNum() = this.replace("""^(\d+\.\d+\.\d+).*$""".toRegex(), "$1")
 }

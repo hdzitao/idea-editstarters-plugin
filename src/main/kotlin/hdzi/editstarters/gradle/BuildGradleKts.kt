@@ -52,11 +52,17 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
 
     override fun findAllRepositories(repositoriesTag: KtBlockExpression): Sequence<ProjectRepository> =
         repositoriesTag.findAllCallExpression("maven").asSequence()
-            .map { ProjectRepository(it.getCallFirstParam() ?: "") }
+            .map {
+                var url = it.getCallFirstParam() ?: ""
+                if (url.startsWith("{")) { // 传递的是个代码块
+                    url = url.replace("""^.*\s+url\s*=\s*uri\("([^"]+)"\).*$""".toRegex(), "$1")
+                }
+                ProjectRepository(url)
+            }
 
     override fun createRepositoryTag(repositoriesTag: KtBlockExpression, repository: InitializrRepository) {
         val (instantiation, point) = repositoryInstruction(repository)
-        repositoriesTag.addExpression("$instantiation(\"$point\")")
+        repositoriesTag.addExpression("$instantiation { url = uri(\"$point\") }")
     }
 
     override fun repositoryInstruction(repository: InitializrRepository) = GradleInstruction("maven", repository.url!!)

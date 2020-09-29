@@ -13,8 +13,7 @@ abstract class ButtonAction : AnAction() {
             invoke(e)
         } catch (ex: Exception) {
             Messages.showErrorDialog(
-                "Please check the network and try again. " +
-                        "If it fails again, please contact the author. Details:\n" +
+                "There are some errors, please try again. If it fails again, please contact the author. Details:\n" +
                         if (ex is ShowErrorException) ex.error else ex,
                 "Edit Starters Error"
             )
