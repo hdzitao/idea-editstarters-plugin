@@ -35,6 +35,6 @@ patchPluginXml {
 <ul>
 <li>* 2020/8/13 update error message</li>
 </ul>
-<a href="https://github.com/Hdzi/idea-editstarters-plugin/blob/2.x/CHANGELOG.md">All Changes</a>
+<a href="https://github.com/hdzitao/idea-editstarters-plugin/blob/2.x/CHANGELOG.md">All Changes</a>
       """
 }

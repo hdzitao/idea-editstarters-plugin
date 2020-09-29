@@ -2,7 +2,7 @@
 
 Edit Spring Boot Starters just like sts and vscode spring boot plugin.
 
-You can download [here](https://github.com/Hdzi/idea-editstarters-plugin/releases).
+You can download [here](https://github.com/hdzitao/idea-editstarters-plugin/releases).
 
 ## With Maven
 

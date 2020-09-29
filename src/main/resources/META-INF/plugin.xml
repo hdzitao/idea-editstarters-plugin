@@ -1,11 +1,11 @@
 <idea-plugin>
     <id>hdzi.idea-editstarters-plugin</id>
     <name>EditStarters</name>
-    <vendor email="taojinhou@qq.com" url="http://github.com/Hdzi">Hdzi</vendor>
+    <vendor email="taojinhou@qq.com" url="http://github.com/hdzitao">HdziTao</vendor>
 
     <description><![CDATA[
     <p>This plugin provides the ability to modify Spring Boot Starters.</p>
-    <p>If the latest version is reviewing, you can download it on <a href="https://github.com/Hdzi/idea-editstarters-plugin/releases">Github</a></p>
+    <p>If the latest version is reviewing, you can download it on <a href="https://github.com/hdzitao/idea-editstarters-plugin/releases">Github</a></p>
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
@@ -13,8 +13,10 @@
     <!-- uncomment to enable plugin in all products
     <depends>com.intellij.modules.lang</depends>
     -->
+    <depends>com.intellij.modules.platform</depends>
     <depends>org.jetbrains.idea.maven</depends>
     <depends>org.jetbrains.plugins.gradle</depends>
+    <depends>org.intellij.groovy</depends>
     <depends>org.jetbrains.kotlin</depends>
 
     <extensions defaultExtensionNs="com.intellij">
@@ -24,11 +26,11 @@
     <actions>
         <!-- Add your actions here -->
         <action id="EditStarters.MavenButton" class="hdzi.editstarters.ui.MavenButtonAction" text="Edit Starters"
-                description="edit maven spring boot starters" icon="/icons/button.png">
+                description="Edit maven spring boot starters" icon="/icons/button.png">
             <add-to-group group-id="GenerateGroup" anchor="first"/>
         </action>
         <action id="EditStarters.GradleButton" class="hdzi.editstarters.ui.GradleButtonAction" text="Edit Starters"
-                description="edit gradle spring boot starters" icon="/icons/button.png">
+                description="Edit gradle spring boot starters" icon="/icons/button.png">
             <add-to-group group-id="GenerateGroup" anchor="first"/>
         </action>
     </actions>
