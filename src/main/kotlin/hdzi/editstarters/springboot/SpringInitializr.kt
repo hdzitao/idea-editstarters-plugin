@@ -33,16 +33,14 @@ class SpringInitializr(url: String, bootVersion: String) {
         parseSpringBootModules(baseInfoJSON)
 
         val dependenciesUrl = parseDependenciesUrl(baseInfoJSON, this.currentVersionID)
-        val depsJSON = HttpRequests.request(dependenciesUrl).connect {
-            val res = it.readString(null)
-            // 检查版本
-            if (res.isEmpty()) {
-                throw ShowErrorException("Unsupported version: ${currentVersionID}, check the site($url) please.")
+        try {
+            val depsJSON = HttpRequests.request(dependenciesUrl).connect {
+                this.gson.fromJson(it.readString(null), JsonObject::class.java)
             }
-            this.gson.fromJson(res, JsonObject::class.java)
+            parseDependencies(depsJSON)
+        } catch (ignore: HttpRequests.HttpStatusException) {
+            throw ShowErrorException("Request failure! $currentVersionID may not be supported, please try again.")
         }
-
-        parseDependencies(depsJSON)
     }
 
     fun addExistsStarter(depend: ProjectDependency) {
