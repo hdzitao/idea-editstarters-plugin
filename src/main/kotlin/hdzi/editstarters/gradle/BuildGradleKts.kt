@@ -53,11 +53,24 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
     override fun findAllRepositories(repositoriesTag: KtBlockExpression): Sequence<ProjectRepository> =
         repositoriesTag.findAllCallExpression("maven").asSequence()
             .map {
-                var url = it.getCallFirstParam() ?: ""
-                if (url.startsWith("{")) { // 传递的是个代码块
-                    url = url.replace("""^.*\s+url\s*=\s*uri\("([^"]+)"\).*$""".toRegex(), "$1")
-                }
-                ProjectRepository(url)
+                val arguments = it.valueArguments
+                val url = if (arguments.isNotEmpty()) {
+                    when (val first = arguments.first()) {
+                        is KtLambdaArgument -> {
+                            val statements = first.getLambdaExpression()?.bodyExpression?.statements
+                            val urlStatement = statements?.find { statement ->
+                                statement is KtBinaryExpression
+                                        && statement.left?.text == "url"
+                            }
+                            ((urlStatement as KtBinaryExpression).right as? KtCallExpression)?.getCallFirstParam()
+                        }
+                        is KtValueArgument -> {
+                            it.getCallFirstParam()
+                        }
+                        else -> null
+                    }
+                } else null
+                ProjectRepository(url ?: "")
             }
 
     override fun createRepositoryTag(repositoriesTag: KtBlockExpression, repository: InitializrRepository) {
