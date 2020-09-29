@@ -39,7 +39,7 @@ class SpringInitializr(url: String, bootVersion: String) {
             }
             parseDependencies(depsJSON)
         } catch (ignore: HttpRequests.HttpStatusException) {
-            throw ShowErrorException("Request failure! $currentVersionID may not be supported, please try again.")
+            throw ShowErrorException("Request failure! v$currentVersionID may not be supported, please try again.")
         }
     }
 

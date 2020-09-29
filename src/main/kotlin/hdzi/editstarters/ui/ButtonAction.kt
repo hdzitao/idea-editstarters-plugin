@@ -13,7 +13,7 @@ abstract class ButtonAction : AnAction() {
             invoke(e)
         } catch (ex: Exception) {
             Messages.showErrorDialog(
-                "There are some errors. Details:\n${if (ex is ShowErrorException) ex.error else ex}",
+                if (ex is ShowErrorException) ex.error else "${ex.javaClass.name}: ${ex.message}",
                 "Edit Starters Error"
             )
         }
