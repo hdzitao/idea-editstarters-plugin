@@ -7,6 +7,7 @@ import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.CollectionListModel
 import hdzi.editstarters.bean.StarterInfo
 import hdzi.editstarters.springboot.SpringBootEditor
+import org.apache.commons.lang.WordUtils
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
@@ -143,17 +144,17 @@ class EditStartersDialog(springBoot: SpringBootEditor) {
         toolTipTextCache.computeIfAbsent(this) { info ->
             val buffer = StringBuilder()
             if (info.groupId != null) {
-                buffer.append("GroupId: ").append(info.groupId).append("\n")
-                    .append("ArtifactId: ").append(info.artifactId).append("\n")
-                    .append("Scope: ").append(info.scope).append("\n")
+                buffer.append("GroupId: ").append(info.groupId).append("<br/>")
+                    .append("ArtifactId: ").append(info.artifactId).append("<br/>")
+                    .append("Scope: ").append(info.scope).append("<br/>")
                 if (info.version != null) {
-                    buffer.append("Version: ").append(info.version).append("\n")
+                    buffer.append("Version: ").append(info.version).append("<br/>")
                 }
             } else if (info.versionRange != null) {
-                buffer.append("VersionRange: ").append(info.versionRange).append("\n")
+                buffer.append("VersionRange: ").append(info.versionRange).append("<br/>")
             }
 
-            buffer.append("Desc: ").append(info.description).append("\n")
+            buffer.append("<br/>").append(WordUtils.wrap(info.description, 50, "<br/>", false))
 
             buffer.toString()
         }
