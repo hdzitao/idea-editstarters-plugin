@@ -2,10 +2,10 @@ package hdzi.editstarters.buildsystem.maven
 
 import com.intellij.psi.xml.XmlFile
 import com.intellij.psi.xml.XmlTag
+import hdzi.editstarters.buildsystem.BuildBom
+import hdzi.editstarters.buildsystem.BuildDependency
 import hdzi.editstarters.buildsystem.BuildFile
-import hdzi.editstarters.buildsystem.ProjectBom
-import hdzi.editstarters.buildsystem.ProjectDependency
-import hdzi.editstarters.buildsystem.ProjectRepository
+import hdzi.editstarters.buildsystem.BuildRepository
 import hdzi.editstarters.springboot.initializr.InitializrBom
 import hdzi.editstarters.springboot.initializr.InitializrRepository
 import hdzi.editstarters.springboot.initializr.StarterInfo
@@ -22,9 +22,9 @@ class PomXml(file: XmlFile) : BuildFile<XmlTag>() {
 
     override fun getOrCreateDependenciesTag(): XmlTag = this.rootTag.getOrCreateXmlTag("dependencies")
 
-    override fun findAllDependencies(dependenciesTag: XmlTag): Sequence<ProjectDependency> =
+    override fun findAllDependencies(dependenciesTag: XmlTag): Sequence<BuildDependency> =
         dependenciesTag.findSubTags("dependency").asSequence()
-            .map { ProjectDependency(it.getTagText("groupId"), it.getTagText("artifactId"), it) }
+            .map { BuildDependency(it.getTagText("groupId"), it.getTagText("artifactId"), it) }
 
     override fun createDependencyTag(dependenciesTag: XmlTag, info: StarterInfo) {
         val dependency = dependenciesTag.createSubTag("dependency")
@@ -40,9 +40,9 @@ class PomXml(file: XmlFile) : BuildFile<XmlTag>() {
         this.rootTag.getOrCreateXmlTag("dependencyManagement").getOrCreateXmlTag("dependencies")
 
 
-    override fun findAllBoms(bomsTag: XmlTag): Sequence<ProjectBom> =
+    override fun findAllBoms(bomsTag: XmlTag): Sequence<BuildBom> =
         bomsTag.findSubTags("dependency").asSequence()
-            .map { ProjectBom(it.getTagText("groupId"), it.getTagText("artifactId")) }
+            .map { BuildBom(it.getTagText("groupId"), it.getTagText("artifactId")) }
 
     override fun createBomTag(bomsTag: XmlTag, bom: InitializrBom) {
         val dependencyTag = bomsTag.createSubTag("dependency")
@@ -55,9 +55,9 @@ class PomXml(file: XmlFile) : BuildFile<XmlTag>() {
 
     override fun getOrCreateRepositoriesTag(): XmlTag = this.rootTag.getOrCreateXmlTag("repositories")
 
-    override fun findAllRepositories(repositoriesTag: XmlTag): Sequence<ProjectRepository> =
+    override fun findAllRepositories(repositoriesTag: XmlTag): Sequence<BuildRepository> =
         repositoriesTag.findSubTags("repository").asSequence()
-            .map { ProjectRepository(it.getTagText("url")) }
+            .map { BuildRepository(it.getTagText("url")) }
 
     override fun createRepositoryTag(repositoriesTag: XmlTag, repository: InitializrRepository) {
         val repositoryTag = repositoriesTag.createSubTag("repository")

@@ -9,13 +9,13 @@ import hdzi.editstarters.EditStarters
 abstract class BuildSystem(
     val context: DataContext,
     editStartersGetter: () -> EditStarters,
-    dependenciesGetter: () -> List<ProjectDependency>
+    dependenciesGetter: () -> List<BuildDependency>
 ) : EditStarters by editStartersGetter() {
-    val existsDependencyDB: Map<String, ProjectDependency> =
+    val existsDependencyDB: Map<String, BuildDependency> =
         dependenciesGetter().associateBy({ it.point }, { it })
 
     val springbootDependency =
-        existsDependencyDB[ProjectDependency("org.springframework.boot", "spring-boot").point]
+        existsDependencyDB[BuildDependency("org.springframework.boot", "spring-boot").point]
 
     /**
      * 判断是否是spring boot项目

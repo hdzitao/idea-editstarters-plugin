@@ -5,8 +5,8 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
+import hdzi.editstarters.buildsystem.BuildDependency
 import hdzi.editstarters.buildsystem.BuildSystem
-import hdzi.editstarters.buildsystem.ProjectDependency
 import hdzi.editstarters.ui.ShowErrorException
 import org.gradle.tooling.model.idea.IdeaProject
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
@@ -39,7 +39,7 @@ class GradleBuildSystem(context: DataContext) : BuildSystem(
 
         val progressManager = ProgressManager.getInstance()
         progressManager.runProcessWithProgressSynchronously(
-            ThrowableComputable<List<ProjectDependency>, Exception> {
+            ThrowableComputable<List<BuildDependency>, Exception> {
                 progressManager.progressIndicator.isIndeterminate = true
                 GradleExecutionHelper().execute(basePath, setting) { connect ->
                     val ideaModule = connect.getModel(IdeaProject::class.java).modules.getAt(0)
@@ -47,7 +47,7 @@ class GradleBuildSystem(context: DataContext) : BuildSystem(
                         .filter { it is IdeaSingleEntryLibraryDependency && it.gradleModuleVersion != null }
                         .map {
                             val moduleVersion = (it as IdeaSingleEntryLibraryDependency).gradleModuleVersion!!
-                            ProjectDependency(moduleVersion.group, moduleVersion.name, moduleVersion.version)
+                            BuildDependency(moduleVersion.group, moduleVersion.name, moduleVersion.version)
                         }
                 }
             }, "Load Gradle Project", false, project
