@@ -5,16 +5,13 @@ import hdzi.editstarters.springboot.Dependency
 /**
  * Created by taojinhou on 2018/12/21.
  */
-class StarterInfo : Dependency {
-    // 基本信息
-    var id: String? = null
-    var name: String? = null
+class StarterInfo(var id: String, var name: String) : Dependency {
     var description: String? = null
     var versionRange: String? = null
 
     // 坐标信息
-    override var groupId: String? = null
-    override var artifactId: String? = null
+    override lateinit var groupId: String
+    override lateinit var artifactId: String
     var scope: String? = null
     var version: String? = null
     var repositories = mutableSetOf<InitializrRepository>()
@@ -23,9 +20,6 @@ class StarterInfo : Dependency {
 
     val searchKey: String
         get() = "$groupId\t$artifactId\t$name\t$description".toLowerCase()
-
-    val canBeAdded: Boolean
-        get() = groupId != null && artifactId != null
 
     fun addRepository(repository: InitializrRepository?) {
         if (repository != null) {
@@ -45,10 +39,10 @@ class StarterInfo : Dependency {
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        return id.hashCode()
     }
 
     override fun toString(): String {
-        return name!!
+        return name
     }
 }

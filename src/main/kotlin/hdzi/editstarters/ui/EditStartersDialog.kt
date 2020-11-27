@@ -84,7 +84,6 @@ class EditStartersDialog(buildSystem: BuildSystem, initializr: SpringInitializr)
             override fun mouseClicked(e: MouseEvent) {
                 if (e.clickCount == 2) { // 按两下选择
                     val starterInfo = starterList.selectedValue
-                    if (!starterInfo.canBeAdded) return  // 检查一下是否允许添加
                     if (starterInfo.exist) { // 对于已存在的starter，添加就是从删除列表里删除
                         removeStarters.remove(starterInfo)
                     } else { // 对于不存在的starter，添加直接加入添加列表
@@ -142,15 +141,11 @@ class EditStartersDialog(buildSystem: BuildSystem, initializr: SpringInitializr)
     private fun StarterInfo.getStarterInfoToolTipText(): String =
         toolTipTextCache.computeIfAbsent(this) { info ->
             val buffer = StringBuilder()
-            if (info.groupId != null) {
-                buffer.append("GroupId: ").append(info.groupId).append("<br/>")
-                    .append("ArtifactId: ").append(info.artifactId).append("<br/>")
-                    .append("Scope: ").append(info.scope).append("<br/>")
-                if (info.version != null) {
-                    buffer.append("Version: ").append(info.version).append("<br/>")
-                }
-            } else if (info.versionRange != null) {
-                buffer.append("VersionRange: ").append(info.versionRange).append("<br/>")
+            buffer.append("GroupId: ").append(info.groupId).append("<br/>")
+                .append("ArtifactId: ").append(info.artifactId).append("<br/>")
+                .append("Scope: ").append(info.scope).append("<br/>")
+            if (info.version != null) {
+                buffer.append("Version: ").append(info.version).append("<br/>")
             }
 
             buffer.append("<br/>").append(WordUtils.wrap(info.description, 50, "<br/>", false))

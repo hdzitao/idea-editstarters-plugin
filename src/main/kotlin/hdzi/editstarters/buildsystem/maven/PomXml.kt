@@ -64,9 +64,9 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
         repositoryTag.addSubTagWithTextBody("id", repository.id)
         repositoryTag.addSubTagWithTextBody("name", repository.name)
         repositoryTag.addSubTagWithTextBody("url", repository.url)
-        if (repository.snapshotEnabled != null) {
+        if (repository.snapshotEnabled) {
             val snapshotsTag = repositoryTag.createSubTag("snapshots")
-            snapshotsTag.addSubTagWithTextBody("enabled", repository.snapshotEnabled!!.toString())
+            snapshotsTag.addSubTagWithTextBody("enabled", repository.snapshotEnabled.toString())
         }
     }
 
