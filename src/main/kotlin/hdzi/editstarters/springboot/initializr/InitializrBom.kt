@@ -2,9 +2,9 @@ package hdzi.editstarters.springboot.initializr
 
 import hdzi.editstarters.springboot.Bom
 
-class InitializrBom(
-    override var groupId: String,
-    override var artifactId: String,
-    var version: String,
-    var repositories: List<String>
-) : Bom
+class InitializrBom : Bom {
+    override lateinit var groupId: String
+    override lateinit var artifactId: String
+    lateinit var version: String
+    lateinit var repositories: List<String>
+}

@@ -1,15 +1,15 @@
 package hdzi.editstarters.springboot.initializr
 
-class InitializrVersion(
-    var default: String?,
-    var values: List<Value>?
-) {
+class InitializrVersion {
     class Value {
-        var id: String? = null
-        var name: String? = null
+        lateinit var id: String
+        lateinit var name: String
         override fun toString(): String {
-            return name!!
+            return name
         }
     }
+
+    lateinit var default: String
+    var values: List<Value>? = null
 }
 

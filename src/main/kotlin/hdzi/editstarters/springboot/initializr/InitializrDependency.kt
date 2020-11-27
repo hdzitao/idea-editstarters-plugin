@@ -2,11 +2,11 @@ package hdzi.editstarters.springboot.initializr
 
 import hdzi.editstarters.springboot.Dependency
 
-class InitializrDependency(
-    override var groupId: String,
-    override var artifactId: String,
-    var scope: String,
-    var version: String?,
-    var repository: String?,
-    var bom: String?
-) : Dependency
+class InitializrDependency : Dependency {
+    override lateinit var groupId: String
+    override lateinit var artifactId: String
+    lateinit var scope: String
+    var version: String? = null
+    var repository: String? = null
+    var bom: String? = null
+}

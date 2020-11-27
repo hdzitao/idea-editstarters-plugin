@@ -5,7 +5,9 @@ import hdzi.editstarters.springboot.Dependency
 /**
  * Created by taojinhou on 2018/12/21.
  */
-class StarterInfo(var id: String, var name: String) : Dependency {
+class StarterInfo : Dependency {
+    lateinit var id: String
+    lateinit var name: String
     var description: String? = null
     var versionRange: String? = null
 
@@ -14,7 +16,7 @@ class StarterInfo(var id: String, var name: String) : Dependency {
     override lateinit var artifactId: String
     var scope: String? = null
     var version: String? = null
-    var repositories = mutableSetOf<InitializrRepository>()
+    var repositories = mutableListOf<InitializrRepository>()
     var bom: InitializrBom? = null
     var exist = false
 

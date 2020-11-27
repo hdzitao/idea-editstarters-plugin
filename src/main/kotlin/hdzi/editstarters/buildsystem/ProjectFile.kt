@@ -44,7 +44,7 @@ abstract class ProjectFile<T : PsiElement> : EditStarters {
     /**
      * 添加仓库信息
      */
-    private fun addRepositories(repositories: Set<InitializrRepository>) {
+    private fun addRepositories(repositories: Collection<InitializrRepository>) {
         val repositoriesTag = getOrCreateRepositoriesTag()
         val existingRepos = findAllRepositories(repositoriesTag).map { it.point }.toSet()
         repositories.forEach {
