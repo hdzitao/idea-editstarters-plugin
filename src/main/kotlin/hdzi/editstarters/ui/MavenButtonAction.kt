@@ -1,6 +1,6 @@
 package hdzi.editstarters.ui
 
-import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.actionSystem.DataContext
 import hdzi.editstarters.buildsystem.maven.MavenBuildSystem
 import hdzi.editstarters.ui.dialog.EditStartersButtonAction
 import org.jetbrains.idea.maven.model.MavenConstants
@@ -11,7 +11,6 @@ import org.jetbrains.idea.maven.model.MavenConstants
 class MavenButtonAction : EditStartersButtonAction() {
     override fun String.isMatchFile() = this == MavenConstants.POM_XML
 
-    override fun doAction(e: AnActionEvent) {
-        MavenBuildSystem(e.dataContext).edit()
-    }
+    override fun newBuildSystem(dataContext: DataContext) = MavenBuildSystem(dataContext)
+
 }

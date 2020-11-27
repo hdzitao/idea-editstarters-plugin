@@ -2,7 +2,6 @@ package hdzi.editstarters.ui
 
 import com.intellij.openapi.ui.InputValidator
 import com.intellij.openapi.ui.Messages
-import org.apache.commons.lang.StringUtils
 
 class InitializrUrlDialog {
     private val urlVerifier = object : InputValidator {
@@ -13,21 +12,14 @@ class InitializrUrlDialog {
         override fun canClose(inputString: String) = true
     }
 
-    var url: String? = "https://start.spring.io/"
-        private set
+    private val defaultUrl = "https://start.spring.io/"
 
-    val isOK: Boolean
-        get() = StringUtils.isNotBlank(this.url)
-
-    fun show(): InitializrUrlDialog {
-        this.url = Messages.showInputDialog(
+    val url: String
+        get() = Messages.showInputDialog(
             null,
             "Spring Initializr Url",
             null,
-            this.url,
+            defaultUrl,
             urlVerifier
-        )
-
-        return this
-    }
+        ) ?: defaultUrl
 }

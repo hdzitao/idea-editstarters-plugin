@@ -5,6 +5,8 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.CollectionListModel
+import hdzi.editstarters.buildsystem.BuildSystem
+import hdzi.editstarters.springboot.initializr.SpringInitializr
 import hdzi.editstarters.springboot.initializr.StarterInfo
 import org.apache.commons.lang.WordUtils
 import java.awt.event.KeyAdapter
@@ -14,7 +16,7 @@ import java.awt.event.MouseEvent
 import java.util.*
 import javax.swing.*
 
-class EditStartersDialog(springBoot: SpringBootButtonAction) {
+class EditStartersDialog(buildSystem: BuildSystem, initializr: SpringInitializr) {
     private lateinit var root: JPanel
     private lateinit var buttonOK: JButton
     private lateinit var buttonCancel: JButton
@@ -30,8 +32,6 @@ class EditStartersDialog(springBoot: SpringBootButtonAction) {
     private val toolTipTextCache = WeakHashMap<StarterInfo, String>() // 加个缓存
 
     init {
-        val initializr = springBoot.springInitializr!!
-
         this.frame = JFrame(this.title)
         this.frame.contentPane = this.root
 
@@ -47,9 +47,9 @@ class EditStartersDialog(springBoot: SpringBootButtonAction) {
 
         // ok按钮
         this.buttonOK.addActionListener {
-            WriteCommandAction.runWriteCommandAction(springBoot.context.getData<Project>(CommonDataKeys.PROJECT)) {
-                springBoot.addStarters(this.addStarters)
-                springBoot.removeStarters(this.removeStarters)
+            WriteCommandAction.runWriteCommandAction(buildSystem.context.getData<Project>(CommonDataKeys.PROJECT)) {
+                buildSystem.addStarters(this.addStarters)
+                buildSystem.removeStarters(this.removeStarters)
             }
             this.frame.dispose()
         }
