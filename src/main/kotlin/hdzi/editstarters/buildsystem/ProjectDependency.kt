@@ -6,7 +6,7 @@ import hdzi.editstarters.springboot.Dependency
 /**
  * Created by taojinhou on 2019/1/15.
  */
-class BuildDependency private constructor(
+class ProjectDependency private constructor(
     override val groupId: String,
     override val artifactId: String,
     val version: String?,

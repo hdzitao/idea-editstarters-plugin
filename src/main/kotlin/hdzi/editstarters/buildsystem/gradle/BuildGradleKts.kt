@@ -4,10 +4,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.containers.ContainerUtil
-import hdzi.editstarters.buildsystem.BuildBom
-import hdzi.editstarters.buildsystem.BuildDependency
-import hdzi.editstarters.buildsystem.BuildFile
-import hdzi.editstarters.buildsystem.BuildRepository
+import hdzi.editstarters.buildsystem.ProjectBom
+import hdzi.editstarters.buildsystem.ProjectDependency
+import hdzi.editstarters.buildsystem.ProjectFile
+import hdzi.editstarters.buildsystem.ProjectRepository
 import hdzi.editstarters.springboot.initializr.InitializrBom
 import hdzi.editstarters.springboot.initializr.InitializrRepository
 import hdzi.editstarters.springboot.initializr.StarterInfo
@@ -18,14 +18,14 @@ import org.jetbrains.kotlin.psi.*
  *
  * Created by taojinhou on 2019/1/17.
  */
-class BuildGradleKts(project: Project, private val buildFile: KtFile) : BuildFile<KtBlockExpression>(), GradleSyntax {
+class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectFile<KtBlockExpression>(), GradleSyntax {
     override fun getOrCreateDependenciesTag(): KtBlockExpression = "dependencies".getOrCreateTopBlock()
 
-    override fun findAllDependencies(dependenciesTag: KtBlockExpression): Sequence<BuildDependency> =
+    override fun findAllDependencies(dependenciesTag: KtBlockExpression): Sequence<ProjectDependency> =
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, KtCallExpression::class.java).asSequence()
             .map {
                 val (groupId, artifactId) = it.getCallGroupName()
-                BuildDependency(groupId, artifactId, it)
+                ProjectDependency(groupId, artifactId, it)
             }
 
     override fun createDependencyTag(dependenciesTag: KtBlockExpression, info: StarterInfo) {
@@ -36,11 +36,11 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : BuildFil
     override fun getOrCreateBomsTag(): KtBlockExpression =
         "dependencyManagement".getOrCreateTopBlock().getOrCreateBlock("imports")
 
-    override fun findAllBoms(bomsTag: KtBlockExpression): Sequence<BuildBom> =
+    override fun findAllBoms(bomsTag: KtBlockExpression): Sequence<ProjectBom> =
         bomsTag.findAllCallExpression("mavenBom").asSequence()
             .map {
                 val (groupId, artifactId) = it.getCallGroupNameByFirstParam()
-                BuildBom(groupId, artifactId)
+                ProjectBom(groupId, artifactId)
             }
 
     override fun createBomTag(bomsTag: KtBlockExpression, bom: InitializrBom) {
@@ -50,7 +50,7 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : BuildFil
 
     override fun getOrCreateRepositoriesTag(): KtBlockExpression = "repositories".getOrCreateTopBlock()
 
-    override fun findAllRepositories(repositoriesTag: KtBlockExpression): Sequence<BuildRepository> =
+    override fun findAllRepositories(repositoriesTag: KtBlockExpression): Sequence<ProjectRepository> =
         repositoriesTag.findAllCallExpression("maven").asSequence()
             .map {
                 val arguments = it.valueArguments
@@ -70,7 +70,7 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : BuildFil
                         else -> null
                     }
                 } else null
-                BuildRepository(url ?: "")
+                ProjectRepository(url ?: "")
             }
 
     override fun createRepositoryTag(repositoriesTag: KtBlockExpression, repository: InitializrRepository) {

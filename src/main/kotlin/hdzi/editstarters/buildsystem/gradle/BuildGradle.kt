@@ -4,10 +4,10 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.containers.ContainerUtil
-import hdzi.editstarters.buildsystem.BuildBom
-import hdzi.editstarters.buildsystem.BuildDependency
-import hdzi.editstarters.buildsystem.BuildFile
-import hdzi.editstarters.buildsystem.BuildRepository
+import hdzi.editstarters.buildsystem.ProjectBom
+import hdzi.editstarters.buildsystem.ProjectDependency
+import hdzi.editstarters.buildsystem.ProjectFile
+import hdzi.editstarters.buildsystem.ProjectRepository
 import hdzi.editstarters.springboot.initializr.InitializrBom
 import hdzi.editstarters.springboot.initializr.InitializrRepository
 import hdzi.editstarters.springboot.initializr.StarterInfo
@@ -19,14 +19,14 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethod
 /**
  * Created by taojinhou on 2019/1/16.
  */
-class BuildGradle(project: Project, private val buildFile: GroovyFile) : BuildFile<GrClosableBlock>(), GradleSyntax {
+class BuildGradle(project: Project, private val buildFile: GroovyFile) : ProjectFile<GrClosableBlock>(), GradleSyntax {
     override fun getOrCreateDependenciesTag(): GrClosableBlock = buildFile.getOrCreateClosure("dependencies")
 
-    override fun findAllDependencies(dependenciesTag: GrClosableBlock): Sequence<BuildDependency> =
+    override fun findAllDependencies(dependenciesTag: GrClosableBlock): Sequence<ProjectDependency> =
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall::class.java).asSequence()
             .map {
                 val (groupId, artifactId) = it.getMethodGroupName()
-                BuildDependency(groupId, artifactId, it)
+                ProjectDependency(groupId, artifactId, it)
             }
 
     override fun createDependencyTag(dependenciesTag: GrClosableBlock, info: StarterInfo) {
@@ -38,11 +38,11 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : BuildFi
     override fun getOrCreateBomsTag(): GrClosableBlock =
         buildFile.getOrCreateClosure("dependencyManagement").getOrCreateClosure("imports")
 
-    override fun findAllBoms(bomsTag: GrClosableBlock): Sequence<BuildBom> =
+    override fun findAllBoms(bomsTag: GrClosableBlock): Sequence<ProjectBom> =
         bomsTag.findAllMethod("mavenBom").asSequence()
             .map {
                 val (groupId, artifactId) = it.getMethodGroupNameByFirstParam()
-                BuildBom(groupId, artifactId)
+                ProjectBom(groupId, artifactId)
             }
 
     override fun createBomTag(bomsTag: GrClosableBlock, bom: InitializrBom) {
@@ -53,9 +53,9 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : BuildFi
 
     override fun getOrCreateRepositoriesTag(): GrClosableBlock = buildFile.getOrCreateClosure("repositories")
 
-    override fun findAllRepositories(repositoriesTag: GrClosableBlock): Sequence<BuildRepository> =
+    override fun findAllRepositories(repositoriesTag: GrClosableBlock): Sequence<ProjectRepository> =
         repositoriesTag.findAllMethod("maven").asSequence()
-            .map { BuildRepository(it.closureArguments[0].findMethod("url")?.getMethodFirstParam() ?: "") }
+            .map { ProjectRepository(it.closureArguments[0].findMethod("url")?.getMethodFirstParam() ?: "") }
 
     override fun createRepositoryTag(repositoriesTag: GrClosableBlock, repository: InitializrRepository) {
         val (instantiation, point) = repositoryInstruction(repository)

@@ -6,7 +6,7 @@ import hdzi.editstarters.springboot.initializr.InitializrBom
 import hdzi.editstarters.springboot.initializr.InitializrRepository
 import hdzi.editstarters.springboot.initializr.StarterInfo
 
-abstract class BuildFile<T : PsiElement> : EditStarters {
+abstract class ProjectFile<T : PsiElement> : EditStarters {
 
     override fun removeStarters(dependencies: Collection<StarterInfo>) {
         val dependenciesTag = getOrCreateDependenciesTag()
@@ -54,19 +54,19 @@ abstract class BuildFile<T : PsiElement> : EditStarters {
 
     protected abstract fun getOrCreateDependenciesTag(): T
 
-    protected abstract fun findAllDependencies(dependenciesTag: T): Sequence<BuildDependency>
+    protected abstract fun findAllDependencies(dependenciesTag: T): Sequence<ProjectDependency>
 
     protected abstract fun createDependencyTag(dependenciesTag: T, info: StarterInfo)
 
     protected abstract fun getOrCreateBomsTag(): T
 
-    protected abstract fun findAllBoms(bomsTag: T): Sequence<BuildBom>
+    protected abstract fun findAllBoms(bomsTag: T): Sequence<ProjectBom>
 
     protected abstract fun createBomTag(bomsTag: T, bom: InitializrBom)
 
     protected abstract fun getOrCreateRepositoriesTag(): T
 
-    protected abstract fun findAllRepositories(repositoriesTag: T): Sequence<BuildRepository>
+    protected abstract fun findAllRepositories(repositoriesTag: T): Sequence<ProjectRepository>
 
     protected abstract fun createRepositoryTag(repositoriesTag: T, repository: InitializrRepository)
 }

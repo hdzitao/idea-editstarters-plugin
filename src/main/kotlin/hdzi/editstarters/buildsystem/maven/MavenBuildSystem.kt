@@ -3,8 +3,8 @@ package hdzi.editstarters.buildsystem.maven
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.psi.xml.XmlFile
-import hdzi.editstarters.buildsystem.BuildDependency
 import hdzi.editstarters.buildsystem.BuildSystem
+import hdzi.editstarters.buildsystem.ProjectDependency
 import org.jetbrains.idea.maven.utils.actions.MavenActionUtil
 
 /**
@@ -18,5 +18,5 @@ class MavenBuildSystem(context: DataContext) : BuildSystem(
     },
     {
         MavenActionUtil.getMavenProject(context)!!.dependencies
-            .map { BuildDependency(it.groupId, it.artifactId, it.version) }
+            .map { ProjectDependency(it.groupId, it.artifactId, it.version) }
     })

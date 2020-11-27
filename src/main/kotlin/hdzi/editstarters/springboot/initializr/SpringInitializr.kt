@@ -3,7 +3,7 @@ package hdzi.editstarters.springboot.initializr
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.intellij.util.io.HttpRequests
-import hdzi.editstarters.buildsystem.BuildDependency
+import hdzi.editstarters.buildsystem.ProjectDependency
 import hdzi.editstarters.ui.ShowErrorException
 
 /**
@@ -40,7 +40,7 @@ class SpringInitializr(url: String, bootVersion: String) {
         }
     }
 
-    fun addExistsStarter(depend: BuildDependency) {
+    fun addExistsStarter(depend: ProjectDependency) {
         val starterInfo = this.anchorsMap[depend.point]
         if (starterInfo != null) {
             starterInfo.exist = true
