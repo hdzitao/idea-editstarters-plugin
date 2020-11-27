@@ -1,7 +1,7 @@
 package hdzi.editstarters.ui
 
 import com.intellij.openapi.actionSystem.AnActionEvent
-import hdzi.editstarters.gradle.GradleSpringBootEditor
+import hdzi.editstarters.buildsystem.gradle.GradleSpringBootEditor
 import hdzi.editstarters.ui.dialog.ButtonAction
 import org.jetbrains.plugins.gradle.util.GradleConstants
 

@@ -1,7 +1,6 @@
-package hdzi.editstarters.bean
+package hdzi.editstarters.springboot.initializr
 
-import hdzi.editstarters.bean.initializr.InitializrBom
-import hdzi.editstarters.bean.initializr.InitializrRepository
+import hdzi.editstarters.springboot.Dependency
 
 /**
  * Created by taojinhou on 2018/12/21.

@@ -1,8 +1,8 @@
-package hdzi.editstarters.gradle
+package hdzi.editstarters.buildsystem.gradle
 
-import hdzi.editstarters.bean.StarterInfo
-import hdzi.editstarters.bean.initializr.InitializrBom
-import hdzi.editstarters.bean.initializr.InitializrRepository
+import hdzi.editstarters.springboot.initializr.InitializrBom
+import hdzi.editstarters.springboot.initializr.InitializrRepository
+import hdzi.editstarters.springboot.initializr.StarterInfo
 
 interface GradleSyntax {
     fun dependencyInstruction(info: StarterInfo): GradleInstruction {

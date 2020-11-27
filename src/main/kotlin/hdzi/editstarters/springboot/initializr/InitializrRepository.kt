@@ -1,6 +1,6 @@
-package hdzi.editstarters.bean.initializr
+package hdzi.editstarters.springboot.initializr
 
-import hdzi.editstarters.bean.Repository
+import hdzi.editstarters.springboot.Repository
 
 class InitializrRepository(
     var id: String?,

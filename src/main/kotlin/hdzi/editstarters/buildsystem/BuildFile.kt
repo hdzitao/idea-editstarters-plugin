@@ -1,14 +1,12 @@
-package hdzi.editstarters
+package hdzi.editstarters.buildsystem
 
 import com.intellij.psi.PsiElement
-import hdzi.editstarters.bean.StarterInfo
-import hdzi.editstarters.bean.initializr.InitializrBom
-import hdzi.editstarters.bean.initializr.InitializrRepository
-import hdzi.editstarters.bean.project.ProjectBom
-import hdzi.editstarters.bean.project.ProjectDependency
-import hdzi.editstarters.bean.project.ProjectRepository
+import hdzi.editstarters.EditStarters
+import hdzi.editstarters.springboot.initializr.InitializrBom
+import hdzi.editstarters.springboot.initializr.InitializrRepository
+import hdzi.editstarters.springboot.initializr.StarterInfo
 
-abstract class ProjectFile<T : PsiElement> : EditStarters {
+abstract class BuildFile<T : PsiElement> : EditStarters {
 
     override fun removeStarters(dependencies: Collection<StarterInfo>) {
         val dependenciesTag = getOrCreateDependenciesTag()
@@ -19,7 +17,7 @@ abstract class ProjectFile<T : PsiElement> : EditStarters {
         // 遍历存在的依赖，如果待删除的依赖包含它，就删除
         for (extDependency in extDependencies) {
             if (removeDependencies.contains(extDependency.point)) {
-                extDependency.element!!.delete()
+                extDependency.element?.delete()
             }
         }
     }
@@ -30,7 +28,7 @@ abstract class ProjectFile<T : PsiElement> : EditStarters {
         dependencies.forEach {
             createDependencyTag(dependenciesTag, it)
             if (it.bom != null) addBom(it.bom!!)
-            if (!it.repositories.isEmpty()) addRepositories(it.repositories)
+            if (it.repositories.isNotEmpty()) addRepositories(it.repositories)
         }
     }
 

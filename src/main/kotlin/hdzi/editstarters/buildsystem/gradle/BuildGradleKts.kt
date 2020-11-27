@@ -1,16 +1,16 @@
-package hdzi.editstarters.gradle
+package hdzi.editstarters.buildsystem.gradle
 
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.containers.ContainerUtil
-import hdzi.editstarters.ProjectFile
-import hdzi.editstarters.bean.StarterInfo
-import hdzi.editstarters.bean.initializr.InitializrBom
-import hdzi.editstarters.bean.initializr.InitializrRepository
-import hdzi.editstarters.bean.project.ProjectBom
-import hdzi.editstarters.bean.project.ProjectDependency
-import hdzi.editstarters.bean.project.ProjectRepository
+import hdzi.editstarters.buildsystem.BuildFile
+import hdzi.editstarters.buildsystem.ProjectBom
+import hdzi.editstarters.buildsystem.ProjectDependency
+import hdzi.editstarters.buildsystem.ProjectRepository
+import hdzi.editstarters.springboot.initializr.InitializrBom
+import hdzi.editstarters.springboot.initializr.InitializrRepository
+import hdzi.editstarters.springboot.initializr.StarterInfo
 import org.jetbrains.kotlin.psi.*
 
 /**
@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.psi.*
  *
  * Created by taojinhou on 2019/1/17.
  */
-class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectFile<KtBlockExpression>(), GradleSyntax {
+class BuildGradleKts(project: Project, private val buildFile: KtFile) : BuildFile<KtBlockExpression>(), GradleSyntax {
     override fun getOrCreateDependenciesTag(): KtBlockExpression = "dependencies".getOrCreateTopBlock()
 
     override fun findAllDependencies(dependenciesTag: KtBlockExpression): Sequence<ProjectDependency> =

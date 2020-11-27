@@ -1,4 +1,4 @@
-package hdzi.editstarters.bean
+package hdzi.editstarters.springboot
 
 interface Bom : Point {
     val groupId: String?

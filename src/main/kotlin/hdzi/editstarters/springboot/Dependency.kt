@@ -1,4 +1,4 @@
-package hdzi.editstarters.bean
+package hdzi.editstarters.springboot
 
 /**
  * Created by taojinhou on 2019/1/16.

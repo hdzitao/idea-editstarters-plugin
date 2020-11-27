@@ -1,20 +1,20 @@
-package hdzi.editstarters.maven
+package hdzi.editstarters.buildsystem.maven
 
 import com.intellij.psi.xml.XmlFile
 import com.intellij.psi.xml.XmlTag
-import hdzi.editstarters.ProjectFile
-import hdzi.editstarters.bean.StarterInfo
-import hdzi.editstarters.bean.initializr.InitializrBom
-import hdzi.editstarters.bean.initializr.InitializrRepository
-import hdzi.editstarters.bean.project.ProjectBom
-import hdzi.editstarters.bean.project.ProjectDependency
-import hdzi.editstarters.bean.project.ProjectRepository
+import hdzi.editstarters.buildsystem.BuildFile
+import hdzi.editstarters.buildsystem.ProjectBom
+import hdzi.editstarters.buildsystem.ProjectDependency
+import hdzi.editstarters.buildsystem.ProjectRepository
+import hdzi.editstarters.springboot.initializr.InitializrBom
+import hdzi.editstarters.springboot.initializr.InitializrRepository
+import hdzi.editstarters.springboot.initializr.StarterInfo
 import org.apache.commons.lang.StringUtils
 
 /**
  * Created by taojinhou on 2018/12/24.
  */
-class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
+class PomXml(file: XmlFile) : BuildFile<XmlTag>() {
     /**
      * 根标签
      */

@@ -1,12 +1,9 @@
-package hdzi.editstarters.springboot
+package hdzi.editstarters.springboot.initializr
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.intellij.util.io.HttpRequests
-import hdzi.editstarters.bean.StarterInfo
-import hdzi.editstarters.bean.initializr.InitializrResponse
-import hdzi.editstarters.bean.initializr.InitializrVersion
-import hdzi.editstarters.bean.project.ProjectDependency
+import hdzi.editstarters.buildsystem.ProjectDependency
 import hdzi.editstarters.ui.ShowErrorException
 
 /**

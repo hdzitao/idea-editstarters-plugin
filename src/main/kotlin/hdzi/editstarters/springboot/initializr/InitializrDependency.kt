@@ -1,6 +1,6 @@
-package hdzi.editstarters.bean.initializr
+package hdzi.editstarters.springboot.initializr
 
-import hdzi.editstarters.bean.Dependency
+import hdzi.editstarters.springboot.Dependency
 
 class InitializrDependency(
     override var groupId: String?,

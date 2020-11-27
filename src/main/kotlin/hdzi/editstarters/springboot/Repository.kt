@@ -1,4 +1,4 @@
-package hdzi.editstarters.bean
+package hdzi.editstarters.springboot
 
 interface Repository : Point {
     val url: String?

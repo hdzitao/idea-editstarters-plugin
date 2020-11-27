@@ -1,9 +1,9 @@
-package hdzi.editstarters.maven
+package hdzi.editstarters.buildsystem.maven
 
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.psi.xml.XmlFile
-import hdzi.editstarters.bean.project.ProjectDependency
+import hdzi.editstarters.buildsystem.ProjectDependency
 import hdzi.editstarters.springboot.SpringBootEditor
 import org.jetbrains.idea.maven.utils.actions.MavenActionUtil
 

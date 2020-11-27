@@ -1,11 +1,11 @@
-package hdzi.editstarters.gradle
+package hdzi.editstarters.buildsystem.gradle
 
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
-import hdzi.editstarters.bean.project.ProjectDependency
+import hdzi.editstarters.buildsystem.ProjectDependency
 import hdzi.editstarters.springboot.SpringBootEditor
 import hdzi.editstarters.ui.ShowErrorException
 import org.gradle.tooling.model.idea.IdeaProject

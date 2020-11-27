@@ -1,4 +1,4 @@
-package hdzi.editstarters.bean.initializr
+package hdzi.editstarters.springboot.initializr
 
 class InitializrVersion(
     var default: String?,

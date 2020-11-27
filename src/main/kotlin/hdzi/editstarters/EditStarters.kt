@@ -1,6 +1,6 @@
 package hdzi.editstarters
 
-import hdzi.editstarters.bean.StarterInfo
+import hdzi.editstarters.springboot.initializr.StarterInfo
 
 /**
  * Created by taojinhou on 2019/1/16.

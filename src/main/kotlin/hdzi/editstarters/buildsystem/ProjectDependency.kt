@@ -1,7 +1,7 @@
-package hdzi.editstarters.bean.project
+package hdzi.editstarters.buildsystem
 
 import com.intellij.psi.PsiElement
-import hdzi.editstarters.bean.Dependency
+import hdzi.editstarters.springboot.Dependency
 
 /**
  * Created by taojinhou on 2019/1/15.

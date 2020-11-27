@@ -1,6 +1,6 @@
-package hdzi.editstarters.bean.initializr
+package hdzi.editstarters.springboot.initializr
 
-import hdzi.editstarters.bean.Bom
+import hdzi.editstarters.springboot.Bom
 
 class InitializrBom(
     override var groupId: String?,

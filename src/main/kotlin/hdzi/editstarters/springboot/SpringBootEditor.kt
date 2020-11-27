@@ -5,7 +5,8 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
 import hdzi.editstarters.EditStarters
-import hdzi.editstarters.bean.project.ProjectDependency
+import hdzi.editstarters.buildsystem.ProjectDependency
+import hdzi.editstarters.springboot.initializr.SpringInitializr
 import hdzi.editstarters.ui.EditStartersDialog
 import hdzi.editstarters.ui.InitializrUrlDialog
 import hdzi.editstarters.ui.ShowErrorException
