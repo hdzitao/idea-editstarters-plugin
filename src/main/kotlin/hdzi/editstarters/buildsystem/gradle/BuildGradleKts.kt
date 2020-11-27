@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.psi.*
  *
  * Created by taojinhou on 2019/1/17.
  */
-class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectFile<KtBlockExpression>(), GradleSyntax {
+class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectFile<KtBlockExpression>() {
     override fun getOrCreateDependenciesTag(): KtBlockExpression = "dependencies".getOrCreateTopBlock()
 
     override fun findAllDependencies(dependenciesTag: KtBlockExpression): Sequence<ProjectDependency> =
@@ -29,8 +29,9 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
             }
 
     override fun createDependencyTag(dependenciesTag: KtBlockExpression, info: StarterInfo) {
-        val (instantiation, point) = dependencyInstruction(info)
-        dependenciesTag.addExpression("$instantiation(\"$point\")")
+        val scopeMethod = mapScope(info.scope)
+        val version = if (info.version != null) ":${info.version}" else ""
+        dependenciesTag.addExpression("$scopeMethod(\"${info.groupId}:${info.artifactId}$version\")")
     }
 
     override fun getOrCreateBomsTag(): KtBlockExpression =
@@ -44,8 +45,7 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
             }
 
     override fun createBomTag(bomsTag: KtBlockExpression, bom: InitializrBom) {
-        val (instantiation, point) = bomInstruction(bom)
-        bomsTag.addExpression("$instantiation(\"$point\")")
+        bomsTag.addExpression("mavenBom(\"${bom.groupId}:${bom.artifactId}${bom.version}\")")
     }
 
     override fun getOrCreateRepositoriesTag(): KtBlockExpression = "repositories".getOrCreateTopBlock()
@@ -74,11 +74,8 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
             }
 
     override fun createRepositoryTag(repositoriesTag: KtBlockExpression, repository: InitializrRepository) {
-        val (instantiation, point) = repositoryInstruction(repository)
-        repositoriesTag.addExpression("$instantiation { url = uri(\"$point\") }")
+        repositoriesTag.addExpression("maven { url = uri(\"${repository.url}\") }")
     }
-
-    override fun repositoryInstruction(repository: InitializrRepository) = GradleInstruction("maven", repository.url!!)
 
     private val factory = KtPsiFactory(project)
 
@@ -122,8 +119,10 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
         this.valueArguments[0]?.getArgumentExpression()?.text?.trimText()
 
 
-    private fun KtCallExpression.getCallGroupNameByFirstParam(): Pair<String, String> =
-        splitGroupName(getCallFirstParam() ?: "")
+    private fun KtCallExpression.getCallGroupNameByFirstParam(): Pair<String, String> {
+        val group = "^([^:]+):([^:]+)".toRegex().find(getCallFirstParam() ?: "")?.groupValues
+        return Pair(group?.get(1) ?: "", group?.get(2) ?: "")
+    }
 
 
     private fun KtCallExpression.getCallGroupName(): Pair<String, String> {
@@ -135,7 +134,7 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectF
         return if (namedArguments.isEmpty()) {
             getCallGroupNameByFirstParam()
         } else {
-            splitGroupName(namedArguments)
+            Pair(namedArguments["group"] ?: "", namedArguments["name"] ?: "")
         }
     }
 
