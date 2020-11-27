@@ -1,3 +1,6 @@
 package hdzi.editstarters.ui
 
-class ShowErrorException(val error: String) : Exception()
+/**
+ * 自定义的错误信息
+ */
+class ShowErrorException(override val message: String) : Exception()

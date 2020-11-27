@@ -1,17 +1,17 @@
 package hdzi.editstarters.ui
 
 import com.intellij.openapi.actionSystem.AnActionEvent
-import hdzi.editstarters.buildsystem.maven.MavenSpringBootEditor
-import hdzi.editstarters.ui.dialog.ButtonAction
+import hdzi.editstarters.buildsystem.maven.MavenBuildSystem
+import hdzi.editstarters.ui.dialog.EditStartersButtonAction
 import org.jetbrains.idea.maven.model.MavenConstants
 
 /**
- * Created by taojinhou on 2019/1/11.
+ * maven项目Edit Starters按钮
  */
-class MavenButtonAction : ButtonAction() {
-    override fun isMatchFile(name: String?): Boolean = MavenConstants.POM_XML == name
+class MavenButtonAction : EditStartersButtonAction() {
+    override fun String.isMatchFile() = this == MavenConstants.POM_XML
 
-    override fun invoke(e: AnActionEvent) {
-        MavenSpringBootEditor(e.dataContext).edit()
+    override fun doAction(e: AnActionEvent) {
+        MavenBuildSystem(e.dataContext).edit()
     }
 }

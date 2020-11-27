@@ -1,27 +1,23 @@
-package hdzi.editstarters.springboot
+package hdzi.editstarters.buildsystem
 
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
 import hdzi.editstarters.EditStarters
-import hdzi.editstarters.buildsystem.ProjectDependency
 import hdzi.editstarters.springboot.initializr.SpringInitializr
 import hdzi.editstarters.ui.EditStartersDialog
 import hdzi.editstarters.ui.InitializrUrlDialog
 import hdzi.editstarters.ui.ShowErrorException
 
 /**
- * 编辑器
- *
- * Created by taojinhou on 2019/1/11.
+ * 构建工具父类
  */
-abstract class SpringBootEditor(
+abstract class BuildSystem(
     val context: DataContext,
     editStartersGetter: () -> EditStarters,
     dependenciesGetter: () -> List<ProjectDependency>
 ) : EditStarters by editStartersGetter() {
-
     private val existsDependencyDB: Map<String, ProjectDependency> =
         dependenciesGetter().associateBy({ it.point }, { it })
 
@@ -29,7 +25,7 @@ abstract class SpringBootEditor(
         existsDependencyDB[ProjectDependency("org.springframework.boot", "spring-boot").point]
 
     /**
-     * 启动编辑器
+     * 执行动作
      */
     fun edit() {
         if (isSpringBootProject) {

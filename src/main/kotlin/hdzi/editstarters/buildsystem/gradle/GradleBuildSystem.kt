@@ -5,8 +5,8 @@ import com.intellij.openapi.actionSystem.DataContext
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.util.ThrowableComputable
+import hdzi.editstarters.buildsystem.BuildSystem
 import hdzi.editstarters.buildsystem.ProjectDependency
-import hdzi.editstarters.springboot.SpringBootEditor
 import hdzi.editstarters.ui.ShowErrorException
 import org.gradle.tooling.model.idea.IdeaProject
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency
@@ -19,7 +19,7 @@ import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
 /**
  * Created by taojinhou on 2019/1/14.
  */
-class GradleSpringBootEditor(context: DataContext) : SpringBootEditor(
+class GradleBuildSystem(context: DataContext) : BuildSystem(
     context,
     {
         val psiFile = context.getData(CommonDataKeys.PSI_FILE)!!

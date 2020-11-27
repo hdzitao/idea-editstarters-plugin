@@ -1,18 +1,18 @@
 package hdzi.editstarters.ui
 
 import com.intellij.openapi.actionSystem.AnActionEvent
-import hdzi.editstarters.buildsystem.gradle.GradleSpringBootEditor
-import hdzi.editstarters.ui.dialog.ButtonAction
+import hdzi.editstarters.buildsystem.gradle.GradleBuildSystem
+import hdzi.editstarters.ui.dialog.EditStartersButtonAction
 import org.jetbrains.plugins.gradle.util.GradleConstants
 
 /**
  * Created by taojinhou on 2019/1/14.
  */
-class GradleButtonAction : ButtonAction() {
-    override fun isMatchFile(name: String?): Boolean =
-        GradleConstants.DEFAULT_SCRIPT_NAME == name || GradleConstants.KOTLIN_DSL_SCRIPT_NAME == name
+class GradleButtonAction : EditStartersButtonAction() {
+    override fun String.isMatchFile(): Boolean =
+        this == GradleConstants.DEFAULT_SCRIPT_NAME || this == GradleConstants.KOTLIN_DSL_SCRIPT_NAME
 
-    override fun invoke(e: AnActionEvent) {
-        GradleSpringBootEditor(e.dataContext).edit()
+    override fun doAction(e: AnActionEvent) {
+        GradleBuildSystem(e.dataContext).edit()
     }
 }

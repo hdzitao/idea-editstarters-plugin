@@ -5,7 +5,6 @@ import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.project.Project
 import com.intellij.ui.CollectionComboBoxModel
 import com.intellij.ui.CollectionListModel
-import hdzi.editstarters.springboot.SpringBootEditor
 import hdzi.editstarters.springboot.initializr.StarterInfo
 import org.apache.commons.lang.WordUtils
 import java.awt.event.KeyAdapter
@@ -15,7 +14,7 @@ import java.awt.event.MouseEvent
 import java.util.*
 import javax.swing.*
 
-class EditStartersDialog(springBoot: SpringBootEditor) {
+class EditStartersDialog(springBoot: SpringBootButtonAction) {
     private lateinit var root: JPanel
     private lateinit var buttonOK: JButton
     private lateinit var buttonCancel: JButton
