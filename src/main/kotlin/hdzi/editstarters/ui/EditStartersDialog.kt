@@ -37,7 +37,7 @@ class EditStartersDialog(buildSystem: BuildSystem, initializr: SpringInitializr)
 
         // boot版本选框
         this.versionComboBox.model = CollectionComboBoxModel(
-            initializr.version.values!!.map { it.id },
+            initializr.version.values.map { it.id },
             initializr.currentVersionID
         )
         this.versionComboBox.isEnabled = false
@@ -62,7 +62,7 @@ class EditStartersDialog(buildSystem: BuildSystem, initializr: SpringInitializr)
             override fun mouseClicked(e: MouseEvent) {
                 searchField.text = ""
                 val name = moduleList.selectedValue
-                starterList.model = CollectionListModel(modulesMap[name]!!)
+                starterList.model = CollectionListModel(modulesMap[name] ?: Collections.emptyList())
             }
         })
 

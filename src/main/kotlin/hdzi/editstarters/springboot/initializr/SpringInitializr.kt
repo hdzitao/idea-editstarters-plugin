@@ -54,7 +54,7 @@ class SpringInitializr(url: String, bootVersion: String) {
     private fun parseDependencies(baseInfoJSON: JsonObject, depJSON: JsonObject) {
         // 设置仓库信息的id
         val depResponse = this.gson.fromJson(depJSON, InitializrResponse::class.java)
-        depResponse.repositories?.forEach { id, repository -> repository.id = id }
+        depResponse.repositories.forEach { (id, repository) -> repository.id = id }
 
         val modulesJSON = baseInfoJSON.getAsJsonObject("dependencies").getAsJsonArray("values")
         for (moduleEle in modulesJSON) {
@@ -69,10 +69,10 @@ class SpringInitializr(url: String, bootVersion: String) {
                 starterInfo.artifactId = dependency.artifactId
                 starterInfo.version = dependency.version
                 starterInfo.scope = dependency.scope
-                val bom = depResponse.boms?.get(dependency.bom)
+                val bom = depResponse.boms[dependency.bom]
                 if (bom != null) {
                     starterInfo.bom = bom
-                    bom.repositories.forEach { rid -> starterInfo.addRepository(depResponse.repositories?.get(rid)) }
+                    bom.repositories.forEach { rid -> starterInfo.addRepository(depResponse.repositories[rid]) }
                 }
 
                 this.pointMap[starterInfo.point] = starterInfo
