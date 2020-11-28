@@ -20,9 +20,6 @@ class StarterInfo : Dependency {
     var bom: InitializrBom? = null
     var exist = false
 
-    val searchKey: String
-        get() = "$groupId\t$artifactId\t$name\t$description".toLowerCase()
-
     fun addRepository(repository: InitializrRepository?) {
         if (repository != null) {
             this.repositories.add(repository)

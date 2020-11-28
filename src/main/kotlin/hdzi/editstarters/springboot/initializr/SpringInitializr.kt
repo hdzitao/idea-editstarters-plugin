@@ -11,7 +11,6 @@ import hdzi.editstarters.ui.ShowErrorException
  */
 class SpringInitializr(url: String, bootVersion: String) {
     val modulesMap = linkedMapOf<String, List<StarterInfo>>()
-    val searchDB = linkedMapOf<String, StarterInfo>()
     private val pointMap = hashMapOf<String, StarterInfo>()
     private val gson = Gson()
     var version: InitializrVersion
@@ -76,7 +75,6 @@ class SpringInitializr(url: String, bootVersion: String) {
                 }
 
                 this.pointMap[starterInfo.point] = starterInfo
-                this.searchDB[starterInfo.searchKey] = starterInfo
 
                 dependencies.add(starterInfo)
             }

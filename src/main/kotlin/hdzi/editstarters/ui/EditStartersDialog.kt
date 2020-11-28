@@ -122,11 +122,12 @@ class EditStartersDialog(buildSystem: BuildSystem, initializr: SpringInitializr)
             override fun keyReleased(e: KeyEvent) {
                 moduleList.clearSelection()
                 val searchKey = searchField.text.toLowerCase()
-                val result = initializr.searchDB.asSequence()
-                    .filter { it.key.contains(searchKey) }
-                    .map { it.value }
-                    .toList()
-
+                val result = modulesMap.values.flatMap { starters ->
+                    starters.filter { starter ->
+                        "${starter.groupId}:${starter.artifactId}\t${starter.name}"
+                            .toLowerCase().contains(searchKey)
+                    }
+                }
                 starterList.model = CollectionComboBoxModel(result)
             }
         })
@@ -150,7 +151,6 @@ class EditStartersDialog(buildSystem: BuildSystem, initializr: SpringInitializr)
             if (info.versionRange != null) {
                 buffer.append("Version Range: ").append(info.versionRange).append("<br/>")
             }
-
             buffer.append("<br/>").append(WordUtils.wrap(info.description, 50, "<br/>", false))
 
             buffer.toString()
