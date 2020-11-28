@@ -2,7 +2,6 @@ package hdzi.editstarters.ui
 
 import com.intellij.openapi.actionSystem.DataContext
 import hdzi.editstarters.buildsystem.maven.MavenBuildSystem
-import hdzi.editstarters.ui.dialog.EditStartersButtonAction
 import org.jetbrains.idea.maven.model.MavenConstants
 
 /**

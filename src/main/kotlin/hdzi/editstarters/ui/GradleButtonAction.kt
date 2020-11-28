@@ -2,7 +2,6 @@ package hdzi.editstarters.ui
 
 import com.intellij.openapi.actionSystem.DataContext
 import hdzi.editstarters.buildsystem.gradle.GradleBuildSystem
-import hdzi.editstarters.ui.dialog.EditStartersButtonAction
 import org.jetbrains.plugins.gradle.util.GradleConstants
 
 /**

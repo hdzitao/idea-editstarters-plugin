@@ -1,4 +1,4 @@
-package hdzi.editstarters.ui.dialog
+package hdzi.editstarters.ui
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -9,9 +9,6 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.util.ThrowableComputable
 import hdzi.editstarters.buildsystem.BuildSystem
 import hdzi.editstarters.springboot.initializr.SpringInitializr
-import hdzi.editstarters.ui.EditStartersDialog
-import hdzi.editstarters.ui.InitializrUrlDialog
-import hdzi.editstarters.ui.ShowErrorException
 
 /**
  * Edit Starter按钮父类。
