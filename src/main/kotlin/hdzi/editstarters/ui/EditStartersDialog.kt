@@ -147,6 +147,9 @@ class EditStartersDialog(buildSystem: BuildSystem, initializr: SpringInitializr)
             if (info.version != null) {
                 buffer.append("Version: ").append(info.version).append("<br/>")
             }
+            if (info.versionRange != null) {
+                buffer.append("Version Range: ").append(info.versionRange).append("<br/>")
+            }
 
             buffer.append("<br/>").append(WordUtils.wrap(info.description, 50, "<br/>", false))
 
