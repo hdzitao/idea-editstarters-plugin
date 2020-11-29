@@ -33,8 +33,8 @@ abstract class GradleSyntax<T : PsiElement> : ProjectFile<T>() {
     protected fun repositoryInstruction(repository: InitializrRepository) =
         Instruction("maven", repository.url)
 
-    protected fun splitGroupArtifact(point: String): Pair<String, String> {
-        val group = "^([^:]+):([^:]+)".toRegex().find(point)?.groupValues
+    protected fun splitGroupArtifact(point: String?): Pair<String, String> {
+        val group = "^([^:]+):([^:]+)".toRegex().find(point ?: "")?.groupValues
         return Pair(group?.get(1) ?: "", group?.get(2) ?: "")
     }
 

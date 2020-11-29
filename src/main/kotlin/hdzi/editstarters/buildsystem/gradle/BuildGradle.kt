@@ -99,7 +99,7 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : GradleS
         )
 
         return if (namedArguments.isEmpty()) {
-            splitGroupArtifact(getMethodFirstParam() ?: "")
+            splitGroupArtifact(getMethodFirstParam())
         } else {
             Pair(namedArguments["group"] ?: "", namedArguments["name"] ?: "")
         }

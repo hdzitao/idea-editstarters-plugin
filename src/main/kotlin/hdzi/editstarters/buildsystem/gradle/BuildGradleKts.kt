@@ -23,14 +23,16 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSy
     override fun findAllDependencies(dependenciesTag: KtBlockExpression): Sequence<ProjectDependency> =
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, KtCallExpression::class.java).asSequence()
             .map {
-                val (groupId, artifactId) = it.getCallGroupName()
+                val (groupId, artifactId) = it.getCallGroupArtifact()
                 ProjectDependency(groupId, artifactId, it)
             }
 
     override fun createDependencyTag(dependenciesTag: KtBlockExpression, info: StarterInfo) {
-        val scopeMethod = mapScope(info.scope)
-        val version = if (info.version != null) ":${info.version}" else ""
-        dependenciesTag.addExpression("$scopeMethod(\"${info.groupId}:${info.artifactId}$version\")")
+        val instructions = dependencyInstruction(info)
+        instructions.forEach {
+            val (instruction, point) = it
+            dependenciesTag.addExpression("$instruction(\"$point\")")
+        }
     }
 
     override fun getOrCreateBomsTag(): KtBlockExpression =
@@ -39,12 +41,13 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSy
     override fun findAllBoms(bomsTag: KtBlockExpression): Sequence<ProjectBom> =
         bomsTag.findAllCallExpression("mavenBom").asSequence()
             .map {
-                val (groupId, artifactId) = it.getCallGroupNameByFirstParam()
+                val (groupId, artifactId) = it.getCallGroupArtifact()
                 ProjectBom(groupId, artifactId)
             }
 
     override fun createBomTag(bomsTag: KtBlockExpression, bom: InitializrBom) {
-        bomsTag.addExpression("mavenBom(\"${bom.groupId}:${bom.artifactId}${bom.version}\")")
+        val (instruction, point) = bomInstruction(bom)
+        bomsTag.addExpression("$instruction(\"$point\")")
     }
 
     override fun getOrCreateRepositoriesTag(): KtBlockExpression = "repositories".getOrCreateTopBlock()
@@ -73,7 +76,8 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSy
             }
 
     override fun createRepositoryTag(repositoriesTag: KtBlockExpression, repository: InitializrRepository) {
-        repositoriesTag.addExpression("maven { url = uri(\"${repository.url}\") }")
+        val (instruction, point) = repositoryInstruction(repository)
+        repositoriesTag.addExpression("$instruction { url = uri(\"$point\") }")
     }
 
     private val factory = KtPsiFactory(project)
@@ -118,20 +122,14 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSy
         this.valueArguments[0]?.getArgumentExpression()?.text?.trimText()
 
 
-    private fun KtCallExpression.getCallGroupNameByFirstParam(): Pair<String, String> {
-        val group = "^([^:]+):([^:]+)".toRegex().find(getCallFirstParam() ?: "")?.groupValues
-        return Pair(group?.get(1) ?: "", group?.get(2) ?: "")
-    }
-
-
-    private fun KtCallExpression.getCallGroupName(): Pair<String, String> {
+    private fun KtCallExpression.getCallGroupArtifact(): Pair<String, String> {
         val namedArguments = this.valueArguments.associateBy(
             { it.getArgumentName()?.text?.trimText() },
             { it.getArgumentExpression()?.text?.trimText() })
             .filter { it.key != null }
 
         return if (namedArguments.isEmpty()) {
-            getCallGroupNameByFirstParam()
+            splitGroupArtifact(getCallFirstParam())
         } else {
             Pair(namedArguments["group"] ?: "", namedArguments["name"] ?: "")
         }
