@@ -10,7 +10,6 @@ import hdzi.editstarters.springboot.initializr.DependencyScope
 import hdzi.editstarters.springboot.initializr.InitializrBom
 import hdzi.editstarters.springboot.initializr.InitializrRepository
 import hdzi.editstarters.springboot.initializr.StarterInfo
-import org.apache.commons.lang.StringUtils
 
 /**
  * Created by taojinhou on 2018/12/24.
@@ -94,7 +93,7 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
      * 添加有内容的标签
      */
     private fun XmlTag.addSubTagWithTextBody(key: String, value: String?) {
-        if (StringUtils.isNotEmpty(value) && StringUtils.isNotEmpty(key)) {
+        if (key.isNotBlank() && value?.isNotBlank() == true) {
             addSubTag(createChildTag(key, this.namespace, value, false), false)
         }
     }

@@ -1,8 +1,8 @@
 # Change Log
 
-## 2.4（doing）
+## 3.0
 * 完善scope在不同build工具下的对应关系
-* 重构build文件写入代码
+* 重构项目结构
 
 ## 2.3
 * 修复maven添加bom时dependencyManagement和dependencies标签弄反的错误
