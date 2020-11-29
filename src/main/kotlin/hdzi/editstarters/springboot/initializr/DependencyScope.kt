@@ -1,33 +1,36 @@
 package hdzi.editstarters.springboot.initializr
 
-enum class DependencyScope {
+enum class DependencyScope(val scope: String) {
     /**
      * Compile Scope.
      */
-    COMPILE,
+    COMPILE("compile"),
 
     /**
      * Compile Only Scope.
      */
-    COMPILE_ONLY,
+    COMPILE_ONLY("compileOnly"),
 
     /**
      * Annotation Processor Scope.
      */
-    ANNOTATION_PROCESSOR,
+    ANNOTATION_PROCESSOR("annotationProcessor"),
 
     /**
      * Runtime Scope.
      */
-    RUNTIME,
+    RUNTIME("runtime"),
 
     /**
      * Provided Scope.
      */
-    PROVIDED,
+    PROVIDED("provided"),
 
     /**
      * Test Scope.
      */
-    TEST,
+    TEST("test"),
+    ;
+
+    override fun toString() = this.scope
 }

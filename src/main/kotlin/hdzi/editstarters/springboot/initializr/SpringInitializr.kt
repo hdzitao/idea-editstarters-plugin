@@ -85,14 +85,5 @@ class SpringInitializr(url: String, bootVersion: String) {
 
     private fun String.versionNum() = this.replace("""^(\d+\.\d+\.\d+).*$""".toRegex(), "$1")
 
-    private fun String.toScopeType(): DependencyScope =
-        when (this) {
-            "compile" -> DependencyScope.COMPILE
-            "compileOnly" -> DependencyScope.COMPILE_ONLY
-            "annotationProcessor" -> DependencyScope.ANNOTATION_PROCESSOR
-            "runtime" -> DependencyScope.RUNTIME
-            "provided" -> DependencyScope.PROVIDED
-            "test" -> DependencyScope.TEST
-            else -> DependencyScope.COMPILE
-        }
+    private fun String.toScopeType() = DependencyScope.values().find { this == it.scope } ?: DependencyScope.COMPILE
 }
