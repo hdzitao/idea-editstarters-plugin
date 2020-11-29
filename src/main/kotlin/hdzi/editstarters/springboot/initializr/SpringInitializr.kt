@@ -2,6 +2,7 @@ package hdzi.editstarters.springboot.initializr
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.google.gson.JsonSyntaxException
 import com.intellij.util.io.HttpRequests
 import hdzi.editstarters.buildsystem.ProjectDependency
 import hdzi.editstarters.ui.ShowErrorException
@@ -18,21 +19,28 @@ class SpringInitializr(url: String, bootVersion: String) {
     val currentVersionID: String
 
     init {
-        // 请求initurl
-        val baseInfoJSON = HttpRequests.request(url).accept("application/json").connect {
-            this.gson.fromJson(it.readString(null), JsonObject::class.java)
-        }
-        this.version = this.gson.fromJson(baseInfoJSON.getAsJsonObject("bootVersion"), InitializrVersion::class.java)
-        this.currentVersionID = bootVersion.versionNum()
 
-        val dependenciesUrl = parseDependenciesUrl(baseInfoJSON, this.currentVersionID)
         try {
+            // 请求initurl
+            val baseInfoJSON = HttpRequests.request(url).accept("application/json").connect {
+                this.gson.fromJson(it.readString(null), JsonObject::class.java)
+            }
+            this.version = this.gson.fromJson(
+                baseInfoJSON.getAsJsonObject("bootVersion"),
+                InitializrVersion::class.java
+            )
+            this.currentVersionID = bootVersion.versionNum()
+            val dependenciesUrl = parseDependenciesUrl(baseInfoJSON, this.currentVersionID)
             val depsJSON = HttpRequests.request(dependenciesUrl).connect {
                 this.gson.fromJson(it.readString(null), JsonObject::class.java)
             }
             parseDependencies(baseInfoJSON, depsJSON)
         } catch (ignore: HttpRequests.HttpStatusException) {
-            throw ShowErrorException("Request failure! v$currentVersionID may not be supported, please try again.")
+            // start.spring.io不支持版本返回404
+            throw ShowErrorException("Request failure! Your spring boot version may not be supported, please confirm.")
+        } catch (ignore: JsonSyntaxException) {
+            // json解析失败
+            throw ShowErrorException("JSON syntax error in response! Please confirm.")
         }
     }
 
