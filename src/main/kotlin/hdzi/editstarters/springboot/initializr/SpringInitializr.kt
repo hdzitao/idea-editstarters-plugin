@@ -19,20 +19,16 @@ class SpringInitializr(url: String, bootVersion: String) {
     val currentVersionID: String
 
     init {
-
         try {
             // 请求initurl
             val baseInfoJSON = HttpRequests.request(url).accept("application/json").connect {
-                this.gson.fromJson(it.readString(null), JsonObject::class.java)
+                gson.fromJson(it.readString(null), JsonObject::class.java)
             }
-            this.version = this.gson.fromJson(
-                baseInfoJSON.getAsJsonObject("bootVersion"),
-                InitializrVersion::class.java
-            )
+            this.version = gson.fromJson(baseInfoJSON.getAsJsonObject("bootVersion"), InitializrVersion::class.java)
             this.currentVersionID = bootVersion.versionNum()
             val dependenciesUrl = parseDependenciesUrl(baseInfoJSON, this.currentVersionID)
             val depsJSON = HttpRequests.request(dependenciesUrl).connect {
-                this.gson.fromJson(it.readString(null), JsonObject::class.java)
+                gson.fromJson(it.readString(null), JsonObject::class.java)
             }
             parseDependencies(baseInfoJSON, depsJSON)
         } catch (ignore: HttpRequests.HttpStatusException) {
@@ -40,7 +36,7 @@ class SpringInitializr(url: String, bootVersion: String) {
             throw ShowErrorException("Request failure! Your spring boot version may not be supported, please confirm.")
         } catch (ignore: JsonSyntaxException) {
             // json解析失败
-            throw ShowErrorException("JSON syntax error in response! Please confirm.")
+            throw ShowErrorException("Request failure! JSON syntax error for response, please confirm.")
         }
     }
 
@@ -60,7 +56,7 @@ class SpringInitializr(url: String, bootVersion: String) {
 
     private fun parseDependencies(baseInfoJSON: JsonObject, depJSON: JsonObject) {
         // 设置仓库信息的id
-        val depResponse = this.gson.fromJson(depJSON, InitializrResponse::class.java)
+        val depResponse = gson.fromJson(depJSON, InitializrResponse::class.java)
         depResponse.repositories.forEach { (id, repository) -> repository.id = id }
 
         val modulesJSON = baseInfoJSON.getAsJsonObject("dependencies").getAsJsonArray("values")
@@ -70,7 +66,7 @@ class SpringInitializr(url: String, bootVersion: String) {
             val dependenciesJSON = module.getAsJsonArray("values")
             val dependencies = ArrayList<StarterInfo>(dependenciesJSON.size())
             for (depEle in dependenciesJSON) {
-                val starterInfo = this.gson.fromJson(depEle.asJsonObject, StarterInfo::class.java)
+                val starterInfo = gson.fromJson(depEle.asJsonObject, StarterInfo::class.java)
                 val dependency = depResponse.dependencies[starterInfo.id] ?: continue
                 starterInfo.groupId = dependency.groupId
                 starterInfo.artifactId = dependency.artifactId
