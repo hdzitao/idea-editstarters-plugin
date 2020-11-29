@@ -23,7 +23,7 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSy
     override fun findAllDependencies(dependenciesTag: KtBlockExpression): Sequence<ProjectDependency> =
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, KtCallExpression::class.java).asSequence()
             .map {
-                val (groupId, artifactId) = it.getCallGroupArtifact()
+                val (groupId, artifactId) = it.getDependencyGroupArtifact()
                 ProjectDependency(groupId, artifactId, it)
             }
 
@@ -41,7 +41,7 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSy
     override fun findAllBoms(bomsTag: KtBlockExpression): Sequence<ProjectBom> =
         bomsTag.findAllCallExpression("mavenBom").asSequence()
             .map {
-                val (groupId, artifactId) = it.getCallGroupArtifact()
+                val (groupId, artifactId) = splitGroupArtifact(it.getCallFirstParam())
                 ProjectBom(groupId, artifactId)
             }
 
@@ -122,11 +122,11 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSy
         this.valueArguments[0]?.getArgumentExpression()?.text?.trimText()
 
 
-    private fun KtCallExpression.getCallGroupArtifact(): Pair<String, String> {
+    private fun KtCallExpression.getDependencyGroupArtifact(): Pair<String, String> {
         val namedArguments = this.valueArguments.associateBy(
             { it.getArgumentName()?.text?.trimText() },
-            { it.getArgumentExpression()?.text?.trimText() })
-            .filter { it.key != null }
+            { it.getArgumentExpression()?.text?.trimText() }
+        ).filter { it.key != null }
 
         return if (namedArguments.isEmpty()) {
             splitGroupArtifact(getCallFirstParam())

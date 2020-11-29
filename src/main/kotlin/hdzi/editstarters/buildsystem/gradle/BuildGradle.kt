@@ -24,7 +24,7 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : GradleS
     override fun findAllDependencies(dependenciesTag: GrClosableBlock): Sequence<ProjectDependency> =
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall::class.java).asSequence()
             .map {
-                val (groupId, artifactId) = it.getMethodGroupArtifact()
+                val (groupId, artifactId) = it.getDependencyGroupArtifact()
                 ProjectDependency(groupId, artifactId, it)
             }
 
@@ -43,7 +43,7 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : GradleS
     override fun findAllBoms(bomsTag: GrClosableBlock): Sequence<ProjectBom> =
         bomsTag.findAllMethod("mavenBom").asSequence()
             .map {
-                val (groupId, artifactId) = it.getMethodGroupArtifact()
+                val (groupId, artifactId) = splitGroupArtifact(it.getMethodFirstParam())
                 ProjectBom(groupId, artifactId)
             }
 
@@ -92,7 +92,7 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : GradleS
     private fun GrMethodCall.getMethodFirstParam(): String? =
         this.argumentList.allArguments[0]?.text?.trimText()
 
-    private fun GrMethodCall.getMethodGroupArtifact(): Pair<String, String> {
+    private fun GrMethodCall.getDependencyGroupArtifact(): Pair<String, String> {
         val namedArguments = this.namedArguments.associateBy(
             { it.label?.text?.trimText() },
             { it.expression?.text?.trimText() }
