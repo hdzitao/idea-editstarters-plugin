@@ -18,7 +18,7 @@ import org.jetbrains.kotlin.psi.*
  * Created by taojinhou on 2019/1/17.
  */
 class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSyntax<KtBlockExpression>() {
-    override fun getOrCreateDependenciesTag(): KtBlockExpression = "dependencies".getOrCreateTopBlock()
+    override fun getOrCreateDependenciesTag(): KtBlockExpression = TAG_DEPENDENCY_MANAGEMENT.getOrCreateTopBlock()
 
     override fun findAllDependencies(dependenciesTag: KtBlockExpression): Sequence<ProjectDependency> =
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, KtCallExpression::class.java).asSequence()
@@ -36,10 +36,10 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSy
     }
 
     override fun getOrCreateBomsTag(): KtBlockExpression =
-        "dependencyManagement".getOrCreateTopBlock().getOrCreateBlock("imports")
+        TAG_BOM_MANAGEMENT.getOrCreateTopBlock().getOrCreateBlock(TAG_BOM_IMPORT)
 
     override fun findAllBoms(bomsTag: KtBlockExpression): Sequence<ProjectBom> =
-        bomsTag.findAllCallExpression("mavenBom").asSequence()
+        bomsTag.findAllCallExpression(TAG_BOM).asSequence()
             .map {
                 val (groupId, artifactId) = splitGroupArtifact(it.getCallFirstParam())
                 ProjectBom(groupId, artifactId)
@@ -50,10 +50,10 @@ class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSy
         bomsTag.addExpression("$instruction(\"$point\")")
     }
 
-    override fun getOrCreateRepositoriesTag(): KtBlockExpression = "repositories".getOrCreateTopBlock()
+    override fun getOrCreateRepositoriesTag(): KtBlockExpression = TAG_REPOSITORY_MANAGEMENT.getOrCreateTopBlock()
 
     override fun findAllRepositories(repositoriesTag: KtBlockExpression): Sequence<ProjectRepository> =
-        repositoriesTag.findAllCallExpression("maven").asSequence()
+        repositoriesTag.findAllCallExpression(TAG_REPOSITORY).asSequence()
             .map {
                 val arguments = it.valueArguments
                 val url = if (arguments.isNotEmpty()) {

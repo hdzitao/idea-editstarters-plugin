@@ -19,7 +19,7 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethod
  * Created by taojinhou on 2019/1/16.
  */
 class BuildGradle(project: Project, private val buildFile: GroovyFile) : GradleSyntax<GrClosableBlock>() {
-    override fun getOrCreateDependenciesTag(): GrClosableBlock = buildFile.getOrCreateClosure("dependencies")
+    override fun getOrCreateDependenciesTag(): GrClosableBlock = buildFile.getOrCreateClosure(TAG_DEPENDENCY_MANAGEMENT)
 
     override fun findAllDependencies(dependenciesTag: GrClosableBlock): Sequence<ProjectDependency> =
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall::class.java).asSequence()
@@ -38,10 +38,10 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : GradleS
     }
 
     override fun getOrCreateBomsTag(): GrClosableBlock =
-        buildFile.getOrCreateClosure("dependencyManagement").getOrCreateClosure("imports")
+        buildFile.getOrCreateClosure(TAG_BOM_MANAGEMENT).getOrCreateClosure(TAG_BOM_IMPORT)
 
     override fun findAllBoms(bomsTag: GrClosableBlock): Sequence<ProjectBom> =
-        bomsTag.findAllMethod("mavenBom").asSequence()
+        bomsTag.findAllMethod(TAG_BOM).asSequence()
             .map {
                 val (groupId, artifactId) = splitGroupArtifact(it.getMethodFirstParam())
                 ProjectBom(groupId, artifactId)
@@ -53,10 +53,10 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : GradleS
         bomsTag.addStatementBefore(statement, null)
     }
 
-    override fun getOrCreateRepositoriesTag(): GrClosableBlock = buildFile.getOrCreateClosure("repositories")
+    override fun getOrCreateRepositoriesTag(): GrClosableBlock = buildFile.getOrCreateClosure(TAG_REPOSITORY_MANAGEMENT)
 
     override fun findAllRepositories(repositoriesTag: GrClosableBlock): Sequence<ProjectRepository> =
-        repositoriesTag.findAllMethod("maven").asSequence()
+        repositoriesTag.findAllMethod(TAG_REPOSITORY).asSequence()
             .map { ProjectRepository(it.closureArguments[0].findMethod("url")?.getMethodFirstParam() ?: "") }
 
     override fun createRepositoryTag(repositoriesTag: GrClosableBlock, repository: InitializrRepository) {
