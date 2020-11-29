@@ -14,7 +14,7 @@ class StarterInfo : Dependency {
     // 坐标信息
     override lateinit var groupId: String
     override lateinit var artifactId: String
-    lateinit var scope: String
+    lateinit var scope: DependencyScope
     var version: String? = null
     var repositories = mutableListOf<InitializrRepository>()
     var bom: InitializrBom? = null

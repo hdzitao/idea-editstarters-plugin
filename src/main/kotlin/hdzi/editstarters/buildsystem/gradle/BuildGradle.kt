@@ -6,7 +6,6 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.containers.ContainerUtil
 import hdzi.editstarters.buildsystem.ProjectBom
 import hdzi.editstarters.buildsystem.ProjectDependency
-import hdzi.editstarters.buildsystem.ProjectFile
 import hdzi.editstarters.buildsystem.ProjectRepository
 import hdzi.editstarters.springboot.initializr.InitializrBom
 import hdzi.editstarters.springboot.initializr.InitializrRepository
@@ -19,21 +18,23 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethod
 /**
  * Created by taojinhou on 2019/1/16.
  */
-class BuildGradle(project: Project, private val buildFile: GroovyFile) : ProjectFile<GrClosableBlock>() {
+class BuildGradle(project: Project, private val buildFile: GroovyFile) : GradleSyntax<GrClosableBlock>() {
     override fun getOrCreateDependenciesTag(): GrClosableBlock = buildFile.getOrCreateClosure("dependencies")
 
     override fun findAllDependencies(dependenciesTag: GrClosableBlock): Sequence<ProjectDependency> =
         PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall::class.java).asSequence()
             .map {
-                val (groupId, artifactId) = it.getMethodGroupName()
+                val (groupId, artifactId) = it.getMethodGroupArtifact()
                 ProjectDependency(groupId, artifactId, it)
             }
 
     override fun createDependencyTag(dependenciesTag: GrClosableBlock, info: StarterInfo) {
-        val scopeMethod = mapScope(info.scope)
-        val version = if (info.version != null) ":${info.version}" else ""
-        val statement = factory.createStatementFromText("$scopeMethod '${info.groupId}:${info.artifactId}$version'")
-        dependenciesTag.addStatementBefore(statement, null)
+        val instructions = dependencyInstruction(info)
+        instructions.forEach {
+            val (instruction, point) = it
+            val statement = factory.createStatementFromText("$instruction '$point'")
+            dependenciesTag.addStatementBefore(statement, null)
+        }
     }
 
     override fun getOrCreateBomsTag(): GrClosableBlock =
@@ -42,12 +43,13 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
     override fun findAllBoms(bomsTag: GrClosableBlock): Sequence<ProjectBom> =
         bomsTag.findAllMethod("mavenBom").asSequence()
             .map {
-                val (groupId, artifactId) = it.getMethodGroupNameByFirstParam()
+                val (groupId, artifactId) = it.getMethodGroupArtifact()
                 ProjectBom(groupId, artifactId)
             }
 
     override fun createBomTag(bomsTag: GrClosableBlock, bom: InitializrBom) {
-        val statement = factory.createStatementFromText("mavenBom '${bom.groupId}:${bom.artifactId}:${bom.version}'")
+        val (instruction, point) = bomInstruction(bom)
+        val statement = factory.createStatementFromText("$instruction '$point'")
         bomsTag.addStatementBefore(statement, null)
     }
 
@@ -58,7 +60,8 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
             .map { ProjectRepository(it.closureArguments[0].findMethod("url")?.getMethodFirstParam() ?: "") }
 
     override fun createRepositoryTag(repositoriesTag: GrClosableBlock, repository: InitializrRepository) {
-        val statement = factory.createStatementFromText("maven { url '${repository.url}' }")
+        val (instruction, point) = repositoryInstruction(repository)
+        val statement = factory.createStatementFromText("$instruction { url '$point' }")
         repositoriesTag.addStatementBefore(statement, null)
     }
 
@@ -89,19 +92,14 @@ class BuildGradle(project: Project, private val buildFile: GroovyFile) : Project
     private fun GrMethodCall.getMethodFirstParam(): String? =
         this.argumentList.allArguments[0]?.text?.trimText()
 
-    private fun GrMethodCall.getMethodGroupNameByFirstParam(): Pair<String, String> {
-        val group = "^([^:]+):([^:]+)".toRegex().find(getMethodFirstParam() ?: "")?.groupValues
-        return Pair(group?.get(1) ?: "", group?.get(2) ?: "")
-    }
-
-    private fun GrMethodCall.getMethodGroupName(): Pair<String, String> {
+    private fun GrMethodCall.getMethodGroupArtifact(): Pair<String, String> {
         val namedArguments = this.namedArguments.associateBy(
             { it.label?.text?.trimText() },
             { it.expression?.text?.trimText() }
         )
 
         return if (namedArguments.isEmpty()) {
-            getMethodGroupNameByFirstParam()
+            splitGroupArtifact(getMethodFirstParam() ?: "")
         } else {
             Pair(namedArguments["group"] ?: "", namedArguments["name"] ?: "")
         }

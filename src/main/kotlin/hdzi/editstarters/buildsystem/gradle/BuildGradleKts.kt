@@ -6,7 +6,6 @@ import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.containers.ContainerUtil
 import hdzi.editstarters.buildsystem.ProjectBom
 import hdzi.editstarters.buildsystem.ProjectDependency
-import hdzi.editstarters.buildsystem.ProjectFile
 import hdzi.editstarters.buildsystem.ProjectRepository
 import hdzi.editstarters.springboot.initializr.InitializrBom
 import hdzi.editstarters.springboot.initializr.InitializrRepository
@@ -18,7 +17,7 @@ import org.jetbrains.kotlin.psi.*
  *
  * Created by taojinhou on 2019/1/17.
  */
-class BuildGradleKts(project: Project, private val buildFile: KtFile) : ProjectFile<KtBlockExpression>() {
+class BuildGradleKts(project: Project, private val buildFile: KtFile) : GradleSyntax<KtBlockExpression>() {
     override fun getOrCreateDependenciesTag(): KtBlockExpression = "dependencies".getOrCreateTopBlock()
 
     override fun findAllDependencies(dependenciesTag: KtBlockExpression): Sequence<ProjectDependency> =

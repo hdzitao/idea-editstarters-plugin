@@ -67,7 +67,7 @@ class SpringInitializr(url: String, bootVersion: String) {
                 starterInfo.groupId = dependency.groupId
                 starterInfo.artifactId = dependency.artifactId
                 starterInfo.version = dependency.version
-                starterInfo.scope = dependency.scope
+                starterInfo.scope = dependency.scope.toScopeType()
                 val bom = depResponse.boms[dependency.bom]
                 if (bom != null) {
                     starterInfo.bom = bom
@@ -84,4 +84,15 @@ class SpringInitializr(url: String, bootVersion: String) {
     }
 
     private fun String.versionNum() = this.replace("""^(\d+\.\d+\.\d+).*$""".toRegex(), "$1")
+
+    private fun String.toScopeType(): DependencyScope =
+        when (this) {
+            "compile" -> DependencyScope.COMPILE
+            "compileOnly" -> DependencyScope.COMPILE_ONLY
+            "annotationProcessor" -> DependencyScope.ANNOTATION_PROCESSOR
+            "runtime" -> DependencyScope.RUNTIME
+            "provided" -> DependencyScope.PROVIDED
+            "test" -> DependencyScope.TEST
+            else -> DependencyScope.COMPILE
+        }
 }

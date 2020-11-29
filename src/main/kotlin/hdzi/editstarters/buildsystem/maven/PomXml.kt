@@ -2,7 +2,11 @@ package hdzi.editstarters.buildsystem.maven
 
 import com.intellij.psi.xml.XmlFile
 import com.intellij.psi.xml.XmlTag
-import hdzi.editstarters.buildsystem.*
+import hdzi.editstarters.buildsystem.ProjectBom
+import hdzi.editstarters.buildsystem.ProjectDependency
+import hdzi.editstarters.buildsystem.ProjectFile
+import hdzi.editstarters.buildsystem.ProjectRepository
+import hdzi.editstarters.springboot.initializr.DependencyScope
 import hdzi.editstarters.springboot.initializr.InitializrBom
 import hdzi.editstarters.springboot.initializr.InitializrRepository
 import hdzi.editstarters.springboot.initializr.StarterInfo
@@ -28,9 +32,8 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
         dependency.addSubTagWithTextBody("groupId", info.groupId)
         dependency.addSubTagWithTextBody("artifactId", info.artifactId)
         // 处理scope
-        val scope = DependencyScope.get(info.scope)
-        dependency.addSubTagWithTextBody("scope", resolveScope(scope))
-        if (scope == DependencyScope.ANNOTATION_PROCESSOR || scope == DependencyScope.COMPILE_ONLY) {
+        dependency.addSubTagWithTextBody("scope", info.scope.resolveScope())
+        if (info.scope == DependencyScope.ANNOTATION_PROCESSOR || info.scope == DependencyScope.COMPILE_ONLY) {
             dependency.addSubTagWithTextBody("optional", "true")
         }
         dependency.addSubTagWithTextBody("version", info.version)
@@ -102,7 +105,7 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
     private fun XmlTag.createSubTag(name: String): XmlTag =
         addSubTag(createChildTag(name, this.namespace, null, false), false)
 
-    private fun resolveScope(scope: DependencyScope): String? = when (scope) {
+    private fun DependencyScope.resolveScope() = when (this) {
         DependencyScope.ANNOTATION_PROCESSOR -> null
         DependencyScope.COMPILE -> null
         DependencyScope.COMPILE_ONLY -> null
