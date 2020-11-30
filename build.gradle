@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'hdzi'
-version '3.0.0-beta'
+version '2.4.0'
 
 repositories {
     maven { url = 'https://maven.aliyun.com/repository/public' }
