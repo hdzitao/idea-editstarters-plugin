@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'hdzi'
-version '2.4.0'
+version '3.0.0'
 
 repositories {
     maven { url = 'https://maven.aliyun.com/repository/public' }
@@ -35,6 +35,6 @@ patchPluginXml {
 <ul>
 <li>完善scope在不同build工具下的对应关系</li>
 </ul>
-<a href="https://github.com/hdzitao/idea-editstarters-plugin/blob/2.x/CHANGELOG.md">All Changes</a>
+<a href="https://github.com/hdzitao/idea-editstarters-plugin/blob/3.x/CHANGELOG.md">All Changes</a>
       """
 }
