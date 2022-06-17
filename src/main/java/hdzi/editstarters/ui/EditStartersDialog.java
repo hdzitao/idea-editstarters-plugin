@@ -5,9 +5,9 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import hdzi.editstarters.springboot.initializr.InitializrVersion;
-import hdzi.editstarters.springboot.initializr.SpringInitializr;
-import hdzi.editstarters.springboot.initializr.StarterInfo;
+import hdzi.editstarters.initializr.InitializrVersion;
+import hdzi.editstarters.initializr.SpringInitializr;
+import hdzi.editstarters.initializr.StarterInfo;
 import org.apache.commons.lang.WordUtils;
 
 import javax.swing.*;
@@ -40,7 +40,7 @@ public class EditStartersDialog {
 
         // boot版本选框
         this.versionComboBox.setModel(new CollectionComboBoxModel<>(
-                initializr.getVersion().values.stream().map(InitializrVersion.Value::getId).collect(Collectors.toList()),
+                initializr.getVersion().getValues().stream().map(InitializrVersion.Value::getId).collect(Collectors.toList()),
                 initializr.getCurrentVersionID()
         ));
         this.versionComboBox.setEnabled(false);
@@ -92,7 +92,7 @@ public class EditStartersDialog {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // 按两下选择
                     StarterInfo starterInfo = starterList.getSelectedValue();
-                    if (starterInfo.getExist()) { // 对于已存在的starter，添加就是从删除列表里删除
+                    if (starterInfo.isExist()) { // 对于已存在的starter，添加就是从删除列表里删除
                         removeStarters.remove(starterInfo);
                     } else { // 对于不存在的starter，添加直接加入添加列表
                         addStarters.add(starterInfo);
@@ -114,7 +114,7 @@ public class EditStartersDialog {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // 按两下删除
                     StarterInfo starterInfo = selectList.getSelectedValue();
-                    if (starterInfo.getExist()) { // 对于已存在的starter，删除就是加入删除列表
+                    if (starterInfo.isExist()) { // 对于已存在的starter，删除就是加入删除列表
                         removeStarters.add(starterInfo);
                     } else { // 对于不存在的starter，删除是从添加列表里删除
                         addStarters.remove(starterInfo);
@@ -133,7 +133,7 @@ public class EditStartersDialog {
                 moduleList.clearSelection();
                 String searchKey = searchField.getText().toLowerCase();
                 List<StarterInfo> result = modulesMap.values().stream().flatMap(starters -> starters.stream().filter(starter ->
-                                searchCache.computeIfAbsent(starter, key -> (key.groupId + ":" + key.artifactId + "\t" + key.name).toLowerCase())
+                                searchCache.computeIfAbsent(starter, key -> (key.getGroupId() + ":" + key.getArtifactId() + "\t" + key.getName()).toLowerCase())
                                         .contains(searchKey)))
                         .collect(Collectors.toList());
                 starterList.setModel(new CollectionComboBoxModel<>(result));
@@ -150,9 +150,9 @@ public class EditStartersDialog {
     private String getStarterInfoToolTipText(StarterInfo starter) {
         return toolTipTextCache.computeIfAbsent(starter, info -> {
             StringBuilder buffer = new StringBuilder();
-            buffer.append("GroupId: ").append(info.groupId).append("<br/>")
-                    .append("ArtifactId: ").append(info.artifactId).append("<br/>")
-                    .append("Scope: ").append(info.scope).append("<br/>");
+            buffer.append("GroupId: ").append(info.getGroupId()).append("<br/>")
+                    .append("ArtifactId: ").append(info.getArtifactId()).append("<br/>")
+                    .append("Scope: ").append(info.getScope()).append("<br/>");
             if (info.getVersion() != null) {
                 buffer.append("Version: ").append(info.getVersion()).append("<br/>");
             }

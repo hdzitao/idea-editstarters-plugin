@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.10'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.50'
 }
 
 group 'hdzi'
@@ -14,15 +13,14 @@ repositories {
 }
 
 dependencies {
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 intellij {
     version '2019.1'
     plugins = ['maven', 'gradle', 'Groovy', 'Kotlin']
@@ -30,7 +28,7 @@ intellij {
 patchPluginXml {
     sinceBuild "181"
     untilBuild ""
-    
+
     changeNotes """
 <ul>
 <li>完善scope在不同build工具下的对应关系</li>
