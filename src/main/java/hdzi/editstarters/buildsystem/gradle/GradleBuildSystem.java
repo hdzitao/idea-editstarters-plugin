@@ -13,8 +13,8 @@ import hdzi.editstarters.buildsystem.ProjectDependency;
 import hdzi.editstarters.buildsystem.ProjectFile;
 import hdzi.editstarters.ui.ShowErrorException;
 import lombok.SneakyThrows;
-import org.gradle.plugins.ide.idea.model.IdeaModule;
 import org.gradle.tooling.model.GradleModuleVersion;
+import org.gradle.tooling.model.idea.IdeaModule;
 import org.gradle.tooling.model.idea.IdeaProject;
 import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -58,8 +58,8 @@ public class GradleBuildSystem extends BuildSystem {
         List<ProjectDependency> dependencies = progressManager.runProcessWithProgressSynchronously((ThrowableComputable<List<ProjectDependency>, Exception>) () -> {
             progressManager.getProgressIndicator().setIndeterminate(true);
             return new GradleExecutionHelper().execute(basePath, setting, connect -> {
-                IdeaModule ideaModule = (IdeaModule) connect.getModel(IdeaProject.class).getModules().getAt(0);
-                return ideaModule.resolveDependencies().stream()
+                IdeaModule ideaModule = connect.getModel(IdeaProject.class).getModules().getAt(0);
+                return ideaModule.getDependencies().stream()
                         .filter(it -> it instanceof IdeaSingleEntryLibraryDependency
                                 && ((IdeaSingleEntryLibraryDependency) it).getGradleModuleVersion() != null)
                         .map(it -> {
