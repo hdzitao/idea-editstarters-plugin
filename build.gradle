@@ -4,11 +4,11 @@ plugins {
 }
 
 group 'hdzi'
-version '3.0.0'
+version '3.0.0-alpha.1'
 
 repositories {
     maven { url = 'https://maven.aliyun.com/repository/public' }
-    jcenter()
+    //jcenter()
     mavenCentral()
 }
 

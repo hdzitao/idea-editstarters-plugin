@@ -26,7 +26,7 @@ public class ProjectDependency implements Dependency {
     }
 
     public ProjectDependency(String groupId, String artifactId, String version) {
-        this(groupId, artifactId, null, null);
+        this(groupId, artifactId, version, null);
     }
 
     public ProjectDependency(String groupId, String artifactId, PsiElement element) {

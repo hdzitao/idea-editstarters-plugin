@@ -28,14 +28,13 @@ public class EditStartersDialog {
     private JList<StarterInfo> selectList;
     private JTextField searchField;
     private final JFrame frame;
-    private final String title = "Edit Starters";
     private final Set<StarterInfo> addStarters = new HashSet<>(64);
     private final Set<StarterInfo> removeStarters = new HashSet<>(64);
     private final WeakHashMap<StarterInfo, String> toolTipTextCache = new WeakHashMap<>(); // 加个缓存
     private final WeakHashMap<StarterInfo, String> searchCache = new WeakHashMap<>(); // 搜索缓存
 
     public EditStartersDialog(BuildSystem buildSystem, SpringInitializr initializr) {
-        this.frame = new JFrame(this.title);
+        this.frame = new JFrame("Edit Starters");
         this.frame.setContentPane(this.root);
 
         // boot版本选框
@@ -46,9 +45,7 @@ public class EditStartersDialog {
         this.versionComboBox.setEnabled(false);
 
         // 取消按钮
-        this.buttonCancel.addActionListener(e -> {
-            this.frame.dispose();
-        });
+        this.buttonCancel.addActionListener(e -> this.frame.dispose());
 
         // ok按钮
         this.buttonOK.addActionListener(e -> {

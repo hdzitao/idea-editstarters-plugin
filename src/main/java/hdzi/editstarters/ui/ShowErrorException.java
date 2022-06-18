@@ -7,4 +7,8 @@ public class ShowErrorException extends RuntimeException {
     public ShowErrorException(String message) {
         super(message);
     }
+
+    public ShowErrorException(String s, Throwable throwable) {
+        super(s, throwable);
+    }
 }

@@ -17,6 +17,6 @@ public class GradleButtonAction extends EditStartersButtonAction {
 
     @Override
     protected BuildSystem newBuildSystem(DataContext dataContext) {
-        return new GradleBuildSystem(dataContext);
+        return GradleBuildSystem.of(dataContext);
     }
 }

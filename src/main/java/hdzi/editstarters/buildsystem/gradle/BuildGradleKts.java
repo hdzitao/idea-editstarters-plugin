@@ -11,7 +11,6 @@ import hdzi.editstarters.initializr.InitializrBom;
 import hdzi.editstarters.initializr.InitializrRepository;
 import hdzi.editstarters.initializr.StarterInfo;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.kotlin.psi.*;
 
 import java.util.List;
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
  * <p>
  * Created by taojinhou on 2019/1/17.
  */
+@SuppressWarnings("ConstantConditions")
 class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     private final KtFile buildFile;
 
@@ -43,10 +43,8 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     public List<ProjectDependency> findAllDependencies(KtBlockExpression dependenciesTag) {
         return PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, KtCallExpression.class).stream()
                 .map(it -> {
-                    Pair<String, String> pair = getDependencyGroupArtifact(it);
-                    String groupId = pair.getLeft();
-                    String artifactId = pair.getRight();
-                    return new ProjectDependency(groupId, artifactId, it);
+                    GradlePoint gradlePoint = getDependencyGroupArtifact(it);
+                    return new ProjectDependency(gradlePoint.getGroupId(), gradlePoint.getArtifactId(), it);
                 }).collect(Collectors.toList());
     }
 
@@ -67,8 +65,8 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     public List<ProjectBom> findAllBoms(KtBlockExpression bomsTag) {
         return findAllCallExpression(bomsTag, TAG_BOM).stream()
                 .map(it -> {
-                    Pair<String, String> pair = splitGroupArtifact(getCallFirstParam(it));
-                    return new ProjectBom(pair.getLeft(), pair.getRight());
+                    GradlePoint gradlePoint = splitGroupArtifact(getCallFirstParam(it));
+                    return new ProjectBom(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
                 }).collect(Collectors.toList());
     }
 
@@ -89,14 +87,14 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
                 .map(it -> {
                     List<KtValueArgument> arguments = it.getValueArguments();
                     String url = "";
-                    if (!ContainerUtil.isEmpty(arguments)) {
-                        KtValueArgument first = arguments.get(0);
-                        if (KtLambdaArgument.class.equals(first.getClass())) {
+                    KtValueArgument first;
+                    if ((first = ContainerUtil.getFirstItem(arguments)) != null) {
+                        if (first instanceof KtLambdaArgument) {
                             List<KtExpression> statements = ((KtLambdaArgument) first).getLambdaExpression().getBodyExpression().getStatements();
                             KtExpression urlStatement = ContainerUtil.find(statements, statement -> statement instanceof KtBinaryExpression
                                     && "url".equals(((KtBinaryExpression) statement).getLeft().getText()));
                             url = getCallFirstParam(((KtCallExpression) ((KtBinaryExpression) urlStatement).getRight()));
-                        } else if (KtValueArgument.class.equals(first.getClass())) {
+                        } else {
                             url = getCallFirstParam(it);
                         }
                     }
@@ -154,17 +152,18 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
         return trimText(ktCallExpression.getValueArguments().get(0).getText());
     }
 
-    private Pair<String, String> getDependencyGroupArtifact(KtCallExpression ktCallExpression) {
-        Map<String, String> namedArguments = ktCallExpression.getValueArguments().stream().collect(Collectors.toMap(
-                c -> trimText(c.getArgumentName().getText()),
-                c -> trimText(c.getArgumentExpression().getText())
-        ));
-        namedArguments.remove(null);
+    private GradlePoint getDependencyGroupArtifact(KtCallExpression ktCallExpression) {
+        Map<String, String> namedArguments = ktCallExpression.getValueArguments().stream()
+                .filter(it -> it.getArgumentName() != null)
+                .collect(Collectors.toMap(
+                        it -> trimText(it.getArgumentName().getText()),
+                        it -> trimText(it.getArgumentExpression().getText())
+                ));
 
         if (namedArguments.isEmpty()) {
             return splitGroupArtifact(getCallFirstParam(ktCallExpression));
         } else {
-            return Pair.of(namedArguments.get("group"), namedArguments.get("name"));
+            return GradlePoint.of(namedArguments.get("group"), namedArguments.get("name"));
         }
     }
 

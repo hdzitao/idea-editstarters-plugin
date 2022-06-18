@@ -7,34 +7,36 @@ import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ThrowableComputable;
+import com.intellij.psi.PsiFile;
 import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.initializr.SpringInitializr;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Edit Starter按钮父类。
+ * Edit Starter按钮
  */
 public abstract class EditStartersButtonAction extends AnAction {
     /**
      * 点击Edit Starter按钮动作
      */
     @Override
-    public void actionPerformed(AnActionEvent e) {
+    public void actionPerformed(@NotNull AnActionEvent e) {
         try {
             BuildSystem buildSystem = newBuildSystem(e.getDataContext());
-            if (buildSystem.isSpringBootProject()) {
-                // 弹出spring initializr地址输入框
-                String url = new InitializrUrlDialog().getUrl();
-                ProgressManager progressManager = ProgressManager.getInstance();
-                SpringInitializr springInitializr =
-                        progressManager.runProcessWithProgressSynchronously((ThrowableComputable<SpringInitializr, Exception>) () -> {
-                            progressManager.getProgressIndicator().setIndeterminate(true);
-                            return new SpringInitializr(url, buildSystem.getSpringbootDependency().getVersion());
-                        }, "Loading " + url, true, e.getData(CommonDataKeys.PROJECT));
-                buildSystem.getExistsDependencyDB().values().forEach(springInitializr::addExistsStarter);
-                new EditStartersDialog(buildSystem, springInitializr).show();
-            } else {
+            // 检查是否是spring boot
+            if (!buildSystem.isSpringBootProject()) {
                 throw new ShowErrorException("Not a Spring Boot Project!");
             }
+
+            // 弹出spring initializr地址输入框
+            String url = new InitializrUrlDialog().getUrl();
+            ProgressManager progressManager = ProgressManager.getInstance();
+            SpringInitializr springInitializr =
+                    progressManager.runProcessWithProgressSynchronously((ThrowableComputable<SpringInitializr, Exception>) () -> {
+                        progressManager.getProgressIndicator().setIndeterminate(true);
+                        return new SpringInitializr(url, buildSystem.getSpringbootDependency().getVersion(), buildSystem.getExistsDependencyDB());
+                    }, "Loading " + url, true, e.getData(CommonDataKeys.PROJECT));
+            new EditStartersDialog(buildSystem, springInitializr).show();
         } catch (Throwable throwable) { // 所有异常弹错误框
             String message;
 
@@ -54,8 +56,11 @@ public abstract class EditStartersButtonAction extends AnAction {
      */
     @Override
     public void update(AnActionEvent e) {
-        String name = e.getData(CommonDataKeys.PSI_FILE).getName();
-        e.getPresentation().setEnabled(isMatchFile(name));
+        PsiFile data = e.getData(CommonDataKeys.PSI_FILE);
+        if (data != null) {
+            String name = data.getName();
+            e.getPresentation().setEnabled(isMatchFile(name));
+        }
     }
 
     /**

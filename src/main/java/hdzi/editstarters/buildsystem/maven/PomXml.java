@@ -19,11 +19,21 @@ import java.util.stream.Collectors;
 /**
  * Created by taojinhou on 2018/12/24.
  */
+@SuppressWarnings("ConstantConditions")
 public class PomXml extends ProjectFile<XmlTag> {
+    private static final String TAG_DEPENDENCY_MANAGEMENT = "dependencyManagement";
+    private static final String TAG_DEPENDENCIES = "dependencies";
+    private static final String TAG_DEPENDENCY = "dependency";
+    private static final String TAG_GROUP_ID = "groupId";
+    private static final String TAG_ARTIFACT_ID = "artifactId";
+    private static final String TAG_VERSION = "version";
+    private static final String TAG_SCOPE = "scope";
+    private static final String TAG_REPOSITORIES = "repositories";
+    private static final String TAG_REPOSITORY = "repository";
     /**
      * 根标签
      */
-    private XmlTag rootTag;
+    private final XmlTag rootTag;
 
     public PomXml(XmlFile file) {
         rootTag = file.getDocument().getRootTag();
@@ -31,67 +41,67 @@ public class PomXml extends ProjectFile<XmlTag> {
 
     @Override
     public XmlTag getOrCreateDependenciesTag() {
-        return getOrCreateXmlTag(this.rootTag, "dependencies");
+        return getOrCreateXmlTag(this.rootTag, TAG_DEPENDENCIES);
     }
 
     @Override
     public List<ProjectDependency> findAllDependencies(XmlTag dependenciesTag) {
-        return Arrays.stream(dependenciesTag.findSubTags("dependency"))
-                .map(tag -> new ProjectDependency(getTagText(tag, "groupId"), getTagText(tag, "artifactId"), tag))
+        return Arrays.stream(dependenciesTag.findSubTags(TAG_DEPENDENCY))
+                .map(tag -> new ProjectDependency(getTagText(tag, TAG_GROUP_ID), getTagText(tag, TAG_ARTIFACT_ID), tag))
                 .collect(Collectors.toList());
     }
 
     @Override
     public void createDependencyTag(XmlTag dependenciesTag, StarterInfo info) {
-        XmlTag dependency = createSubTag(dependenciesTag, "dependency");
-        addSubTagWithTextBody(dependency, "groupId", info.getGroupId());
-        addSubTagWithTextBody(dependency, "artifactId", info.getArtifactId());
+        XmlTag dependency = createSubTag(dependenciesTag, TAG_DEPENDENCY);
+        addSubTagWithTextBody(dependency, TAG_GROUP_ID, info.getGroupId());
+        addSubTagWithTextBody(dependency, TAG_ARTIFACT_ID, info.getArtifactId());
         DependencyScope scope = info.getScope();
-        addSubTagWithTextBody(dependency, "scope", resolveScope(scope));
+        addSubTagWithTextBody(dependency, TAG_SCOPE, resolveScope(scope));
         if (scope == DependencyScope.ANNOTATION_PROCESSOR || scope == DependencyScope.COMPILE_ONLY) {
             addSubTagWithTextBody(dependency, "optional", "true");
         }
-        addSubTagWithTextBody(dependency, "version", info.getVersion());
+        addSubTagWithTextBody(dependency, TAG_VERSION, info.getVersion());
     }
 
     @Override
     public XmlTag getOrCreateBomsTag() {
-        return getOrCreateXmlTag(getOrCreateXmlTag(this.rootTag, "dependencyManagement"), "dependencies");
+        return getOrCreateXmlTag(getOrCreateXmlTag(this.rootTag, TAG_DEPENDENCY_MANAGEMENT), TAG_DEPENDENCIES);
     }
 
 
     @Override
     public List<ProjectBom> findAllBoms(XmlTag bomsTag) {
-        return Arrays.stream(bomsTag.findSubTags("dependency"))
-                .map(tag -> new ProjectBom(getTagText(tag, "groupId"), getTagText(tag, "artifactId")))
+        return Arrays.stream(bomsTag.findSubTags(TAG_DEPENDENCY))
+                .map(tag -> new ProjectBom(getTagText(tag, TAG_GROUP_ID), getTagText(tag, TAG_ARTIFACT_ID)))
                 .collect(Collectors.toList());
     }
 
     @Override
     public void createBomTag(XmlTag bomsTag, InitializrBom bom) {
-        XmlTag dependencyTag = createSubTag(bomsTag, "dependency");
-        addSubTagWithTextBody(dependencyTag, "groupId", bom.getGroupId());
-        addSubTagWithTextBody(dependencyTag, "artifactId", bom.getArtifactId());
-        addSubTagWithTextBody(dependencyTag, "version", bom.getVersion());
+        XmlTag dependencyTag = createSubTag(bomsTag, TAG_DEPENDENCY);
+        addSubTagWithTextBody(dependencyTag, TAG_GROUP_ID, bom.getGroupId());
+        addSubTagWithTextBody(dependencyTag, TAG_ARTIFACT_ID, bom.getArtifactId());
+        addSubTagWithTextBody(dependencyTag, TAG_VERSION, bom.getVersion());
         addSubTagWithTextBody(dependencyTag, "type", "pom");
-        addSubTagWithTextBody(dependencyTag, "scope", "import");
+        addSubTagWithTextBody(dependencyTag, TAG_SCOPE, "import");
     }
 
     @Override
     public XmlTag getOrCreateRepositoriesTag() {
-        return getOrCreateXmlTag(this.rootTag, "repositories");
+        return getOrCreateXmlTag(this.rootTag, TAG_REPOSITORIES);
     }
 
     @Override
     public List<ProjectRepository> findAllRepositories(XmlTag repositoriesTag) {
-        return Arrays.stream(repositoriesTag.findSubTags("repository"))
+        return Arrays.stream(repositoriesTag.findSubTags(TAG_REPOSITORY))
                 .map(tag -> new ProjectRepository(getTagText(tag, "url")))
                 .collect(Collectors.toList());
     }
 
     @Override
     public void createRepositoryTag(XmlTag repositoriesTag, InitializrRepository repository) {
-        XmlTag repositoryTag = createSubTag(repositoriesTag, "repository");
+        XmlTag repositoryTag = createSubTag(repositoriesTag, TAG_REPOSITORY);
         addSubTagWithTextBody(repositoryTag, "id", repository.getId());
         addSubTagWithTextBody(repositoryTag, "name", repository.getName());
         addSubTagWithTextBody(repositoryTag, "url", repository.getUrl());
@@ -105,7 +115,11 @@ public class PomXml extends ProjectFile<XmlTag> {
      * 获取标签里的值
      */
     private String getTagText(XmlTag xmlTag, String name) {
-        return xmlTag.findFirstSubTag(name).getValue().getText();
+        XmlTag subTag = xmlTag.findFirstSubTag(name);
+        if (subTag == null) {
+            return "";
+        }
+        return subTag.getValue().getText();
     }
 
     /**

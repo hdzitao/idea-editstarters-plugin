@@ -6,6 +6,7 @@ import hdzi.editstarters.dependency.Point;
 import hdzi.editstarters.initializr.InitializrBom;
 import hdzi.editstarters.initializr.InitializrRepository;
 import hdzi.editstarters.initializr.StarterInfo;
+import hdzi.editstarters.ui.ShowErrorException;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.Collection;
@@ -19,36 +20,49 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
 
     @Override
     public void removeStarters(Collection<StarterInfo> dependencies) {
-        T dependenciesTag = getOrCreateDependenciesTag();
-        // 取已存在的依赖
-        List<ProjectDependency> extDependencies = findAllDependencies(dependenciesTag);
-        // 转化待删除的依赖成字符串形式，方便对比
-        Set<String> removeDependencies = dependencies.stream().map(Point::point).collect(Collectors.toSet());
-        // 遍历存在的依赖，如果待删除的依赖包含它，就删除
-        for (ProjectDependency extDependency : extDependencies) {
-            if (removeDependencies.contains(extDependency.point())) {
-                PsiElement element = extDependency.getElement();
-                if (element != null) {
-                    element.delete();
+        try {
+            T dependenciesTag = getOrCreateDependenciesTag();
+            // 取已存在的依赖
+            List<ProjectDependency> extDependencies = findAllDependencies(dependenciesTag);
+            // 转化待删除的依赖成字符串形式，方便对比
+            Set<String> removeDependencies = dependencies.stream().map(Point::point).collect(Collectors.toSet());
+            // 遍历存在的依赖，如果待删除的依赖包含它，就删除
+            for (ProjectDependency extDependency : extDependencies) {
+                if (removeDependencies.contains(extDependency.point())) {
+                    PsiElement element = extDependency.getElement();
+                    if (element != null) {
+                        element.delete();
+                    }
                 }
             }
+        } catch (ShowErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ShowErrorException("Syntax error!", e);
         }
+
     }
 
     @Override
     public void addStarters(Collection<StarterInfo> dependencies) {
-        T dependenciesTag = getOrCreateDependenciesTag();
-        for (StarterInfo dependency : dependencies) {
-            createDependencyTag(dependenciesTag, dependency);
-            InitializrBom bom = dependency.getBom();
-            if (bom != null) {
-                addBom(bom);
-            }
+        try {
+            T dependenciesTag = getOrCreateDependenciesTag();
+            for (StarterInfo dependency : dependencies) {
+                createDependencyTag(dependenciesTag, dependency);
+                InitializrBom bom = dependency.getBom();
+                if (bom != null) {
+                    addBom(bom);
+                }
 
-            List<InitializrRepository> repositories = dependency.getRepositories();
-            if (CollectionUtils.isNotEmpty(repositories)) {
-                addRepositories(repositories);
+                List<InitializrRepository> repositories = dependency.getRepositories();
+                if (CollectionUtils.isNotEmpty(repositories)) {
+                    addRepositories(repositories);
+                }
             }
+        } catch (ShowErrorException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ShowErrorException("Syntax error!", e);
         }
     }
 

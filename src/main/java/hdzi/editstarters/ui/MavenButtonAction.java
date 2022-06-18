@@ -17,6 +17,6 @@ public class MavenButtonAction extends EditStartersButtonAction {
 
     @Override
     protected BuildSystem newBuildSystem(DataContext dataContext) {
-        return new MavenBuildSystem(dataContext);
+        return MavenBuildSystem.of(dataContext);
     }
 }

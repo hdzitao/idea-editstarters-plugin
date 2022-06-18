@@ -20,14 +20,16 @@ public class SpringInitializr {
     private final String currentVersionID;
     private final Map<String, List<StarterInfo>> modulesMap = new LinkedHashMap<>();
     private final Map<String, StarterInfo> pointMap = new LinkedHashMap<>();
-    private InitializrVersion version;
-    Set<StarterInfo> existStarters = new LinkedHashSet<>();
+    private final InitializrVersion version;
+    private final Set<StarterInfo> existStarters = new LinkedHashSet<>();
+    private final Map<String, ? extends Dependency> existsDependencyDB;
 
 
-    public SpringInitializr(String url, String bootVersion) {
+    public SpringInitializr(String url, String bootVersion, Map<String, ? extends Dependency> existsDependencyDB) {
         this.url = url;
         this.bootVersion = bootVersion;
         this.currentVersionID = this.bootVersion.replaceFirst("^(\\d+\\.\\d+\\.\\d+).*$", "$1");
+        this.existsDependencyDB = existsDependencyDB;
 
         try {
             Gson gson = new Gson();
@@ -43,14 +45,6 @@ public class SpringInitializr {
             throw new ShowErrorException("Request failure! Your spring boot version may not be supported, please confirm.");
         } catch (JsonSyntaxException ignore) {
             throw new ShowErrorException("Request failure! JSON syntax error for response, please confirm.");
-        }
-    }
-
-    public void addExistsStarter(Dependency depend) {
-        StarterInfo starterInfo = this.pointMap.get(depend.point());
-        if (starterInfo != null) {
-            starterInfo.setExist(true);
-            this.existStarters.add(starterInfo);
         }
     }
 
@@ -94,6 +88,11 @@ public class SpringInitializr {
 
                     this.pointMap.put(starterInfo.point(), starterInfo);
                     dependencies.add(starterInfo);
+                }
+
+                if (this.existsDependencyDB.containsKey(starterInfo.point())) {
+                    starterInfo.setExist(true);
+                    this.existStarters.add(starterInfo);
                 }
 
             }

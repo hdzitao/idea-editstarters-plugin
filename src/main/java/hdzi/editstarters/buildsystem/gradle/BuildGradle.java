@@ -10,7 +10,6 @@ import hdzi.editstarters.buildsystem.ProjectRepository;
 import hdzi.editstarters.initializr.InitializrBom;
 import hdzi.editstarters.initializr.InitializrRepository;
 import hdzi.editstarters.initializr.StarterInfo;
-import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrStatement;
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 /**
  * Created by taojinhou on 2019/1/16.
  */
+@SuppressWarnings("ConstantConditions")
 public class BuildGradle extends GradleSyntax<GrClosableBlock> {
     private final GroovyFile buildFile;
 
@@ -45,11 +45,9 @@ public class BuildGradle extends GradleSyntax<GrClosableBlock> {
     @Override
     public List<ProjectDependency> findAllDependencies(GrClosableBlock dependenciesTag) {
         return PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall.class).stream()
-                .map(c -> {
-                    Pair<String, String> pair = getDependencyGroupArtifact(c);
-                    String groupId = pair.getLeft();
-                    String artifactId = pair.getRight();
-                    return new ProjectDependency(groupId, artifactId);
+                .map(it -> {
+                    GradlePoint gradlePoint = getDependencyGroupArtifact(it);
+                    return new ProjectDependency(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
                 }).collect(Collectors.toList());
     }
 
@@ -71,11 +69,9 @@ public class BuildGradle extends GradleSyntax<GrClosableBlock> {
     @Override
     public List<ProjectBom> findAllBoms(GrClosableBlock bomsTag) {
         return findAllMethod(bomsTag, TAG_BOM).stream()
-                .map(c -> {
-                    Pair<String, String> pair = splitGroupArtifact(getMethodFirstParam(c));
-                    String groupId = pair.getLeft();
-                    String artifactId = pair.getRight();
-                    return new ProjectBom(groupId, artifactId);
+                .map(it -> {
+                    GradlePoint gradlePoint = splitGroupArtifact(getMethodFirstParam(it));
+                    return new ProjectBom(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
                 }).collect(Collectors.toList());
     }
 
@@ -95,8 +91,8 @@ public class BuildGradle extends GradleSyntax<GrClosableBlock> {
     @Override
     public List<ProjectRepository> findAllRepositories(GrClosableBlock repositoriesTag) {
         return findAllMethod(repositoriesTag, TAG_REPOSITORY).stream()
-                .map(c -> {
-                    GrMethodCall urlCall = findMethod(c.getClosureArguments()[0], "url");
+                .map(it -> {
+                    GrMethodCall urlCall = findMethod(it.getClosureArguments()[0], "url");
                     return new ProjectRepository(urlCall != null ? getMethodFirstParam(urlCall) : "");
                 }).collect(Collectors.toList());
     }
@@ -123,30 +119,30 @@ public class BuildGradle extends GradleSyntax<GrClosableBlock> {
 
     private GrMethodCall findMethod(PsiElement psiElement, String name) {
         return PsiTreeUtil.getChildrenOfTypeAsList(psiElement, GrMethodCall.class).stream()
-                .filter(c -> Objects.equals(name, c.getInvokedExpression().getText()))
+                .filter(it -> Objects.equals(name, it.getInvokedExpression().getText()))
                 .findFirst()
                 .orElse(null);
     }
 
     private List<GrMethodCall> findAllMethod(PsiElement psiElement, String name) {
         List<GrMethodCall> closableBlocks = PsiTreeUtil.getChildrenOfTypeAsList(psiElement, GrMethodCall.class);
-        return ContainerUtil.findAll(closableBlocks, c -> Objects.equals(name, c.getInvokedExpression().getText()));
+        return ContainerUtil.findAll(closableBlocks, it -> Objects.equals(name, it.getInvokedExpression().getText()));
     }
 
     private String getMethodFirstParam(GrMethodCall call) {
         return trimText(call.getArgumentList().getAllArguments()[0].getText());
     }
 
-    private Pair<String, String> getDependencyGroupArtifact(GrMethodCall call) {
+    private GradlePoint getDependencyGroupArtifact(GrMethodCall call) {
         Map<String, String> namedArguments = Arrays.stream(call.getNamedArguments()).collect(Collectors.toMap(
-                c -> trimText(c.getLabel().getText()),
-                c -> trimText(c.getExpression().getText())
+                it -> trimText(it.getLabel().getText()),
+                it -> trimText(it.getExpression().getText())
         ));
 
         if (namedArguments.isEmpty()) {
             return splitGroupArtifact(getMethodFirstParam(call));
         } else {
-            return Pair.of(namedArguments.get("group"), namedArguments.get("name"));
+            return GradlePoint.of(namedArguments.get("group"), namedArguments.get("name"));
         }
     }
 

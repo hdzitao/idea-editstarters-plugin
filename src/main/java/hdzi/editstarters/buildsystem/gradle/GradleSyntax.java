@@ -3,19 +3,20 @@ package hdzi.editstarters.buildsystem.gradle;
 import com.intellij.psi.PsiElement;
 import hdzi.editstarters.buildsystem.ProjectFile;
 import hdzi.editstarters.dependency.DependencyScope;
+import hdzi.editstarters.dependency.Point;
 import hdzi.editstarters.initializr.InitializrBom;
 import hdzi.editstarters.initializr.InitializrRepository;
 import hdzi.editstarters.initializr.StarterInfo;
 import lombok.Data;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//@SuppressWarnings("ConstantConditions")
 public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> {
     @Data
     public static class Instruction {
@@ -32,6 +33,30 @@ public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> 
         }
     }
 
+    @Data
+    protected static class GradlePoint implements Point {
+        private final String groupId;
+        private final String artifactId;
+
+        private GradlePoint(String groupId, String artifactId) {
+            this.groupId = groupId;
+            this.artifactId = artifactId;
+        }
+
+        public static GradlePoint of(String groupId, String artifactId) {
+            return new GradlePoint(groupId, artifactId);
+        }
+
+        public static GradlePoint empty() {
+            return new GradlePoint("", "");
+        }
+
+        @Override
+        public String point() {
+            return this.groupId + ":" + this.artifactId;
+        }
+    }
+
     public static final String TAG_DEPENDENCY_MANAGEMENT = "dependencies";
     public static final String TAG_BOM_MANAGEMENT = "dependencyManagement";
     public static final String TAG_BOM_IMPORT = "imports";
@@ -39,24 +64,13 @@ public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> 
     public static final String TAG_REPOSITORY_MANAGEMENT = "repositories";
     public static final String TAG_REPOSITORY = "maven";
 
-    // scope相关指令
-    public static final String INS_ANNOTATION_PROCESSOR = "annotationProcessor";
-    public static final String INS_COMPILE = "implementation";
-    public static final String INS_COMPILE_ONLY = "compileOnly";
-    public static final String INS_PROVIDED = "providedRuntime";
-    public static final String INS_RUNTIME = "runtimeOnly";
-    public static final String INS_TEST = "testImplementation";
-
 
     protected List<Instruction> dependencyInstruction(StarterInfo info) {
-        String instruction = resolveScope(info.getScope());
-        String point = info.getGroupId() + ":" + info.getArtifactId()
-                + (info.getVersion() != null ? ":" + info.getVersion() : "");
         List<Instruction> instructions = new ArrayList<>();
-        instructions.add(new Instruction(instruction, point));
-        // 额外指令
-        if (info.getScope() == DependencyScope.ANNOTATION_PROCESSOR) {
-            instructions.add(new Instruction(INS_COMPILE_ONLY, point));
+        String point = info.getGroupId() + ":" + info.getArtifactId()
+                + (StringUtils.isNoneBlank(info.getVersion()) ? ":" + info.getVersion() : "");
+        for (String inst : resolveScope(info.getScope())) {
+            instructions.add(new Instruction(inst, point));
         }
         return instructions;
     }
@@ -69,30 +83,30 @@ public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> 
         return new Instruction(TAG_REPOSITORY, repository.getUrl());
     }
 
-    protected Pair<String, String> splitGroupArtifact(String point) {
+    protected GradlePoint splitGroupArtifact(String point) {
         if (StringUtils.isNoneBlank(point)) {
             Matcher matcher = Pattern.compile("^([^:]+):([^:]+)").matcher(point);
             if (matcher.find()) {
-                return Pair.of(matcher.group(1), matcher.group(2));
+                return GradlePoint.of(matcher.group(1), matcher.group(2));
             }
         }
-        return Pair.of("", "");
+        return GradlePoint.empty();
     }
 
-    protected String resolveScope(DependencyScope scope) {
+    protected String[] resolveScope(DependencyScope scope) {
         switch (scope) {
             case ANNOTATION_PROCESSOR:
-                return INS_ANNOTATION_PROCESSOR;
+                return new String[]{"compileOnly", "annotationProcessor"};
             case COMPILE:
-                return INS_COMPILE;
+                return new String[]{"implementation"};
             case COMPILE_ONLY:
-                return INS_COMPILE_ONLY;
+                return new String[]{"compileOnly"};
             case PROVIDED:
-                return INS_PROVIDED;
+                return new String[]{"providedRuntime"};
             case RUNTIME:
-                return INS_RUNTIME;
+                return new String[]{"runtimeOnly"};
             case TEST:
-                return INS_TEST;
+                return new String[]{"testImplementation"};
             default:
                 return null;
         }
@@ -100,7 +114,7 @@ public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> 
 
     protected String trimText(String s, char... chars) {
         if (s == null) {
-            return s;
+            return "";
         }
 
         int len = s.length();
