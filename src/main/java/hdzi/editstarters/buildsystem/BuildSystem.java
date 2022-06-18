@@ -32,7 +32,7 @@ public abstract class BuildSystem implements EditStarters {
     protected BuildSystem(DataContext context, List<ProjectDependency> dependencies, EditStarters editStarters) {
         this.context = context;
         this.editStarters = editStarters;
-        this.existsDependencyDB = dependencies.stream().collect(Collectors.toMap(Point::point, d -> d));
+        this.existsDependencyDB = dependencies.stream().collect(Collectors.toMap(Point::point, d -> d, (o, n) -> n));
         this.springbootDependency = this.existsDependencyDB.get(new ProjectDependency("org.springframework.boot", "spring-boot").point());
         this.springBootProject = this.springbootDependency != null;
     }

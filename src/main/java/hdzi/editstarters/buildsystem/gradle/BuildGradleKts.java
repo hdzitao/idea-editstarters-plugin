@@ -172,17 +172,18 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     }
 
     private PsiElement addExpression(PsiElement psiElement, String text) {
-        KtExpression ktExpression = factory.createExpression(text);
-        if (ktExpression.getPrevSibling() != null
-                && StringUtils.isNoneBlank(ktExpression.getPrevSibling().getText())) {
-            ktExpression.getParent().addBefore(factory.createNewLine(1), ktExpression);
+        PsiElement addEle = psiElement.add(factory.createExpression(text));
+
+        if (addEle.getPrevSibling() != null
+                && StringUtils.isNoneBlank(addEle.getPrevSibling().getText())) {
+            addEle.getParent().addBefore(factory.createNewLine(1), addEle);
         }
 
-        if (ktExpression.getNextSibling() != null
-                && StringUtils.isNoneBlank(ktExpression.getNextSibling().getText())) {
-            ktExpression.getParent().addAfter(factory.createNewLine(1), ktExpression);
+        if (addEle.getNextSibling() != null
+                && StringUtils.isNoneBlank(addEle.getNextSibling().getText())) {
+            addEle.getParent().addAfter(factory.createNewLine(1), addEle);
         }
 
-        return psiElement.add(ktExpression);
+        return addEle;
     }
 }
