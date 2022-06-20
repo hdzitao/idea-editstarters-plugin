@@ -9,7 +9,9 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiFile;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import hdzi.editstarters.initializr.SpringInitializr;
+import hdzi.editstarters.dependency.SpringBootProject;
+import hdzi.editstarters.initializr.chain.InitializrChain;
+import hdzi.editstarters.initializr.chain.InitializrParameters;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -30,16 +32,19 @@ public abstract class EditStartersButtonAction extends AnAction {
 
             // 弹出spring initializr地址输入框
             String url = new InitializrUrlDialog().getUrl();
+            // 组装参数
+            InitializrParameters parameters = new InitializrParameters();
+            parameters.setBuildSystem(buildSystem);
+            parameters.setUrl(url);
             ProgressManager progressManager = ProgressManager.getInstance();
-            SpringInitializr springInitializr =
-                    progressManager.runProcessWithProgressSynchronously((ThrowableComputable<SpringInitializr, Exception>) () -> {
+            SpringBootProject springBootProject =
+                    progressManager.runProcessWithProgressSynchronously((ThrowableComputable<SpringBootProject, Exception>) () -> {
                         progressManager.getProgressIndicator().setIndeterminate(true);
-                        return new SpringInitializr(url, buildSystem.getSpringbootDependency().getVersion(), buildSystem.getExistsDependencyDB());
+                        return new InitializrChain().initialize(parameters);
                     }, "Loading " + url, true, e.getData(CommonDataKeys.PROJECT));
-            new EditStartersDialog(buildSystem, springInitializr).show();
+            new EditStartersDialog(buildSystem, springBootProject).show();
         } catch (Throwable throwable) { // 所有异常弹错误框
             String message;
-
 
             if (throwable instanceof ShowErrorException) {
                 message = throwable.getMessage();

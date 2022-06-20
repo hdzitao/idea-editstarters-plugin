@@ -7,9 +7,9 @@ import hdzi.editstarters.buildsystem.ProjectDependency;
 import hdzi.editstarters.buildsystem.ProjectFile;
 import hdzi.editstarters.buildsystem.ProjectRepository;
 import hdzi.editstarters.dependency.DependencyScope;
+import hdzi.editstarters.dependency.StarterInfo;
 import hdzi.editstarters.initializr.InitializrBom;
 import hdzi.editstarters.initializr.InitializrRepository;
-import hdzi.editstarters.initializr.StarterInfo;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;

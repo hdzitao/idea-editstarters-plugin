@@ -1,9 +1,12 @@
 package hdzi.editstarters.initializr;
 
+import lombok.Data;
+
 import java.util.Map;
 
+@Data
 public class InitializrResponse {
-    Map<String, InitializrDependency> dependencies;
-    Map<String, InitializrRepository> repositories;
-    Map<String, InitializrBom> boms;
+    private Map<String, InitializrDependency> dependencies;
+    private Map<String, InitializrRepository> repositories;
+    private Map<String, InitializrBom> boms;
 }

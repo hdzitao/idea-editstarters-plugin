@@ -15,6 +15,6 @@ public class InitializrVersion {
 
     @SerializedName("default")
     private String _default;
-    List<Value> values;
+    private List<Value> values;
 }
 

@@ -1,6 +1,6 @@
 package hdzi.editstarters;
 
-import hdzi.editstarters.initializr.StarterInfo;
+import hdzi.editstarters.dependency.StarterInfo;
 
 import java.util.Collection;
 

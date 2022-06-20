@@ -3,7 +3,7 @@ package hdzi.editstarters.buildsystem;
 import com.intellij.openapi.actionSystem.DataContext;
 import hdzi.editstarters.EditStarters;
 import hdzi.editstarters.dependency.Point;
-import hdzi.editstarters.initializr.StarterInfo;
+import hdzi.editstarters.dependency.StarterInfo;
 import lombok.Getter;
 
 import java.util.Collection;

@@ -1,46 +1,37 @@
-package hdzi.editstarters.initializr;
+package hdzi.editstarters.initializr.chain;
 
 import com.google.gson.*;
 import com.intellij.util.io.HttpRequests;
+import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.dependency.Dependency;
 import hdzi.editstarters.dependency.DependencyScope;
+import hdzi.editstarters.dependency.SpringBootProject;
+import hdzi.editstarters.dependency.StarterInfo;
+import hdzi.editstarters.initializr.InitializrBom;
+import hdzi.editstarters.initializr.InitializrDependency;
+import hdzi.editstarters.initializr.InitializrResponse;
 import hdzi.editstarters.ui.ShowErrorException;
-import lombok.Data;
 
 import java.io.IOException;
 import java.util.*;
 
-/**
- * Created by taojinhou on 2018/12/21.
- */
-@Data
-public class SpringInitializr {
-    private final String url;
-    private final String bootVersion;
-    private final String currentVersionID;
-    private final Map<String, List<StarterInfo>> modulesMap = new LinkedHashMap<>();
-    private final Map<String, StarterInfo> pointMap = new LinkedHashMap<>();
-    private final InitializrVersion version;
-    private final Set<StarterInfo> existStarters = new LinkedHashSet<>();
-    private final Map<String, ? extends Dependency> existsDependencyDB;
-
-
-    public SpringInitializr(String url, String bootVersion, Map<String, ? extends Dependency> existsDependencyDB) {
-        this.url = url;
-        this.bootVersion = bootVersion;
-        this.currentVersionID = this.bootVersion.replaceFirst("^(\\d+\\.\\d+\\.\\d+).*$", "$1");
-        this.existsDependencyDB = existsDependencyDB;
-
+public class SpringInitializr implements Initializr {
+    @Override
+    public SpringBootProject initialize(InitializrParameters parameters, InitializrChain chain) {
         try {
-            Gson gson = new Gson();
-            JsonObject baseInfoJSON = HttpRequests.request(this.url).accept("application/json").connect(request ->
-                    gson.fromJson(request.readString(), JsonObject.class));
+            BuildSystem buildSystem = parameters.getBuildSystem();
+            String version = buildSystem.getSpringbootDependency().getVersion();
+            String currentVersionID = version.replaceFirst("^(\\d+\\.\\d+\\.\\d+).*$", "$1");
 
-            this.version = gson.fromJson(baseInfoJSON.getAsJsonObject("bootVersion"), InitializrVersion.class);
-            String dependenciesUrl = parseDependenciesUrl(baseInfoJSON, this.currentVersionID);
+            Gson gson = new Gson();
+            JsonObject baseInfoJSON = HttpRequests.request(parameters.getUrl()).accept("application/json").connect(request ->
+                    gson.fromJson(request.readString(), JsonObject.class));
+            String dependenciesUrl = parseDependenciesUrl(baseInfoJSON, currentVersionID);
             JsonObject depsJSON = HttpRequests.request(dependenciesUrl).connect(request ->
                     gson.fromJson(request.readString(), JsonObject.class));
-            parseDependencies(baseInfoJSON, depsJSON);
+            Map<String, List<StarterInfo>> modules = parseDependencies(baseInfoJSON, depsJSON, buildSystem.getExistsDependencyDB());
+
+            return new SpringBootProject(currentVersionID, modules);
         } catch (IOException ignore) {
             throw new ShowErrorException("Request failure! Your spring boot version may not be supported, please confirm.");
         } catch (JsonSyntaxException ignore) {
@@ -56,12 +47,12 @@ public class SpringInitializr {
                 .replace("{?bootVersion}", "?bootVersion=" + version);
     }
 
-
-    private void parseDependencies(JsonObject baseInfoJSON, JsonObject depJSON) {
+    private Map<String, List<StarterInfo>> parseDependencies(JsonObject baseInfoJSON, JsonObject depJSON, Map<String, ? extends Dependency> existsDependencyDB) {
         Gson gson = new Gson();
+        Map<String, List<StarterInfo>> modules = new LinkedHashMap<>();
         // 设置仓库信息的id
         InitializrResponse depResponse = gson.fromJson(depJSON, InitializrResponse.class);
-        depResponse.repositories.forEach((id, repository) -> repository.setId(id));
+        depResponse.getRepositories().forEach((id, repository) -> repository.setId(id));
 
         JsonArray modulesJSON = baseInfoJSON.getAsJsonObject("dependencies").getAsJsonArray("values");
         for (JsonElement moduleEle : modulesJSON) {
@@ -71,7 +62,7 @@ public class SpringInitializr {
             for (JsonElement depEle : dependenciesJSON) {
                 StarterInfo starterInfo = gson.fromJson(depEle.getAsJsonObject(), StarterInfo.class);
 
-                InitializrDependency dependency = depResponse.dependencies.get(starterInfo.getId());
+                InitializrDependency dependency = depResponse.getDependencies().get(starterInfo.getId());
                 if (dependency != null) {
                     starterInfo.setGroupId(dependency.getGroupId());
                     starterInfo.setArtifactId(dependency.getArtifactId());
@@ -80,24 +71,23 @@ public class SpringInitializr {
                             .filter(scopeEnum -> scopeEnum.getScope().equals(dependency.getScope()))
                             .findFirst().orElse(DependencyScope.COMPILE));
 
-                    InitializrBom bom = depResponse.boms.get(dependency.getBom());
+                    InitializrBom bom = depResponse.getBoms().get(dependency.getBom());
                     if (bom != null) {
                         starterInfo.setBom(bom);
-                        bom.getRepositories().forEach(rid -> starterInfo.addRepository(depResponse.repositories.get(rid)));
+                        bom.getRepositories().forEach(rid -> starterInfo.addRepository(depResponse.getRepositories().get(rid)));
                     }
-
-                    this.pointMap.put(starterInfo.point(), starterInfo);
                     dependencies.add(starterInfo);
                 }
 
-                if (this.existsDependencyDB.containsKey(starterInfo.point())) {
+                if (existsDependencyDB.containsKey(starterInfo.point())) {
                     starterInfo.setExist(true);
-                    this.existStarters.add(starterInfo);
                 }
 
             }
 
-            this.modulesMap.put(module.get("name").getAsString(), dependencies);
+            modules.put(module.get("name").getAsString(), dependencies);
         }
+
+        return modules;
     }
 }

@@ -1,7 +1,7 @@
-package hdzi.editstarters.initializr;
+package hdzi.editstarters.dependency;
 
-import hdzi.editstarters.dependency.Dependency;
-import hdzi.editstarters.dependency.DependencyScope;
+import hdzi.editstarters.initializr.InitializrBom;
+import hdzi.editstarters.initializr.InitializrRepository;
 import lombok.Data;
 
 import java.util.ArrayList;

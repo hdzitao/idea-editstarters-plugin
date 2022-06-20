@@ -3,9 +3,9 @@ package hdzi.editstarters.buildsystem;
 import com.intellij.psi.PsiElement;
 import hdzi.editstarters.EditStarters;
 import hdzi.editstarters.dependency.Point;
+import hdzi.editstarters.dependency.StarterInfo;
 import hdzi.editstarters.initializr.InitializrBom;
 import hdzi.editstarters.initializr.InitializrRepository;
-import hdzi.editstarters.initializr.StarterInfo;
 import hdzi.editstarters.ui.ShowErrorException;
 import org.apache.commons.collections.CollectionUtils;
 

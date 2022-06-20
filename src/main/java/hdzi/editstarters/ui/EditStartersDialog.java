@@ -5,9 +5,8 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import hdzi.editstarters.initializr.InitializrVersion;
-import hdzi.editstarters.initializr.SpringInitializr;
-import hdzi.editstarters.initializr.StarterInfo;
+import hdzi.editstarters.dependency.SpringBootProject;
+import hdzi.editstarters.dependency.StarterInfo;
 import org.apache.commons.lang.WordUtils;
 
 import javax.swing.*;
@@ -33,14 +32,15 @@ public class EditStartersDialog {
     private final WeakHashMap<StarterInfo, String> toolTipTextCache = new WeakHashMap<>(); // 加个缓存
     private final WeakHashMap<StarterInfo, String> searchCache = new WeakHashMap<>(); // 搜索缓存
 
-    public EditStartersDialog(BuildSystem buildSystem, SpringInitializr initializr) {
+    public EditStartersDialog(BuildSystem buildSystem, SpringBootProject initializr) {
         this.frame = new JFrame("Edit Starters");
         this.frame.setContentPane(this.root);
 
         // boot版本选框
         this.versionComboBox.setModel(new CollectionComboBoxModel<>(
-                initializr.getVersion().getValues().stream().map(InitializrVersion.Value::getId).collect(Collectors.toList()),
-                initializr.getCurrentVersionID()
+//                initializr.getVersion().getValues().stream().map(InitializrVersion.Value::getId).collect(Collectors.toList()),
+                Collections.singletonList(initializr.getBootVersion()),
+                initializr.getBootVersion()
         ));
         this.versionComboBox.setEnabled(false);
 
@@ -56,16 +56,16 @@ public class EditStartersDialog {
             this.frame.dispose();
         });
 
-        Map<String, List<StarterInfo>> modulesMap = initializr.getModulesMap();
+        Map<String, List<StarterInfo>> modules = initializr.getModules();
 
         // Module列表
-        this.moduleList.setModel(new CollectionListModel<>(modulesMap.keySet()));
+        this.moduleList.setModel(new CollectionListModel<>(modules.keySet()));
         this.moduleList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 searchField.setText("");
                 String name = moduleList.getSelectedValue();
-                starterList.setModel(new CollectionListModel<>(modulesMap.getOrDefault(name, Collections.emptyList())));
+                starterList.setModel(new CollectionListModel<>(modules.getOrDefault(name, Collections.emptyList())));
             }
         });
 
@@ -129,7 +129,7 @@ public class EditStartersDialog {
             public void keyReleased(KeyEvent e) {
                 moduleList.clearSelection();
                 String searchKey = searchField.getText().toLowerCase();
-                List<StarterInfo> result = modulesMap.values().stream().flatMap(starters -> starters.stream().filter(starter ->
+                List<StarterInfo> result = modules.values().stream().flatMap(starters -> starters.stream().filter(starter ->
                                 searchCache.computeIfAbsent(starter, key -> (key.getGroupId() + ":" + key.getArtifactId() + "\t" + key.getName()).toLowerCase())
                                         .contains(searchKey)))
                         .collect(Collectors.toList());
