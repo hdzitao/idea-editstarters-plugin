@@ -5,6 +5,7 @@ import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import hdzi.editstarters.dependency.SpringBoot;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,7 +23,7 @@ public class CachePersistentComponent implements PersistentStateComponent<CacheP
         private String projectJson;
         private String url;
         private String version;
-        private Long createTime;
+        private Long updateTime;
     }
 
     private State state;
@@ -41,11 +42,19 @@ public class CachePersistentComponent implements PersistentStateComponent<CacheP
     public void put(String url, String version, SpringBoot project) {
         if (this.state == null) {
             this.state = new State();
-            this.state.createTime = System.currentTimeMillis();
         }
         this.state.url = url;
         this.state.version = version;
         this.state.projectJson = new Gson().toJson(project);
+        this.state.updateTime = System.currentTimeMillis();
+    }
+
+    public String getUrl() {
+        if (this.state != null && StringUtils.isNoneBlank(this.state.url)) {
+            return this.state.url;
+        }
+
+        return "https://start.spring.io/";
     }
 
     @Nullable

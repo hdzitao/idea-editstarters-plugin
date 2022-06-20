@@ -32,10 +32,8 @@ public abstract class EditStartersButtonAction extends AnAction {
             if (!buildSystem.isSpringBootProject()) {
                 throw new ShowErrorException("Not a Spring Boot Project!");
             }
-            // 取缓存
-            CachePersistentComponent.State state = CachePersistentComponent.getInstance(e.getProject()).getState();
             // 取缓存中的url作为弹出框的默认值
-            String url = state != null ? state.getUrl() : "https://start.spring.io/";
+            String url = CachePersistentComponent.getInstance(e.getProject()).getUrl();
             // 弹出spring initializr地址输入框
             InitializrDialog initializrDialog = new InitializrDialog(url);
             initializrDialog.showDialog();

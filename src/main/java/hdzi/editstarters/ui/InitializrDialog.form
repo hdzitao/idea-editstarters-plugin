@@ -60,7 +60,7 @@
               <horizontalAlignment value="2"/>
               <horizontalTextPosition value="10"/>
               <selected value="true"/>
-              <text value="Enable Cache:"/>
+              <text value="Use Cached:"/>
             </properties>
           </component>
         </children>
