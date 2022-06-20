@@ -3,6 +3,7 @@ package hdzi.editstarters.ui;
 import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 
+@Deprecated
 class InitializrUrlDialog {
     private final InputValidator urlVerifier = new InputValidator() {
         @Override

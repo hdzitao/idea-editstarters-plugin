@@ -1,6 +1,7 @@
 package hdzi.editstarters.initializr.chain;
 
 import hdzi.editstarters.dependency.SpringBoot;
+import hdzi.editstarters.initializr.CachePersistentComponent;
 
 public class CacheInitializr implements Initializr {
     @Override

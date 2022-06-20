@@ -10,6 +10,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiFile;
 import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.dependency.SpringBoot;
+import hdzi.editstarters.initializr.CachePersistentComponent;
 import hdzi.editstarters.initializr.chain.InitializrChain;
 import hdzi.editstarters.initializr.chain.InitializrParameters;
 import org.apache.commons.lang3.StringUtils;
@@ -25,15 +26,22 @@ public abstract class EditStartersButtonAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         try {
+            // 分析项目
             BuildSystem buildSystem = newBuildSystem(e.getDataContext());
             // 检查是否是spring boot
             if (!buildSystem.isSpringBootProject()) {
                 throw new ShowErrorException("Not a Spring Boot Project!");
             }
-
+            // 取缓存
+            CachePersistentComponent.State state = CachePersistentComponent.getInstance(e.getProject()).getState();
+            // 取缓存中的url作为弹出框的默认值
+            String url = state != null ? state.getUrl() : "https://start.spring.io/";
             // 弹出spring initializr地址输入框
-            String url = new InitializrUrlDialog().getUrl();
-            // 取消退出
+            InitializrDialog initializrDialog = new InitializrDialog(url);
+            initializrDialog.showDialog();
+            // 取出新的url
+            url = initializrDialog.getUrl();
+            // 新的url为空,取消退出
             if (StringUtils.isBlank(url)) {
                 return;
             }
@@ -42,6 +50,8 @@ public abstract class EditStartersButtonAction extends AnAction {
             parameters.setProject(e.getProject());
             parameters.setBuildSystem(buildSystem);
             parameters.setUrl(url);
+            parameters.setEnableCache(initializrDialog.isEnableCache());
+            // 执行
             ProgressManager progressManager = ProgressManager.getInstance();
             SpringBoot springBoot =
                     progressManager.runProcessWithProgressSynchronously((ThrowableComputable<SpringBoot, Exception>) () -> {
