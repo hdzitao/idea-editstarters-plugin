@@ -3,9 +3,8 @@ package hdzi.editstarters.initializr.chain;
 import com.google.gson.*;
 import com.intellij.util.io.HttpRequests;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import hdzi.editstarters.dependency.Dependency;
 import hdzi.editstarters.dependency.DependencyScope;
-import hdzi.editstarters.dependency.SpringBootProject;
+import hdzi.editstarters.dependency.SpringBoot;
 import hdzi.editstarters.dependency.StarterInfo;
 import hdzi.editstarters.initializr.InitializrBom;
 import hdzi.editstarters.initializr.InitializrDependency;
@@ -17,7 +16,7 @@ import java.util.*;
 
 public class SpringInitializr implements Initializr {
     @Override
-    public SpringBootProject initialize(InitializrParameters parameters, InitializrChain chain) {
+    public SpringBoot initialize(InitializrParameters parameters, InitializrChain chain) {
         try {
             BuildSystem buildSystem = parameters.getBuildSystem();
             String version = buildSystem.getSpringbootDependency().getVersion();
@@ -29,9 +28,9 @@ public class SpringInitializr implements Initializr {
             String dependenciesUrl = parseDependenciesUrl(baseInfoJSON, currentVersionID);
             JsonObject depsJSON = HttpRequests.request(dependenciesUrl).connect(request ->
                     gson.fromJson(request.readString(), JsonObject.class));
-            Map<String, List<StarterInfo>> modules = parseDependencies(baseInfoJSON, depsJSON, buildSystem.getExistsDependencyDB());
+            Map<String, List<StarterInfo>> modules = parseDependencies(baseInfoJSON, depsJSON);
 
-            return new SpringBootProject(currentVersionID, modules);
+            return new SpringBoot(currentVersionID, modules);
         } catch (IOException ignore) {
             throw new ShowErrorException("Request failure! Your spring boot version may not be supported, please confirm.");
         } catch (JsonSyntaxException ignore) {
@@ -47,7 +46,7 @@ public class SpringInitializr implements Initializr {
                 .replace("{?bootVersion}", "?bootVersion=" + version);
     }
 
-    private Map<String, List<StarterInfo>> parseDependencies(JsonObject baseInfoJSON, JsonObject depJSON, Map<String, ? extends Dependency> existsDependencyDB) {
+    private Map<String, List<StarterInfo>> parseDependencies(JsonObject baseInfoJSON, JsonObject depJSON) {
         Gson gson = new Gson();
         Map<String, List<StarterInfo>> modules = new LinkedHashMap<>();
         // 设置仓库信息的id
@@ -77,10 +76,6 @@ public class SpringInitializr implements Initializr {
                         bom.getRepositories().forEach(rid -> starterInfo.addRepository(depResponse.getRepositories().get(rid)));
                     }
                     dependencies.add(starterInfo);
-                }
-
-                if (existsDependencyDB.containsKey(starterInfo.point())) {
-                    starterInfo.setExist(true);
                 }
 
             }

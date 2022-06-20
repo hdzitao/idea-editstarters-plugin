@@ -5,7 +5,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import hdzi.editstarters.dependency.SpringBootProject;
+import hdzi.editstarters.dependency.SpringBoot;
 import hdzi.editstarters.dependency.StarterInfo;
 import org.apache.commons.lang.WordUtils;
 
@@ -32,15 +32,15 @@ public class EditStartersDialog {
     private final WeakHashMap<StarterInfo, String> toolTipTextCache = new WeakHashMap<>(); // 加个缓存
     private final WeakHashMap<StarterInfo, String> searchCache = new WeakHashMap<>(); // 搜索缓存
 
-    public EditStartersDialog(BuildSystem buildSystem, SpringBootProject initializr) {
+    public EditStartersDialog(BuildSystem buildSystem, SpringBoot springBoot) {
         this.frame = new JFrame("Edit Starters");
         this.frame.setContentPane(this.root);
 
         // boot版本选框
         this.versionComboBox.setModel(new CollectionComboBoxModel<>(
-//                initializr.getVersion().getValues().stream().map(InitializrVersion.Value::getId).collect(Collectors.toList()),
-                Collections.singletonList(initializr.getBootVersion()),
-                initializr.getBootVersion()
+//                springBoot.getVersion().getValues().stream().map(InitializrVersion.Value::getId).collect(Collectors.toList()),
+                Collections.singletonList(springBoot.getBootVersion()),
+                springBoot.getBootVersion()
         ));
         this.versionComboBox.setEnabled(false);
 
@@ -56,7 +56,7 @@ public class EditStartersDialog {
             this.frame.dispose();
         });
 
-        Map<String, List<StarterInfo>> modules = initializr.getModules();
+        Map<String, List<StarterInfo>> modules = springBoot.getModules();
 
         // Module列表
         this.moduleList.setModel(new CollectionListModel<>(modules.keySet()));
@@ -83,13 +83,14 @@ public class EditStartersDialog {
             }
         };
 
+        Set<String> existDependencies = buildSystem.getExistsDependencyDB().keySet();
         // Starter列表
         this.starterList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // 按两下选择
                     StarterInfo starterInfo = starterList.getSelectedValue();
-                    if (starterInfo.isExist()) { // 对于已存在的starter，添加就是从删除列表里删除
+                    if (existDependencies.contains(starterInfo.point())) { // 对于已存在的starter，添加就是从删除列表里删除
                         removeStarters.remove(starterInfo);
                     } else { // 对于不存在的starter，添加直接加入添加列表
                         addStarters.add(starterInfo);
@@ -105,13 +106,17 @@ public class EditStartersDialog {
         this.starterList.addMouseMotionListener(showDescAdapter);
 
         // selected列表
-        this.selectList.setModel(new CollectionListModel<>(initializr.getExistStarters()));
+        List<StarterInfo> existStarters = modules.values().stream()
+                .flatMap(List::stream)
+                .filter(info -> existDependencies.contains(info.point()))
+                .collect(Collectors.toList());
+        this.selectList.setModel(new CollectionListModel<>(existStarters));
         this.selectList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // 按两下删除
                     StarterInfo starterInfo = selectList.getSelectedValue();
-                    if (starterInfo.isExist()) { // 对于已存在的starter，删除就是加入删除列表
+                    if (existDependencies.contains(starterInfo.point())) { // 对于已存在的starter，删除就是加入删除列表
                         removeStarters.add(starterInfo);
                     } else { // 对于不存在的starter，删除是从添加列表里删除
                         addStarters.remove(starterInfo);

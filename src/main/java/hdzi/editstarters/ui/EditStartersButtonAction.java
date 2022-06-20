@@ -9,7 +9,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiFile;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import hdzi.editstarters.dependency.SpringBootProject;
+import hdzi.editstarters.dependency.SpringBoot;
 import hdzi.editstarters.initializr.chain.InitializrChain;
 import hdzi.editstarters.initializr.chain.InitializrParameters;
 import org.jetbrains.annotations.NotNull;
@@ -38,12 +38,12 @@ public abstract class EditStartersButtonAction extends AnAction {
             parameters.setBuildSystem(buildSystem);
             parameters.setUrl(url);
             ProgressManager progressManager = ProgressManager.getInstance();
-            SpringBootProject springBootProject =
-                    progressManager.runProcessWithProgressSynchronously((ThrowableComputable<SpringBootProject, Exception>) () -> {
+            SpringBoot springBoot =
+                    progressManager.runProcessWithProgressSynchronously((ThrowableComputable<SpringBoot, Exception>) () -> {
                         progressManager.getProgressIndicator().setIndeterminate(true);
                         return new InitializrChain().initialize(parameters);
                     }, "Loading " + url, true, e.getData(CommonDataKeys.PROJECT));
-            new EditStartersDialog(buildSystem, springBootProject).show();
+            new EditStartersDialog(buildSystem, springBoot).show();
         } catch (Throwable throwable) { // 所有异常弹错误框
             String message;
 

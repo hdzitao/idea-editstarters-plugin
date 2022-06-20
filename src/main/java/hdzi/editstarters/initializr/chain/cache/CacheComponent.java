@@ -3,46 +3,59 @@ package hdzi.editstarters.initializr.chain.cache;
 import com.google.gson.Gson;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.xmlb.XmlSerializerUtil;
-import hdzi.editstarters.dependency.SpringBootProject;
+import hdzi.editstarters.dependency.SpringBoot;
+import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Objects;
 
 @State(name = "spring_boot_project_cache",
         storages = @Storage(value = "editstarters.xml", roamingType = RoamingType.DISABLED))
-public class CacheComponent implements PersistentStateComponent<CacheComponent> {
+public class CacheComponent implements PersistentStateComponent<CacheComponent.State> {
     public static CacheComponent getInstance(Project project) {
         return ServiceManager.getService(project, CacheComponent.class);
     }
 
-    private final Gson gson = new Gson();
-
-
-    public final Map<String, String> projects = new ConcurrentHashMap<>();
-
-    public SpringBootProject get(String url, String version) {
-        return gson.fromJson(this.projects.get(key(url, version)), SpringBootProject.class);
+    @Data
+    public static class State {
+        private String projectJson;
+        private String url;
+        private String version;
+        private Long createTime;
     }
 
-    public void put(String url, String version, SpringBootProject project) {
-        this.projects.put(key(url, version), gson.toJson(project));
+    private State state;
+
+    public SpringBoot get(String url, String version) {
+        // 检查缓存
+        if (this.state != null
+                && Objects.equals(url, this.state.url)
+                && Objects.equals(version, this.state.version)) {
+            return new Gson().fromJson(this.state.projectJson, SpringBoot.class);
+        }
+
+        return null;
     }
 
-    private String key(String url, String version) {
-        return url + "::" + version;
+    public void put(String url, String version, SpringBoot project) {
+        if (this.state == null) {
+            this.state = new State();
+            this.state.createTime = System.currentTimeMillis();
+        }
+        this.state.url = url;
+        this.state.version = version;
+        this.state.projectJson = new Gson().toJson(project);
     }
 
     @Nullable
     @Override
-    public CacheComponent getState() {
-        return this;
+    public CacheComponent.State getState() {
+        return this.state;
     }
 
     @Override
-    public void loadState(@NotNull CacheComponent component) {
-        XmlSerializerUtil.copyBean(component, this);
+    public void loadState(@NotNull CacheComponent.State state) {
+        this.state = state;
     }
 }

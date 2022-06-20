@@ -26,7 +26,6 @@ public class StarterInfo implements Dependency {
     private String version;
     private final List<InitializrRepository> repositories = new ArrayList<>();
     private InitializrBom bom;
-    private boolean exist = false;
 
     public void addRepository(InitializrRepository repository) {
         if (repository != null) {

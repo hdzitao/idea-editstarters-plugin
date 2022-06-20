@@ -1,6 +1,6 @@
 package hdzi.editstarters.initializr.chain;
 
-import hdzi.editstarters.dependency.SpringBootProject;
+import hdzi.editstarters.dependency.SpringBoot;
 import hdzi.editstarters.ui.ShowErrorException;
 
 public class InitializrChain {
@@ -10,7 +10,7 @@ public class InitializrChain {
     };
     private int i = 0;
 
-    public SpringBootProject initialize(InitializrParameters parameters) {
+    public SpringBoot initialize(InitializrParameters parameters) {
         if (i >= CHAIN.length) {
             throw new ShowErrorException("internal error!!!");
         }

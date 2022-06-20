@@ -1,7 +1,7 @@
 package hdzi.editstarters.initializr.chain;
 
-import hdzi.editstarters.dependency.SpringBootProject;
+import hdzi.editstarters.dependency.SpringBoot;
 
 public interface Initializr {
-    SpringBootProject initialize(InitializrParameters parameters, InitializrChain chain);
+    SpringBoot initialize(InitializrParameters parameters, InitializrChain chain);
 }
