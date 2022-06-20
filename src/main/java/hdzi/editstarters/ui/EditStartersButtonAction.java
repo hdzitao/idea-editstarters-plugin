@@ -12,6 +12,7 @@ import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.dependency.SpringBoot;
 import hdzi.editstarters.initializr.chain.InitializrChain;
 import hdzi.editstarters.initializr.chain.InitializrParameters;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,6 +33,10 @@ public abstract class EditStartersButtonAction extends AnAction {
 
             // 弹出spring initializr地址输入框
             String url = new InitializrUrlDialog().getUrl();
+            // 取消退出
+            if (StringUtils.isBlank(url)) {
+                return;
+            }
             // 组装参数
             InitializrParameters parameters = new InitializrParameters();
             parameters.setProject(e.getProject());

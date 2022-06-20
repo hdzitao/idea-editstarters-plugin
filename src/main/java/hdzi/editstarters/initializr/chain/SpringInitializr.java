@@ -23,7 +23,8 @@ public class SpringInitializr implements Initializr {
             String currentVersionID = version.replaceFirst("^(\\d+\\.\\d+\\.\\d+).*$", "$1");
 
             Gson gson = new Gson();
-            JsonObject baseInfoJSON = HttpRequests.request(parameters.getUrl()).accept("application/json").connect(request ->
+            String url = spliceMetadataLink(parameters.getUrl());
+            JsonObject baseInfoJSON = HttpRequests.request(url).accept("application/json").connect(request ->
                     gson.fromJson(request.readString(), JsonObject.class));
             String dependenciesUrl = parseDependenciesUrl(baseInfoJSON, currentVersionID);
             JsonObject depsJSON = HttpRequests.request(dependenciesUrl).connect(request ->
@@ -31,11 +32,25 @@ public class SpringInitializr implements Initializr {
             Map<String, List<StarterInfo>> modules = parseDependencies(baseInfoJSON, depsJSON);
 
             return new SpringBoot(currentVersionID, modules);
-        } catch (IOException ignore) {
-            throw new ShowErrorException("Request failure! Your spring boot version may not be supported, please confirm.");
-        } catch (JsonSyntaxException ignore) {
-            throw new ShowErrorException("Request failure! JSON syntax error for response, please confirm.");
+        } catch (IOException e) {
+            throw new ShowErrorException("Request failure! Your spring boot version may not be supported, please confirm.", e);
+        } catch (JsonSyntaxException e) {
+            throw new ShowErrorException("Request failure! JSON syntax error for response, please confirm.", e);
         }
+    }
+
+    private String spliceMetadataLink(String url) {
+        if (url.endsWith("/")) {
+            url = url.substring(0, url.length() - 1);
+        }
+
+        String metadataLink = "/metadata/client";
+
+        if (url.endsWith(metadataLink)) {
+            return url;
+        }
+
+        return url + metadataLink;
     }
 
     private String parseDependenciesUrl(JsonObject json, String version) {

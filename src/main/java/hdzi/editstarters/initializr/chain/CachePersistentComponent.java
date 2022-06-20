@@ -1,4 +1,4 @@
-package hdzi.editstarters.initializr.chain.cache;
+package hdzi.editstarters.initializr.chain;
 
 import com.google.gson.Gson;
 import com.intellij.openapi.components.*;
@@ -12,9 +12,9 @@ import java.util.Objects;
 
 @State(name = "spring_boot_project_cache",
         storages = @Storage(value = "editstarters.xml", roamingType = RoamingType.DISABLED))
-public class CacheComponent implements PersistentStateComponent<CacheComponent.State> {
-    public static CacheComponent getInstance(Project project) {
-        return ServiceManager.getService(project, CacheComponent.class);
+public class CachePersistentComponent implements PersistentStateComponent<CachePersistentComponent.State> {
+    public static CachePersistentComponent getInstance(Project project) {
+        return ServiceManager.getService(project, CachePersistentComponent.class);
     }
 
     @Data
@@ -50,12 +50,12 @@ public class CacheComponent implements PersistentStateComponent<CacheComponent.S
 
     @Nullable
     @Override
-    public CacheComponent.State getState() {
+    public CachePersistentComponent.State getState() {
         return this.state;
     }
 
     @Override
-    public void loadState(@NotNull CacheComponent.State state) {
+    public void loadState(@NotNull CachePersistentComponent.State state) {
         this.state = state;
     }
 }

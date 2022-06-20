@@ -21,7 +21,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <projectService serviceImplementation="hdzi.editstarters.initializr.chain.cache.CacheComponent"/>
+        <projectService serviceImplementation="hdzi.editstarters.initializr.chain.CachePersistentComponent"/>
     </extensions>
 
     <actions>
