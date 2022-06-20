@@ -34,6 +34,7 @@ public abstract class EditStartersButtonAction extends AnAction {
             String url = new InitializrUrlDialog().getUrl();
             // 组装参数
             InitializrParameters parameters = new InitializrParameters();
+            parameters.setProject(e.getProject());
             parameters.setBuildSystem(buildSystem);
             parameters.setUrl(url);
             ProgressManager progressManager = ProgressManager.getInstance();
