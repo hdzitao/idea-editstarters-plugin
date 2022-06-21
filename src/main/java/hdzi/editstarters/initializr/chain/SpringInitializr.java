@@ -1,18 +1,15 @@
 package hdzi.editstarters.initializr.chain;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.intellij.util.io.HttpRequests;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import hdzi.editstarters.dependency.DependencyScope;
 import hdzi.editstarters.dependency.SpringBoot;
-import hdzi.editstarters.dependency.StarterInfo;
-import hdzi.editstarters.initializr.InitializrBom;
-import hdzi.editstarters.initializr.InitializrDependency;
-import hdzi.editstarters.initializr.InitializrResponse;
+import hdzi.editstarters.initializr.StartSpringIO;
 import hdzi.editstarters.ui.ShowErrorException;
 
 import java.io.IOException;
-import java.util.*;
 
 public class SpringInitializr implements Initializr {
     @Override
@@ -23,81 +20,23 @@ public class SpringInitializr implements Initializr {
             String currentVersionID = version.replaceFirst("^(\\d+\\.\\d+\\.\\d+).*$", "$1");
 
             Gson gson = new Gson();
-            String url = spliceMetadataLink(parameters.getUrl());
-            JsonObject baseInfoJSON = HttpRequests.request(url).accept("application/json").connect(request ->
+            StartSpringIO startSpringIO = new StartSpringIO();
+
+            String url = startSpringIO.spliceMetadataLink(parameters.getUrl());
+            JsonObject metadataJson = HttpRequests.request(url).accept("application/json").connect(request ->
                     gson.fromJson(request.readString(), JsonObject.class));
-            String dependenciesUrl = parseDependenciesUrl(baseInfoJSON, currentVersionID);
+            startSpringIO.setMetaData(currentVersionID, metadataJson);
+
+            String dependenciesUrl = startSpringIO.getMetaData().getDependenciesUrl();
             JsonObject depsJSON = HttpRequests.request(dependenciesUrl).connect(request ->
                     gson.fromJson(request.readString(), JsonObject.class));
-            Map<String, List<StarterInfo>> modules = parseDependencies(baseInfoJSON, depsJSON);
+            startSpringIO.setDependencies(depsJSON);
 
-            return new SpringBoot(currentVersionID, modules);
+            return new SpringBoot(currentVersionID, startSpringIO.getModules());
         } catch (IOException e) {
             throw new ShowErrorException("Request failure! Your spring boot version may not be supported, please confirm.", e);
         } catch (JsonSyntaxException e) {
             throw new ShowErrorException("Request failure! JSON syntax error for response, please confirm.", e);
         }
-    }
-
-    private String spliceMetadataLink(String url) {
-        if (url.endsWith("/")) {
-            url = url.substring(0, url.length() - 1);
-        }
-
-        String metadataLink = "/metadata/client";
-
-        if (url.endsWith(metadataLink)) {
-            return url;
-        }
-
-        return url + metadataLink;
-    }
-
-    private String parseDependenciesUrl(JsonObject json, String version) {
-        return json.getAsJsonObject("_links")
-                .getAsJsonObject("dependencies")
-                .get("href")
-                .getAsString()
-                .replace("{?bootVersion}", "?bootVersion=" + version);
-    }
-
-    private Map<String, List<StarterInfo>> parseDependencies(JsonObject baseInfoJSON, JsonObject depJSON) {
-        Gson gson = new Gson();
-        Map<String, List<StarterInfo>> modules = new LinkedHashMap<>();
-        // 设置仓库信息的id
-        InitializrResponse depResponse = gson.fromJson(depJSON, InitializrResponse.class);
-        depResponse.getRepositories().forEach((id, repository) -> repository.setId(id));
-
-        JsonArray modulesJSON = baseInfoJSON.getAsJsonObject("dependencies").getAsJsonArray("values");
-        for (JsonElement moduleEle : modulesJSON) {
-            JsonObject module = moduleEle.getAsJsonObject();
-            JsonArray dependenciesJSON = module.getAsJsonArray("values");
-            List<StarterInfo> dependencies = new ArrayList<>(dependenciesJSON.size());
-            for (JsonElement depEle : dependenciesJSON) {
-                StarterInfo starterInfo = gson.fromJson(depEle.getAsJsonObject(), StarterInfo.class);
-
-                InitializrDependency dependency = depResponse.getDependencies().get(starterInfo.getId());
-                if (dependency != null) {
-                    starterInfo.setGroupId(dependency.getGroupId());
-                    starterInfo.setArtifactId(dependency.getArtifactId());
-                    starterInfo.setVersion(dependency.getVersion());
-                    starterInfo.setScope(Arrays.stream(DependencyScope.values())
-                            .filter(scopeEnum -> scopeEnum.getScope().equals(dependency.getScope()))
-                            .findFirst().orElse(DependencyScope.COMPILE));
-
-                    InitializrBom bom = depResponse.getBoms().get(dependency.getBom());
-                    if (bom != null) {
-                        starterInfo.setBom(bom);
-                        bom.getRepositories().forEach(rid -> starterInfo.addRepository(depResponse.getRepositories().get(rid)));
-                    }
-                    dependencies.add(starterInfo);
-                }
-
-            }
-
-            modules.put(module.get("name").getAsString(), dependencies);
-        }
-
-        return modules;
     }
 }
