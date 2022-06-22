@@ -8,8 +8,10 @@ import com.google.gson.reflect.TypeToken;
 import hdzi.editstarters.dependency.DependencyScope;
 import hdzi.editstarters.dependency.StarterInfo;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Type;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,7 @@ import java.util.Map;
 public class StartSpringIO {
     @Data
     public static class MetaData {
-        private String versionID;
+        private Versions.Version version;
         private String dependenciesUrl;
         private Map<String, List<StarterInfo>> dependencies;
 
@@ -49,13 +51,13 @@ public class StartSpringIO {
         return url + metadataLink;
     }
 
-    public void setMetaData(String versionID, JsonObject metaDataJson) {
+    public void setMetaData(Versions.Version version, JsonObject metaDataJson) {
         Gson gson = new Gson();
 
         MetaData metaData = new MetaData();
         // 版本
         {
-            metaData.versionID = versionID;
+            metaData.version = version;
         }
         // 解析依赖地址
         {
@@ -63,7 +65,7 @@ public class StartSpringIO {
                     .getAsJsonObject("dependencies")
                     .get("href")
                     .getAsString()
-                    .replace("{?bootVersion}", "?bootVersion=" + versionID);
+                    .replace("{?bootVersion}", "?bootVersion=" + version.toVersionID());
         }
         // 解析 dependencies
         {
@@ -108,6 +110,32 @@ public class StartSpringIO {
     }
 
     public Map<String, List<StarterInfo>> getModules() {
-        return this.metaData.dependencies;
+        Map<String, List<StarterInfo>> modules = new LinkedHashMap<>(this.metaData.dependencies);
+        // 删除无效项
+        Versions.Version version = this.metaData.version;
+        Iterator<Map.Entry<String, List<StarterInfo>>> moduleIterator = modules.entrySet().iterator();
+        if (moduleIterator.hasNext()) {
+            Map.Entry<String, List<StarterInfo>> entry = moduleIterator.next();
+            String name = entry.getKey();
+            List<StarterInfo> infos = entry.getValue();
+            Iterator<StarterInfo> infoIterator = infos.iterator();
+            while (infoIterator.hasNext()) {
+                StarterInfo starterInfo = infoIterator.next();
+                if (StringUtils.isBlank(starterInfo.getGroupId())) {
+                    // 检查坐标
+                    infoIterator.remove();
+                } else if ((StringUtils.isNoneBlank(starterInfo.getVersionRange())
+                        && !version.inRange(Versions.parseRange(starterInfo.getVersionRange())))) {
+                    // 版本范围检查
+                    infoIterator.remove();
+                }
+            }
+            // 删空了,就删除module
+            if (infos.isEmpty()) {
+                moduleIterator.remove();
+            }
+        }
+
+        return modules;
     }
 }

@@ -8,11 +8,10 @@ public class OthersInitializr implements Initializr {
     public SpringBoot initialize(InitializrParameters parameters, InitializrChain chain) {
         OthersHub othersHub = parameters.getOthersHub();
         StartSpringIO startSpringIO = new StartSpringIO();
-        String versionID = parameters.getVersion().toVersionID();
 
-        startSpringIO.setMetaData(versionID, othersHub.getMetaData());
+        startSpringIO.setMetaData(parameters.getVersion(), othersHub.getMetaData());
         startSpringIO.setDependencies(othersHub.getDependencies());
 
-        return new SpringBoot(versionID, startSpringIO.getModules());
+        return new SpringBoot(parameters.getVersion().toVersionID(), startSpringIO.getModules());
     }
 }

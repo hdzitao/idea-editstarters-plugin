@@ -12,7 +12,7 @@ public final class Versions {
 
     private static final Pattern VERSION_REGEX = Pattern.compile("^(\\d+)\\.(\\d+|x)\\.(\\d+|x).*$");
 
-    private static final Pattern RANGE_REGEX = Pattern.compile("(\\(|\\[)(.*),(.*)(\\)|\\])");
+    private static final Pattern RANGE_REGEX = Pattern.compile("([(\\[])(.*),(.*)([)\\]])");
 
     public static Version parse(String text) {
         Matcher matcher = VERSION_REGEX.matcher(text);

@@ -13,13 +13,12 @@ public class SpringInitializr implements Initializr {
     public SpringBoot initialize(InitializrParameters parameters, InitializrChain chain) {
         Gson gson = new Gson();
 
-        String versionID = parameters.getVersion().toVersionID();
         StartSpringIO startSpringIO = new StartSpringIO();
 
         String url = startSpringIO.spliceMetadataLink(parameters.getUrl());
         JsonObject metadataJson = HttpRequests.request(url).accept("application/json").connect(request ->
                 gson.fromJson(request.readString(), JsonObject.class));
-        startSpringIO.setMetaData(versionID, metadataJson);
+        startSpringIO.setMetaData(parameters.getVersion(), metadataJson);
 
         String dependenciesUrl = startSpringIO.getMetaData().getDependenciesUrl();
         JsonObject depsJSON;
@@ -39,6 +38,6 @@ public class SpringInitializr implements Initializr {
         }
         startSpringIO.setDependencies(depsJSON);
 
-        return new SpringBoot(startSpringIO.getMetaData().getVersionID(), startSpringIO.getModules());
+        return new SpringBoot(parameters.getVersion().toVersionID(), startSpringIO.getModules());
     }
 }
