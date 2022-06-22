@@ -1,16 +1,6 @@
 [
   {
-    "versionRange": "2.3.7",
-    "metadata": "2.4.1",
-    "dependencies": "2.4.1"
-  },
-  {
-    "versionRange": "2.1.18",
-    "metadata": "2.4.1",
-    "dependencies": "2.4.1"
-  },
-  {
-    "versionRange": "2.1.17",
+    "versionRange": "2.0.0",
     "metadata": "2.4.1",
     "dependencies": "2.4.1"
   }
