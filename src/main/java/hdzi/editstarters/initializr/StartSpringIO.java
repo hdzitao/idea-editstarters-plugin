@@ -114,7 +114,7 @@ public class StartSpringIO {
         // 删除无效项
         Versions.Version version = this.metaData.version;
         Iterator<Map.Entry<String, List<StarterInfo>>> moduleIterator = modules.entrySet().iterator();
-        if (moduleIterator.hasNext()) {
+        while (moduleIterator.hasNext()) {
             Map.Entry<String, List<StarterInfo>> entry = moduleIterator.next();
             String name = entry.getKey();
             List<StarterInfo> infos = entry.getValue();
