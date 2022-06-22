@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.10'
+    id 'org.jetbrains.intellij' version '1.1.2'
 }
 
 group 'hdzi'
@@ -18,23 +18,23 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 intellij {
-    version '2019.1'
+    version = '2019.1'
+    type = "IC"
     plugins = ['maven', 'gradle', 'Groovy', 'Kotlin']
 }
-patchPluginXml {
-    sinceBuild "181"
-    untilBuild ""
 
-    changeNotes """
-<ul>
-<li>支持spring boot旧版本</li>
-<li>支持缓存</li>
-<li>支持start.aliyun.com</li>
-</ul>
-<a href="https://github.com/hdzitao/idea-editstarters-plugin/blob/3.x/CHANGELOG.md">All Changes</a>
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+patchPluginXml {
+    sinceBuild = "181"
+    untilBuild = ""
+
+    changeNotes = """
+<a href="https://github.com/hdzitao/idea-editstarters-plugin/blob/3.x/CHANGELOG.md">ChangeLog</a>
       """
 }
