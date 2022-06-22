@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'hdzi'
-version '3.0.0-alpha.1'
+version '3.0.0-alpha.2'
 
 repositories {
     maven { url = 'https://maven.aliyun.com/repository/public' }
@@ -31,7 +31,9 @@ patchPluginXml {
 
     changeNotes """
 <ul>
-<li>完善scope在不同build工具下的对应关系</li>
+<li>支持spring boot旧版本</li>
+<li>支持缓存</li>
+<li>支持start.aliyun.com</li>
 </ul>
 <a href="https://github.com/hdzitao/idea-editstarters-plugin/blob/3.x/CHANGELOG.md">All Changes</a>
       """
