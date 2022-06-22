@@ -2,6 +2,7 @@ package hdzi.editstarters.initializr;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.intellij.util.io.HttpRequests;
 import hdzi.editstarters.dependency.SpringBoot;
 import lombok.SneakyThrows;
@@ -27,6 +28,11 @@ public class SpringInitializr implements Initializr {
                     gson.fromJson(request.readString(), JsonObject.class));
         } catch (HttpRequests.HttpStatusException e) {
             if (400 == e.getStatusCode()) { // 400 bad request, 官网不支持的版本,尝试othersInitializr
+                return chain.initialize(parameters);
+            }
+            throw e;
+        } catch (JsonSyntaxException e) {
+            if ("start.aliyun.com".equals(OthersHub.url2site(url))) { // aliyun其他版本会是一个默认的错误页面
                 return chain.initialize(parameters);
             }
             throw e;
