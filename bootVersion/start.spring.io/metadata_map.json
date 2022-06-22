@@ -1,6 +1,7 @@
 [
   {
-    "versionRange": "[2.2.2,2.2.13]",
-    "metadata": "2.2.2"
+    "versionRange": "[2.2.2,2.2.x]",
+    "metadata": "2.2.2",
+    "dependencies": "2.2.2"
   }
 ]

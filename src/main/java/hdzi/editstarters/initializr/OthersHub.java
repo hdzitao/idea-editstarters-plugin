@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.intellij.util.io.HttpRequests;
 import hdzi.editstarters.ui.ShowErrorException;
+import lombok.Data;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
@@ -15,6 +16,9 @@ public abstract class OthersHub {
 
     @Getter
     private final Versions.Version version;
+
+    @Getter
+    private Configure configure;
 
     protected OthersHub(String site, Versions.Version version) {
         this.site = site;
@@ -34,11 +38,10 @@ public abstract class OthersHub {
         JsonArray metadataMap = HttpRequests.request(metadataMapUrl).connect(request ->
                 gson.fromJson(request.readString(), JsonArray.class));
         for (JsonElement element : metadataMap) {
-            JsonObject configure = element.getAsJsonObject();
-            String versionRange = configure.get("versionRange").getAsString();
-            if (version.inRange(Versions.parseRange(versionRange))) {
-                String metadataPath = configure.get("metadata").getAsString();
-                metadataPath = getMetaDataUrl(metadataPath);
+            Configure configure = gson.fromJson(element, Configure.class);
+            if (version.inRange(Versions.parseRange(configure.versionRange))) {
+                this.configure = configure;
+                String metadataPath = getMetaDataUrl(configure.metadata);
                 return HttpRequests.request(metadataPath).connect(request ->
                         gson.fromJson(request.readString(), JsonObject.class));
             }
@@ -71,10 +74,18 @@ public abstract class OthersHub {
     }
 
     private String getDependenciesUrl() {
-        return basePath() + this.site + "/" + this.version.toVersionID() + "/dependencies.json";
+        return basePath() + this.site + "/" + configure.dependencies + "/dependencies.json";
     }
 
     //==================================================================================================================
+
+    @Data
+    public static class Configure {
+        private String versionRange;
+        private String metadata;
+        private String dependencies;
+    }
+
 
     public static class GitHub extends OthersHub {
         public GitHub(String site, Versions.Version version) {
