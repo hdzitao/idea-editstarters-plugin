@@ -1,4 +1,4 @@
-package hdzi.editstarters.initializr.chain;
+package hdzi.editstarters.initializr;
 
 import hdzi.editstarters.dependency.SpringBoot;
 

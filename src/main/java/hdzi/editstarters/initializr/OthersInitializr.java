@@ -1,8 +1,6 @@
-package hdzi.editstarters.initializr.chain;
+package hdzi.editstarters.initializr;
 
 import hdzi.editstarters.dependency.SpringBoot;
-import hdzi.editstarters.initializr.OthersHub;
-import hdzi.editstarters.initializr.StartSpringIO;
 
 public class OthersInitializr implements Initializr {
 

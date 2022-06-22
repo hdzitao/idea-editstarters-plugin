@@ -1,10 +1,9 @@
-package hdzi.editstarters.initializr.chain;
+package hdzi.editstarters.initializr;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.intellij.util.io.HttpRequests;
 import hdzi.editstarters.dependency.SpringBoot;
-import hdzi.editstarters.initializr.StartSpringIO;
 import lombok.SneakyThrows;
 
 public class SpringInitializr implements Initializr {

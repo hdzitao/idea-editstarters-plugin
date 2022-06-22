@@ -10,11 +10,7 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiFile;
 import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.dependency.SpringBoot;
-import hdzi.editstarters.initializr.CachePersistentComponent;
-import hdzi.editstarters.initializr.OthersHub;
-import hdzi.editstarters.initializr.Versions;
-import hdzi.editstarters.initializr.chain.InitializrChain;
-import hdzi.editstarters.initializr.chain.InitializrParameters;
+import hdzi.editstarters.initializr.*;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -69,7 +65,7 @@ public abstract class EditStartersButtonAction extends AnAction {
             if (throwable instanceof ShowErrorException) {
                 message = throwable.getMessage();
             } else {
-                message = throwable.getClass().getName() + ": " + throwable.getMessage();
+                message = throwable.getClass().getSimpleName() + ": " + throwable.getMessage();
             }
 
             Messages.showErrorDialog(message, "Edit Starters Error");

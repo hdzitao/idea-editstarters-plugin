@@ -44,15 +44,22 @@ public abstract class OthersHub {
             }
         }
 
-        throw new ShowErrorException("Can't find metadata!");
+        throw new ShowErrorException("Can't find metadata from OthersHub!");
     }
 
     @SneakyThrows
     public JsonObject getDependencies() {
         Gson gson = new Gson();
         String dependenciesUrl = getDependenciesUrl();
-        return HttpRequests.request(dependenciesUrl).connect(request ->
-                gson.fromJson(request.readString(), JsonObject.class));
+        try {
+            return HttpRequests.request(dependenciesUrl).connect(request ->
+                    gson.fromJson(request.readString(), JsonObject.class));
+        } catch (HttpRequests.HttpStatusException e) {
+            if (404 == e.getStatusCode()) {
+                throw new ShowErrorException("Can't find dependencies from OthersHub!");
+            }
+            throw e;
+        }
     }
 
     private String getMetaDataMapUrl() {

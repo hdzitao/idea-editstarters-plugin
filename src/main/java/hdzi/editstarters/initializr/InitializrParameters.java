@@ -1,9 +1,7 @@
-package hdzi.editstarters.initializr.chain;
+package hdzi.editstarters.initializr;
 
 import com.intellij.openapi.project.Project;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import hdzi.editstarters.initializr.OthersHub;
-import hdzi.editstarters.initializr.Versions;
 import lombok.Data;
 
 @Data
