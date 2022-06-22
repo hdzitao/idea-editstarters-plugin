@@ -10,7 +10,12 @@
     "dependencies": "2.2.0"
   },
   {
-    "versionRange": "[2.0.1,2.2.0)",
+    "versionRange": "[2.0.2,2.2.0)",
+    "metadata": "2.0.0",
+    "dependencies": "2.0.2"
+  },
+  {
+    "versionRange": "2.0.1",
     "metadata": "2.0.0",
     "dependencies": "2.0.1"
   },
