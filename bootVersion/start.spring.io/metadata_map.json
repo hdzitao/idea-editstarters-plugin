@@ -3,5 +3,10 @@
     "versionRange": "[2.2.2,2.2.x]",
     "metadata": "2.2.2",
     "dependencies": "2.2.2"
+  },
+  {
+    "versionRange": "[2.2.0,2.2.2)",
+    "metadata": "2.2.0",
+    "dependencies": "2.2.0"
   }
 ]
