@@ -10,7 +10,6 @@ import hdzi.editstarters.dependency.StarterInfo;
 import lombok.Data;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -96,9 +95,7 @@ public class StartSpringIO {
                     starterInfo.setGroupId(dependency.getGroupId());
                     starterInfo.setArtifactId(dependency.getArtifactId());
                     starterInfo.setVersion(dependency.getVersion());
-                    starterInfo.setScope(Arrays.stream(DependencyScope.values())
-                            .filter(scopeEnum -> scopeEnum.getScope().equals(dependency.getScope()))
-                            .findFirst().orElse(DependencyScope.COMPILE));
+                    starterInfo.setScope(DependencyScope.getByScope(dependency.getScope()));
 
                     InitializrBom bom = this.dependencies.getBoms().get(dependency.getBom());
                     if (bom != null) {

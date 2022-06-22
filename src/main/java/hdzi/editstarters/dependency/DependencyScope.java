@@ -43,6 +43,16 @@ public enum DependencyScope {
     @Getter
     private final String scope;
 
+    public static DependencyScope getByScope(String scope) {
+        for (DependencyScope dependencyScope : values()) {
+            if (dependencyScope.scope.equals(scope)) {
+                return dependencyScope;
+            }
+        }
+
+        return COMPILE;
+    }
+
     @Override
     public String toString() {
         return this.scope;

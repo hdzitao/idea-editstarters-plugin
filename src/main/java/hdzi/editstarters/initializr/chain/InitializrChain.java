@@ -6,7 +6,8 @@ import hdzi.editstarters.ui.ShowErrorException;
 public class InitializrChain {
     private static final Initializr[] CHAIN = {
             new CacheInitializr(), // 通过缓存处理
-            new SpringInitializr() // 最后的默认处理
+            new SpringInitializr(), // 默认处理
+            new OthersInitializr() // 其他版本处理
     };
     private int i = 0;
 

@@ -1,5 +1,6 @@
 package hdzi.editstarters.ui;
 
+import hdzi.editstarters.initializr.Versions;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,7 +15,6 @@ public class InitializrDialog extends JDialog {
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField urlInput;
-    private JComboBox othersComboBox;
     private JCheckBox enableCacheCheckBox;
 
     @Getter
@@ -25,16 +25,15 @@ public class InitializrDialog extends JDialog {
 
     private final Pattern urlCheck = Pattern.compile("^https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 
-    public InitializrDialog(String url) {
+    public InitializrDialog(String url, Versions.Version version) {
         setTitle("Spring Initializr Url");
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+        // url
         urlInput.setText(url);
 
-
         buttonOK.addActionListener(e -> onOK());
-
         buttonCancel.addActionListener(e -> onCancel());
 
         // 点击 X 时调用 onCancel()

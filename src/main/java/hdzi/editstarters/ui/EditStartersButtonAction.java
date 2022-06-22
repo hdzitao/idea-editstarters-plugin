@@ -11,6 +11,8 @@ import com.intellij.psi.PsiFile;
 import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.dependency.SpringBoot;
 import hdzi.editstarters.initializr.CachePersistentComponent;
+import hdzi.editstarters.initializr.OthersHub;
+import hdzi.editstarters.initializr.Versions;
 import hdzi.editstarters.initializr.chain.InitializrChain;
 import hdzi.editstarters.initializr.chain.InitializrParameters;
 import org.apache.commons.lang3.StringUtils;
@@ -32,10 +34,12 @@ public abstract class EditStartersButtonAction extends AnAction {
             if (!buildSystem.isSpringBootProject()) {
                 throw new ShowErrorException("Not a Spring Boot Project!");
             }
+            // spring boot version
+            Versions.Version version = Versions.parse(buildSystem.getSpringbootDependency().getVersion());
             // 取缓存中的url作为弹出框的默认值
             String url = CachePersistentComponent.getInstance(e.getProject()).getUrl();
             // 弹出spring initializr地址输入框
-            InitializrDialog initializrDialog = new InitializrDialog(url);
+            InitializrDialog initializrDialog = new InitializrDialog(url, version);
             initializrDialog.showDialog();
             // 取出新的url
             url = initializrDialog.getUrl();
@@ -49,6 +53,8 @@ public abstract class EditStartersButtonAction extends AnAction {
             parameters.setBuildSystem(buildSystem);
             parameters.setUrl(url);
             parameters.setEnableCache(initializrDialog.isEnableCache());
+            parameters.setVersion(version);
+            parameters.setOthersHub(new OthersHub.GitHub(OthersHub.url2site(url), version));
             // 执行
             ProgressManager progressManager = ProgressManager.getInstance();
             SpringBoot springBoot =
