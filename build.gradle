@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.1.2'
+    id 'org.jetbrains.intellij' version '1.6.0'
 }
 
 group 'hdzi'
@@ -15,24 +15,21 @@ repositories {
 dependencies {
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
 intellij {
     version = '2019.1'
-    type = "IC"
+    type = 'IC'
     plugins = ['maven', 'gradle', 'Groovy', 'Kotlin']
 }
 
-
-compileJava {
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 patchPluginXml {
-    sinceBuild = "181"
-    untilBuild = ""
+    sinceBuild = '181'
+    untilBuild = ''
 
     changeNotes = """
 <a href="https://github.com/hdzitao/idea-editstarters-plugin/blob/3.x/CHANGELOG.md">ChangeLog</a>
