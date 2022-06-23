@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '1.6.0'
+    id 'org.jetbrains.changelog' version '1.3.1'
 }
 
 group 'hdzi'
@@ -19,15 +20,20 @@ dependencies {
 }
 
 // 兼容 Apple M1
-if ("Mac OS X" == System.getProperty("os.name") && "aarch64" == System.getProperty("os.arch")) {
+if ('Mac OS X' == System.getProperty('os.name') && 'aarch64' == System.getProperty('os.arch')) {
     // 2019.1对应的jbr并没有M1的版本,请求下载jbr会403,改成amd64的jbr版本
-    System.setProperty("os.arch", "amd64")
+    System.setProperty('os.arch', 'amd64')
 }
 
 intellij {
     version = '2019.1'
     type = 'IC'
     plugins = ['maven', 'gradle', 'Groovy', 'Kotlin']
+}
+
+changelog {
+    headerParserRegex = ~/\d+\.\d+\.\d+/
+    groups = []
 }
 
 sourceCompatibility = 1.8
@@ -38,6 +44,7 @@ patchPluginXml {
     untilBuild = ''
 
     changeNotes = """
+${changelog.get(project.version.replaceAll(~/^(\d+\.\d+\.\d+)(-.+)?$/, '$1')).toHTML()}
 <a href="https://github.com/hdzitao/idea-editstarters-plugin/blob/3.x/CHANGELOG.md">ChangeLog</a>
       """
 }
