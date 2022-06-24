@@ -31,6 +31,8 @@ public abstract class OthersHub {
 
     protected abstract String basePath();
 
+    public abstract String toString();
+
     @SneakyThrows
     public JsonObject getMetaData() {
         Gson gson = new Gson();
@@ -39,7 +41,7 @@ public abstract class OthersHub {
                 gson.fromJson(request.readString(), JsonArray.class));
         for (JsonElement element : metadataMap) {
             Configure configure = gson.fromJson(element, Configure.class);
-            if (version.inRange(Versions.parseRange(configure.versionRange))) {
+            if (this.version.inRange(Versions.parseRange(configure.versionRange))) {
                 this.configure = configure;
                 String metadataPath = getMetaDataUrl(configure.metadata);
                 return HttpRequests.request(metadataPath).connect(request ->
@@ -94,7 +96,12 @@ public abstract class OthersHub {
 
         @Override
         protected String basePath() {
-            return "https://raw.githubusercontent.com/hdzitao/idea-editstarters-plugin/3.x/bootVersion/";
+            return "https://raw.githubusercontent.com/hdzitao/idea-editstarters-plugin-configure/main/bootVersion/";
+        }
+
+        @Override
+        public String toString() {
+            return "GitHub";
         }
     }
 

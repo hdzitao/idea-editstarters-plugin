@@ -118,10 +118,8 @@ public class BuildGradle extends GradleSyntax<GrClosableBlock> {
     }
 
     private GrMethodCall findMethod(PsiElement psiElement, String name) {
-        return PsiTreeUtil.getChildrenOfTypeAsList(psiElement, GrMethodCall.class).stream()
-                .filter(it -> Objects.equals(name, it.getInvokedExpression().getText()))
-                .findFirst()
-                .orElse(null);
+        return ContainerUtil.find(PsiTreeUtil.getChildrenOfTypeAsList(psiElement, GrMethodCall.class), it ->
+                Objects.equals(name, it.getInvokedExpression().getText()));
     }
 
     private List<GrMethodCall> findAllMethod(PsiElement psiElement, String name) {

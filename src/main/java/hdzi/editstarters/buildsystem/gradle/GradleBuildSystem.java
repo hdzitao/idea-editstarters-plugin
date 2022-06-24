@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("ConstantConditions")
 public class GradleBuildSystem extends BuildSystem {
 
-    public GradleBuildSystem(DataContext context, List<ProjectDependency> dependencies, EditStarters editStarters) {
+    private GradleBuildSystem(DataContext context, List<ProjectDependency> dependencies, EditStarters editStarters) {
         super(context, dependencies, editStarters);
     }
 

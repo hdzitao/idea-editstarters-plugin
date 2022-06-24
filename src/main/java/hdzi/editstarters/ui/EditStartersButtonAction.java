@@ -10,7 +10,10 @@ import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiFile;
 import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.dependency.SpringBoot;
-import hdzi.editstarters.initializr.*;
+import hdzi.editstarters.initializr.CachePersistentComponent;
+import hdzi.editstarters.initializr.InitializrChain;
+import hdzi.editstarters.initializr.InitializrParameters;
+import hdzi.editstarters.initializr.Versions;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +53,7 @@ public abstract class EditStartersButtonAction extends AnAction {
             parameters.setUrl(url);
             parameters.setEnableCache(initializrDialog.isEnableCache());
             parameters.setVersion(version);
-            parameters.setOthersHub(new OthersHub.GitHub(OthersHub.url2site(url), version));
+            parameters.setOthersHub(initializrDialog.getOthersHub());
             // 执行
             ProgressManager progressManager = ProgressManager.getInstance();
             SpringBoot springBoot =

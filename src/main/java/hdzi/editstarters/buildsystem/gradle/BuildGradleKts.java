@@ -111,7 +111,7 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     private KtBlockExpression getOrCreateTopBlock(String name) {
         Pattern regex = callNameRegex(name);
         KtScriptInitializer initializer = ContainerUtil.find(PsiTreeUtil.findChildrenOfAnyType(buildFile, KtScriptInitializer.class),
-                ktScriptInitializer -> regex.matcher(ktScriptInitializer.getText()).find());
+                it -> regex.matcher(it.getText()).find());
 
         KtCallExpression expression;
         if (initializer == null) {

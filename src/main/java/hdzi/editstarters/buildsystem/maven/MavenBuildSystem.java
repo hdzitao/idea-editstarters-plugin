@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class MavenBuildSystem extends BuildSystem {
 
 
-    public MavenBuildSystem(DataContext context, List<ProjectDependency> dependencies, EditStarters editStarters) {
+    private MavenBuildSystem(DataContext context, List<ProjectDependency> dependencies, EditStarters editStarters) {
         super(context, dependencies, editStarters);
     }
 

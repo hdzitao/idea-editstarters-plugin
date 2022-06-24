@@ -1,5 +1,7 @@
 package hdzi.editstarters.ui;
 
+import com.intellij.ui.CollectionComboBoxModel;
+import hdzi.editstarters.initializr.OthersHub;
 import hdzi.editstarters.initializr.Versions;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -8,20 +10,24 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class InitializrDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
-    private JButton buttonCancel;
     private JTextField urlInput;
     private JCheckBox enableCacheCheckBox;
+    private JComboBox<OthersHub> ohubComboBox;
 
     @Getter
     private String url;
 
     @Getter
     private boolean enableCache;
+
+    @Getter
+    private OthersHub othersHub;
 
     private final Pattern urlCheck = Pattern.compile("^https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 
@@ -34,7 +40,15 @@ public class InitializrDialog extends JDialog {
         urlInput.setText(url);
 
         buttonOK.addActionListener(e -> onOK());
-        buttonCancel.addActionListener(e -> onCancel());
+
+        // OthersHub
+        String site = OthersHub.url2site(url);
+        OthersHub[] othersHubs = {
+                new OthersHub.GitHub(site, version),
+        };
+        ohubComboBox.setModel(new CollectionComboBoxModel<>(
+                Arrays.asList(othersHubs),
+                othersHubs[0]));
 
         // 点击 X 时调用 onCancel()
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -54,6 +68,7 @@ public class InitializrDialog extends JDialog {
         if (StringUtils.isNoneBlank(url) && urlCheck.matcher(url).find()) {
             this.url = url;
             this.enableCache = enableCacheCheckBox.isSelected();
+            this.othersHub = (OthersHub) ohubComboBox.getSelectedItem();
             dispose();
         }
     }
