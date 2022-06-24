@@ -2,11 +2,10 @@
 
 ## 3.0.0
 
-- 鉴于jdk升级11、项目配置升级和idea api的变化,最低版本为201
-- 支持start.spring.io不再支持的spring boot版本
-- kotlin代码转回java
+- 最低版本为201
+- 支持spring boot旧版本
 - 支持start.aliyun.com
-- 请求一次后保留缓存
+- 本地缓存
 
 ## 2.4.0
 

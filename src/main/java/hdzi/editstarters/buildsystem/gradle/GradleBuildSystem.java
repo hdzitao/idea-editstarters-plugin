@@ -49,6 +49,7 @@ public class GradleBuildSystem extends BuildSystem {
                 throw new ShowErrorException("Not support extension!");
         }
 
+        @SuppressWarnings("all")
         DataNode<ProjectData> projectData = ExternalSystemApiUtil.findProjectData(project, GradleConstants.SYSTEM_ID, project.getBasePath());
         List<ProjectDependency> dependencies = projectData.getChildren().stream()
                 .filter(node -> ProjectKeys.LIBRARY.equals(node.getKey()))
