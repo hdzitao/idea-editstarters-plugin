@@ -3,40 +3,5 @@
     "versionRange": "[2.2.2,2.2.x]",
     "metadata": "2.2.2",
     "dependencies": "2.2.2"
-  },
-  {
-    "versionRange": "[2.2.0,2.2.1]",
-    "metadata": "2.2.0",
-    "dependencies": "2.2.0"
-  },
-  {
-    "versionRange": "[2.1.2,2.1.x]",
-    "metadata": "2.0.0",
-    "dependencies": "2.1.2"
-  },
-  {
-    "versionRange": "[2.1.0,2.1.1]",
-    "metadata": "2.0.0",
-    "dependencies": "2.1.0"
-  },
-  {
-    "versionRange": "[2.0.3,2.0.x]",
-    "metadata": "2.0.0",
-    "dependencies": "2.0.3"
-  },
-  {
-    "versionRange": "2.0.2",
-    "metadata": "2.0.0",
-    "dependencies": "2.0.2"
-  },
-  {
-    "versionRange": "2.0.1",
-    "metadata": "2.0.0",
-    "dependencies": "2.0.1"
-  },
-  {
-    "versionRange": "2.0.0",
-    "metadata": "2.0.0",
-    "dependencies": "2.0.0"
   }
 ]
