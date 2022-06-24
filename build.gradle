@@ -30,7 +30,7 @@ if ('Mac OS X' == System.getProperty('os.name') && 'aarch64' == System.getProper
 }
 
 intellij {
-    version = '2020.1'
+    version = '2020.1.1'
     type = 'IC'
     plugins = ['java', 'maven', 'gradle', 'Groovy', 'Kotlin']
 }
