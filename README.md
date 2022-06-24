@@ -4,6 +4,8 @@ Edit Spring Boot Starters just like sts and vscode spring boot plugin.
 
 You can download [here](https://github.com/hdzitao/idea-editstarters-plugin/releases).
 
+Plugin icon from [icon-icons.com](https://icon-icons.com/icon/feather-pen-graphic-design/52939), by FreeVectors.
+
 ## With Maven
 
 ![img loading...](https://user-images.githubusercontent.com/12962462/51593574-734e2000-1f2d-11e9-88a0-9d43f7877131.gif)
@@ -23,4 +25,3 @@ You can download [here](https://github.com/hdzitao/idea-editstarters-plugin/rele
 ## Search
 
 ![img loading...](https://user-images.githubusercontent.com/12962462/51376551-90f14300-1b43-11e9-985b-b417d67b530a.gif)
-
