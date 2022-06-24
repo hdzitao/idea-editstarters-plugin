@@ -2,10 +2,12 @@ package hdzi.editstarters.buildsystem.gradle;
 
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.externalSystem.model.DataNode;
+import com.intellij.openapi.externalSystem.model.ProjectKeys;
+import com.intellij.openapi.externalSystem.model.project.LibraryData;
+import com.intellij.openapi.externalSystem.model.project.ProjectData;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiFile;
 import hdzi.editstarters.EditStarters;
 import hdzi.editstarters.buildsystem.BuildSystem;
@@ -13,13 +15,7 @@ import hdzi.editstarters.buildsystem.ProjectDependency;
 import hdzi.editstarters.buildsystem.ProjectFile;
 import hdzi.editstarters.ui.ShowErrorException;
 import lombok.SneakyThrows;
-import org.gradle.tooling.model.GradleModuleVersion;
-import org.gradle.tooling.model.idea.IdeaModule;
-import org.gradle.tooling.model.idea.IdeaProject;
-import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency;
 import org.jetbrains.kotlin.psi.KtFile;
-import org.jetbrains.plugins.gradle.service.execution.GradleExecutionHelper;
-import org.jetbrains.plugins.gradle.settings.GradleExecutionSettings;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 
@@ -52,22 +48,13 @@ public class GradleBuildSystem extends BuildSystem {
             default:
                 throw new ShowErrorException("Not support extension!");
         }
-        String basePath = context.getData(CommonDataKeys.VIRTUAL_FILE).getParent().getPath();
-        GradleExecutionSettings setting = ExternalSystemApiUtil.getExecutionSettings(project, basePath, GradleConstants.SYSTEM_ID);
-        ProgressManager progressManager = ProgressManager.getInstance();
-        List<ProjectDependency> dependencies = progressManager.runProcessWithProgressSynchronously((ThrowableComputable<List<ProjectDependency>, Exception>) () -> {
-            progressManager.getProgressIndicator().setIndeterminate(true);
-            return new GradleExecutionHelper().execute(basePath, setting, connect -> {
-                IdeaModule ideaModule = connect.getModel(IdeaProject.class).getModules().getAt(0);
-                return ideaModule.getDependencies().stream()
-                        .filter(it -> it instanceof IdeaSingleEntryLibraryDependency
-                                && ((IdeaSingleEntryLibraryDependency) it).getGradleModuleVersion() != null)
-                        .map(it -> {
-                            GradleModuleVersion moduleVersion = ((IdeaSingleEntryLibraryDependency) it).getGradleModuleVersion();
-                            return new ProjectDependency(moduleVersion.getGroup(), moduleVersion.getName(), moduleVersion.getVersion());
-                        }).collect(Collectors.toList());
-            });
-        }, "Load Gradle Project", false, project);
+
+        DataNode<ProjectData> projectData = ExternalSystemApiUtil.findProjectData(project, GradleConstants.SYSTEM_ID, project.getBasePath());
+        List<ProjectDependency> dependencies = projectData.getChildren().stream()
+                .filter(node -> ProjectKeys.LIBRARY.equals(node.getKey()))
+                .map(node -> (LibraryData) node.getData())
+                .map(lib -> new ProjectDependency(lib.getGroupId(), lib.getArtifactId(), lib.getVersion()))
+                .collect(Collectors.toList());
 
         return new GradleBuildSystem(context, dependencies, projectFile);
     }

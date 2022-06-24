@@ -7,6 +7,10 @@ plugins {
 group 'hdzi'
 version '3.0.0-alpha.2'
 
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
 repositories {
     maven { url = 'https://maven.aliyun.com/repository/public' }
     //jcenter()
@@ -26,7 +30,7 @@ if ('Mac OS X' == System.getProperty('os.name') && 'aarch64' == System.getProper
 }
 
 intellij {
-    version = '2019.1'
+    version = '2020.1'
     type = 'IC'
     plugins = ['maven', 'gradle', 'Groovy', 'Kotlin']
 }
@@ -36,11 +40,8 @@ changelog {
     groups = []
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 patchPluginXml {
-    sinceBuild = '181'
+    sinceBuild = '201'
     untilBuild = ''
 
     changeNotes = """
