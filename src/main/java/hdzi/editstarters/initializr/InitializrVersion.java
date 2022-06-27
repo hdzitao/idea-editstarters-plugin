@@ -1,13 +1,16 @@
 package hdzi.editstarters.initializr;
 
 import com.google.gson.annotations.SerializedName;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class InitializrVersion {
-    @Data
+    @Getter
+    @Setter
     public static class Value {
         private String id;
         private String name;

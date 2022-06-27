@@ -1,7 +1,8 @@
 package hdzi.editstarters.initializr;
 
 import hdzi.editstarters.ui.ShowErrorException;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,7 +42,8 @@ public final class Versions {
         return new VersionRange(lowerVersion, lowerInclusive, higherVersion, higherInclusive);
     }
 
-    @Data
+    @Getter
+    @Setter
     public static class Version implements Comparable<Version> {
         private final Integer major;
 
@@ -104,7 +106,8 @@ public final class Versions {
         }
     }
 
-    @Data
+    @Getter
+    @Setter
     public static class VersionRange {
         private final Version lowerVersion;
 

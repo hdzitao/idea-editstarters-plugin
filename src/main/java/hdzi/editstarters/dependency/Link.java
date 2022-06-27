@@ -1,8 +1,10 @@
 package hdzi.editstarters.dependency;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class Link {
     private String href;
     private boolean templated;

@@ -2,12 +2,11 @@ package hdzi.editstarters.buildsystem;
 
 import com.intellij.psi.PsiElement;
 import hdzi.editstarters.dependency.Dependency;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Created by taojinhou on 2019/1/15.
- */
-@Data
+@Getter
+@Setter
 public class ProjectDependency implements Dependency {
     private final String groupId;
     private final String artifactId;

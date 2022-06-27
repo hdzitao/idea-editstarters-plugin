@@ -6,10 +6,12 @@ import hdzi.editstarters.buildsystem.ProjectBom;
 import hdzi.editstarters.buildsystem.ProjectDependency;
 import hdzi.editstarters.buildsystem.ProjectFile;
 import hdzi.editstarters.buildsystem.ProjectRepository;
+import hdzi.editstarters.dependency.Bom;
 import hdzi.editstarters.dependency.DependencyScope;
+import hdzi.editstarters.dependency.Repository;
 import hdzi.editstarters.dependency.StarterInfo;
-import hdzi.editstarters.initializr.InitializrBom;
 import hdzi.editstarters.initializr.InitializrRepository;
+import hdzi.editstarters.ui.ShowErrorException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -78,7 +80,7 @@ public class PomXml extends ProjectFile<XmlTag> {
     }
 
     @Override
-    public void createBomTag(XmlTag bomsTag, InitializrBom bom) {
+    public void createBomTag(XmlTag bomsTag, Bom bom) {
         XmlTag dependencyTag = createSubTag(bomsTag, TAG_DEPENDENCY);
         addSubTagWithTextBody(dependencyTag, TAG_GROUP_ID, bom.getGroupId());
         addSubTagWithTextBody(dependencyTag, TAG_ARTIFACT_ID, bom.getArtifactId());
@@ -100,7 +102,12 @@ public class PomXml extends ProjectFile<XmlTag> {
     }
 
     @Override
-    public void createRepositoryTag(XmlTag repositoriesTag, InitializrRepository repository) {
+    public void createRepositoryTag(XmlTag repositoriesTag, Repository _repository) {
+        if (!(_repository instanceof InitializrRepository)) {
+            throw new ShowErrorException("!!! internal error !!!");
+        }
+
+        InitializrRepository repository = (InitializrRepository) _repository;
         XmlTag repositoryTag = createSubTag(repositoriesTag, TAG_REPOSITORY);
         addSubTagWithTextBody(repositoryTag, "id", repository.getId());
         addSubTagWithTextBody(repositoryTag, "name", repository.getName());

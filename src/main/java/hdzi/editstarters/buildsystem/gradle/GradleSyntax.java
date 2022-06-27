@@ -2,12 +2,9 @@ package hdzi.editstarters.buildsystem.gradle;
 
 import com.intellij.psi.PsiElement;
 import hdzi.editstarters.buildsystem.ProjectFile;
-import hdzi.editstarters.dependency.DependencyScope;
-import hdzi.editstarters.dependency.Point;
-import hdzi.editstarters.dependency.StarterInfo;
-import hdzi.editstarters.initializr.InitializrBom;
-import hdzi.editstarters.initializr.InitializrRepository;
-import lombok.Data;
+import hdzi.editstarters.dependency.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,7 +15,8 @@ import java.util.regex.Pattern;
 
 //@SuppressWarnings("ConstantConditions")
 public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> {
-    @Data
+    @Getter
+    @Setter
     public static class Instruction {
         private final String inst;
         private final String point;
@@ -33,7 +31,8 @@ public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> 
         }
     }
 
-    @Data
+    @Getter
+    @Setter
     protected static class GradlePoint implements Point {
         private final String groupId;
         private final String artifactId;
@@ -75,11 +74,11 @@ public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> 
         return instructions;
     }
 
-    protected Instruction bomInstruction(InitializrBom bom) {
+    protected Instruction bomInstruction(Bom bom) {
         return new Instruction(TAG_BOM, String.join(":", bom.getGroupId(), bom.getArtifactId(), bom.getVersion()));
     }
 
-    protected Instruction repositoryInstruction(InitializrRepository repository) {
+    protected Instruction repositoryInstruction(Repository repository) {
         return new Instruction(TAG_REPOSITORY, repository.getUrl());
     }
 

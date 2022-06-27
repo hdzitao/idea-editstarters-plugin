@@ -1,11 +1,13 @@
 package hdzi.editstarters.initializr;
 
 import hdzi.editstarters.dependency.Bom;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class InitializrBom implements Bom {
     private String groupId;
     private String artifactId;

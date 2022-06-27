@@ -2,9 +2,11 @@ package hdzi.editstarters.initializr;
 
 
 import hdzi.editstarters.dependency.Dependency;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class InitializrDependency implements Dependency {
     private String groupId;
     private String artifactId;

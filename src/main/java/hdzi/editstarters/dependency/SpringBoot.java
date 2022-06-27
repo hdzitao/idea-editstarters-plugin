@@ -1,13 +1,12 @@
 package hdzi.editstarters.dependency;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-/**
- * Created by taojinhou on 2018/12/21.
- */
-@Data
+@Getter
+@Setter
 public class SpringBoot {
     private final String bootVersion;
     private final List<Module> modules;

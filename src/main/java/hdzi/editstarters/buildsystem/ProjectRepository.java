@@ -1,9 +1,11 @@
 package hdzi.editstarters.buildsystem;
 
 import hdzi.editstarters.dependency.Repository;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class ProjectRepository implements Repository {
     private final String url;
 

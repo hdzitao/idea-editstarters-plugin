@@ -1,9 +1,11 @@
 package hdzi.editstarters.initializr;
 
 import hdzi.editstarters.dependency.Repository;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class InitializrRepository implements Repository {
     private String id;
     private String name;

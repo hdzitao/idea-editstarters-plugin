@@ -2,9 +2,11 @@ package hdzi.editstarters.initializr;
 
 import com.intellij.openapi.project.Project;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class InitializrParameters {
     private String url;
     private BuildSystem buildSystem;

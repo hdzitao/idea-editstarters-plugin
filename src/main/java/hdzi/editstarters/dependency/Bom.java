@@ -5,6 +5,8 @@ public interface Bom extends Point {
 
     String getArtifactId();
 
+    String getVersion();
+
     @Override
     default String point() {
         return getGroupId() + ":" + getArtifactId();

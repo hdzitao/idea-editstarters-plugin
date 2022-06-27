@@ -3,14 +3,16 @@ package hdzi.editstarters.initializr;
 import hdzi.editstarters.dependency.DependencyScope;
 import hdzi.editstarters.dependency.Module;
 import hdzi.editstarters.dependency.StarterInfo;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class StartSpringIO {
 
     private Versions.Version version;

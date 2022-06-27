@@ -7,9 +7,9 @@ import com.intellij.util.containers.ContainerUtil;
 import hdzi.editstarters.buildsystem.ProjectBom;
 import hdzi.editstarters.buildsystem.ProjectDependency;
 import hdzi.editstarters.buildsystem.ProjectRepository;
+import hdzi.editstarters.dependency.Bom;
+import hdzi.editstarters.dependency.Repository;
 import hdzi.editstarters.dependency.StarterInfo;
-import hdzi.editstarters.initializr.InitializrBom;
-import hdzi.editstarters.initializr.InitializrRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.kotlin.psi.*;
 
@@ -71,7 +71,7 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     }
 
     @Override
-    public void createBomTag(KtBlockExpression bomsTag, InitializrBom bom) {
+    public void createBomTag(KtBlockExpression bomsTag, Bom bom) {
         Instruction instruction = bomInstruction(bom);
         addExpression(bomsTag, instruction.toInstString("$inst(\"$point\")"));
     }
@@ -103,7 +103,7 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     }
 
     @Override
-    public void createRepositoryTag(KtBlockExpression repositoriesTag, InitializrRepository repository) {
+    public void createRepositoryTag(KtBlockExpression repositoriesTag, Repository repository) {
         Instruction instruction = repositoryInstruction(repository);
         addExpression(repositoriesTag, instruction.toInstString("$inst { url = uri(\"$point\") }"));
     }

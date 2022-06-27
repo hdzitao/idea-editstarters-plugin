@@ -4,13 +4,15 @@ import com.google.gson.annotations.SerializedName;
 import hdzi.editstarters.dependency.Link;
 import hdzi.editstarters.dependency.Module;
 import hdzi.editstarters.dependency.StarterInfo;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 public class InitializrMetadata {
     @SerializedName("_link")
     private MetadataLink link;
@@ -20,12 +22,14 @@ public class InitializrMetadata {
 
     //==================================================================================================================
 
-    @Data
+    @Getter
+    @Setter
     public static class MetadataLink {
         private Link dependencies;
     }
 
-    @Data
+    @Getter
+    @Setter
     public static class MetadataDependencies implements Iterable<StarterInfo> {
         private String type;
         private List<Module> values;

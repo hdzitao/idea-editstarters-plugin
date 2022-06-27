@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.intellij.openapi.components.*;
 import com.intellij.openapi.project.Project;
 import hdzi.editstarters.dependency.SpringBoot;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +19,8 @@ public class CachePersistentComponent implements PersistentStateComponent<CacheP
         return ServiceManager.getService(project, CachePersistentComponent.class);
     }
 
-    @Data
+    @Getter
+    @Setter
     public static class State {
         private String projectJson;
         private String url;

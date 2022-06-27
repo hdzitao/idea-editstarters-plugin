@@ -5,8 +5,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.intellij.util.io.HttpRequests;
 import hdzi.editstarters.ui.ShowErrorException;
-import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 
 public abstract class OthersHub {
@@ -77,7 +77,8 @@ public abstract class OthersHub {
 
     //==================================================================================================================
 
-    @Data
+    @Getter
+    @Setter
     public static class Configure {
         private String versionRange;
         private String metadata;

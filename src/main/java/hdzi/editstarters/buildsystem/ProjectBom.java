@@ -1,15 +1,23 @@
 package hdzi.editstarters.buildsystem;
 
 import hdzi.editstarters.dependency.Bom;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class ProjectBom implements Bom {
     private final String groupId;
     private final String artifactId;
+    private final String version;
 
-    public ProjectBom(String groupId, String artifactId) {
+    public ProjectBom(String groupId, String artifactId, String version) {
         this.groupId = groupId;
         this.artifactId = artifactId;
+        this.version = version;
+    }
+
+    public ProjectBom(String groupId, String artifactId) {
+        this(groupId, artifactId, null);
     }
 }

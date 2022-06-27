@@ -1,17 +1,14 @@
 package hdzi.editstarters.dependency;
 
-import hdzi.editstarters.initializr.InitializrBom;
-import hdzi.editstarters.initializr.InitializrRepository;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Created by taojinhou on 2018/12/21.
- */
-@Data
+@Getter
+@Setter
 public class StarterInfo implements Dependency {
     private String id;
     private String name;
@@ -24,10 +21,11 @@ public class StarterInfo implements Dependency {
     private String artifactId;
     private DependencyScope scope;
     private String version;
-    private final List<InitializrRepository> repositories = new ArrayList<>();
-    private InitializrBom bom;
 
-    public void addRepository(InitializrRepository repository) {
+    private final List<Repository> repositories = new ArrayList<>();
+    private Bom bom;
+
+    public void addRepository(Repository repository) {
         if (repository != null) {
             this.repositories.add(repository);
         }
