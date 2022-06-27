@@ -62,6 +62,10 @@ public class StartSpringIO {
                     starterInfo.setBom(bom);
                     bom.getRepositories().forEach(rid -> starterInfo.addRepository(this.dependencies.getRepositories().get(rid)));
                 }
+                InitializrRepository repository = this.dependencies.getRepositories().get(dependency.getRepository());
+                if (repository != null) {
+                    starterInfo.addRepository(repository);
+                }
             }
         }
     }

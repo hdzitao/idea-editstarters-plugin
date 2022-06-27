@@ -1,5 +1,6 @@
 package hdzi.editstarters.dependency;
 
+import com.intellij.util.containers.ContainerUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +27,8 @@ public class StarterInfo implements Dependency {
     private Bom bom;
 
     public void addRepository(Repository repository) {
-        if (repository != null) {
+        if (repository != null && ContainerUtil.find(this.repositories,
+                it -> Objects.equals(it.getUrl(), repository.getUrl())) == null) {
             this.repositories.add(repository);
         }
     }
