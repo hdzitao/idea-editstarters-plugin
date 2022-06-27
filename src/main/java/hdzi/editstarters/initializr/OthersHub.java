@@ -71,10 +71,6 @@ public abstract class OthersHub {
         return basePath() + this.site + "/" + configure.dependencies + "/dependencies.json";
     }
 
-    private String getInitializrUrl() {
-        return basePath() + this.site + "/" + configure.dependencies + "/initializr.json";
-    }
-
     //==================================================================================================================
 
     @Getter
