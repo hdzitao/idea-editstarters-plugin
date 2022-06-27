@@ -3,7 +3,6 @@ package hdzi.editstarters.initializr;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.intellij.util.io.HttpRequests;
 import hdzi.editstarters.ui.ShowErrorException;
 import lombok.Data;
@@ -20,6 +19,8 @@ public abstract class OthersHub {
     @Getter
     private Configure configure;
 
+    private final Gson gson = new Gson();
+
     protected OthersHub(String site, Versions.Version version) {
         this.site = site;
         this.version = version;
@@ -34,8 +35,7 @@ public abstract class OthersHub {
     public abstract String toString();
 
     @SneakyThrows
-    public JsonObject getMetaData() {
-        Gson gson = new Gson();
+    public InitializrMetadata getMetaData() {
         String metadataMapUrl = getMetaDataMapUrl();
         JsonArray metadataMap = HttpRequests.request(metadataMapUrl).connect(request ->
                 gson.fromJson(request.readString(), JsonArray.class));
@@ -43,9 +43,9 @@ public abstract class OthersHub {
             Configure configure = gson.fromJson(element, Configure.class);
             if (this.version.inRange(Versions.parseRange(configure.versionRange))) {
                 this.configure = configure;
-                String metadataPath = getMetaDataUrl(configure.metadata);
+                String metadataPath = getMetaDataUrl();
                 return HttpRequests.request(metadataPath).connect(request ->
-                        gson.fromJson(request.readString(), JsonObject.class));
+                        gson.fromJson(request.readString(), InitializrMetadata.class));
             }
         }
 
@@ -53,30 +53,26 @@ public abstract class OthersHub {
     }
 
     @SneakyThrows
-    public JsonObject getDependencies() {
-        Gson gson = new Gson();
+    public InitializrDependencies getDependencies() {
         String dependenciesUrl = getDependenciesUrl();
-        try {
-            return HttpRequests.request(dependenciesUrl).connect(request ->
-                    gson.fromJson(request.readString(), JsonObject.class));
-        } catch (HttpRequests.HttpStatusException e) {
-            if (404 == e.getStatusCode()) {
-                throw new ShowErrorException("Can't find dependencies from OthersHub!");
-            }
-            throw e;
-        }
+        return HttpRequests.request(dependenciesUrl).connect(request ->
+                gson.fromJson(request.readString(), InitializrDependencies.class));
     }
 
     private String getMetaDataMapUrl() {
         return basePath() + this.site + "/metadata_map.json";
     }
 
-    private String getMetaDataUrl(String version) {
-        return basePath() + this.site + "/" + version + "/metadata.json ";
+    private String getMetaDataUrl() {
+        return basePath() + this.site + "/" + this.configure.metadata + "/metadata.json ";
     }
 
     private String getDependenciesUrl() {
         return basePath() + this.site + "/" + configure.dependencies + "/dependencies.json";
+    }
+
+    private String getInitializrUrl() {
+        return basePath() + this.site + "/" + configure.dependencies + "/initializr.json";
     }
 
     //==================================================================================================================
@@ -87,7 +83,6 @@ public abstract class OthersHub {
         private String metadata;
         private String dependencies;
     }
-
 
     public static class GitHub extends OthersHub {
         public GitHub(String site, Versions.Version version) {

@@ -5,6 +5,7 @@ import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
 import hdzi.editstarters.buildsystem.BuildSystem;
+import hdzi.editstarters.dependency.Module;
 import hdzi.editstarters.dependency.SpringBoot;
 import hdzi.editstarters.dependency.StarterInfo;
 import org.apache.commons.lang.WordUtils;
@@ -56,8 +57,8 @@ public class EditStartersDialog {
             this.frame.dispose();
         });
 
-        Map<String, List<StarterInfo>> modules = springBoot.getModules();
-
+        Map<String, List<StarterInfo>> modules = springBoot.getModules().stream()
+                .collect(Collectors.toMap(Module::getName, Module::getValues));
         // Module列表
         this.moduleList.setModel(new CollectionListModel<>(modules.keySet()));
         this.moduleList.addMouseListener(new MouseAdapter() {

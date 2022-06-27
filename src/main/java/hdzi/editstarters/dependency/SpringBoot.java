@@ -3,7 +3,6 @@ package hdzi.editstarters.dependency;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by taojinhou on 2018/12/21.
@@ -11,10 +10,10 @@ import java.util.Map;
 @Data
 public class SpringBoot {
     private final String bootVersion;
-    private final Map<String, List<StarterInfo>> modules;
+    private final List<Module> modules;
 
 
-    public SpringBoot(String bootVersion, Map<String, List<StarterInfo>> modules) {
+    public SpringBoot(String bootVersion, List<Module> modules) {
         this.bootVersion = bootVersion;
         this.modules = modules;
     }

@@ -12,6 +12,6 @@ public class OthersInitializr implements Initializr {
         startSpringIO.setMetaData(parameters.getVersion(), othersHub.getMetaData());
         startSpringIO.setDependencies(othersHub.getDependencies());
 
-        return new SpringBoot(parameters.getVersion().toVersionID(), startSpringIO.getModules());
+        return new SpringBoot(parameters.getVersion().toVersionID(), startSpringIO.getDeclaredModules());
     }
 }

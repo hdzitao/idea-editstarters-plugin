@@ -1,7 +1,6 @@
 package hdzi.editstarters.initializr;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.intellij.util.io.HttpRequests;
 import hdzi.editstarters.dependency.SpringBoot;
@@ -16,15 +15,15 @@ public class SpringInitializr implements Initializr {
         StartSpringIO startSpringIO = new StartSpringIO();
 
         String url = startSpringIO.spliceMetadataLink(parameters.getUrl());
-        JsonObject metadataJson = HttpRequests.request(url).accept("application/json").connect(request ->
-                gson.fromJson(request.readString(), JsonObject.class));
-        startSpringIO.setMetaData(parameters.getVersion(), metadataJson);
+        InitializrMetadata metadata = HttpRequests.request(url).accept("application/json").connect(request ->
+                gson.fromJson(request.readString(), InitializrMetadata.class));
+        startSpringIO.setMetaData(parameters.getVersion(), metadata);
 
-        String dependenciesUrl = startSpringIO.getMetaData().getDependenciesUrl();
-        JsonObject depsJSON;
+        String dependenciesUrl = startSpringIO.getDependenciesUrl();
+        InitializrDependencies dependencies;
         try {
-            depsJSON = HttpRequests.request(dependenciesUrl).connect(request ->
-                    gson.fromJson(request.readString(), JsonObject.class));
+            dependencies = HttpRequests.request(dependenciesUrl).connect(request ->
+                    gson.fromJson(request.readString(), InitializrDependencies.class));
         } catch (HttpRequests.HttpStatusException e) {
             if (400 == e.getStatusCode()) { // 400 bad request, 官网不支持的版本,尝试othersInitializr
                 return chain.initialize(parameters);
@@ -36,8 +35,8 @@ public class SpringInitializr implements Initializr {
             }
             throw e;
         }
-        startSpringIO.setDependencies(depsJSON);
+        startSpringIO.setDependencies(dependencies);
 
-        return new SpringBoot(parameters.getVersion().toVersionID(), startSpringIO.getModules());
+        return new SpringBoot(parameters.getVersion().toVersionID(), startSpringIO.getDeclaredModules());
     }
 }
