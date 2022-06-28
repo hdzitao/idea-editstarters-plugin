@@ -37,7 +37,7 @@ public abstract class OthersHub {
     public abstract String toString();
 
     @SneakyThrows
-    public InitializrMetadata getMetaData() {
+    public InitializrMetadataClient getMetaData() {
         String metadataMapUrl = getMetaDataMapUrl();
         JsonArray metadataMap = HttpRequests.request(metadataMapUrl).connect(request ->
                 gson.fromJson(request.readString(), JsonArray.class));
@@ -47,7 +47,7 @@ public abstract class OthersHub {
                 this.configure = configure;
                 String metadataPath = getMetaDataUrl();
                 return HttpRequests.request(metadataPath).connect(request ->
-                        gson.fromJson(request.readString(), InitializrMetadata.class));
+                        gson.fromJson(request.readString(), InitializrMetadataClient.class));
             }
         }
 

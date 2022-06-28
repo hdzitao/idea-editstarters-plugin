@@ -12,11 +12,11 @@ public class SpringInitializr implements Initializr {
     public SpringBoot initialize(InitializrParameters parameters, InitializrChain chain) {
         Gson gson = new Gson();
 
-        StartSpringIO startSpringIO = new StartSpringIO();
+        StartSpringIOMetadataClient startSpringIO = new StartSpringIOMetadataClient();
 
         String url = startSpringIO.spliceMetadataLink(parameters.getUrl());
-        InitializrMetadata metadata = HttpRequests.request(url).accept("application/json").connect(request ->
-                gson.fromJson(request.readString(), InitializrMetadata.class));
+        InitializrMetadataClient metadata = HttpRequests.request(url).accept("application/json").connect(request ->
+                gson.fromJson(request.readString(), InitializrMetadataClient.class));
         startSpringIO.setMetaData(parameters.getVersion(), metadata);
 
         String dependenciesUrl = startSpringIO.getDependenciesUrl();

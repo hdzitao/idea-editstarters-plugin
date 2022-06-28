@@ -13,24 +13,24 @@ import java.util.List;
 
 @Getter
 @Setter
-public class InitializrMetadata {
+public class InitializrMetadataClient {
     @SerializedName("_link")
-    private MetadataLink link;
+    private Links link;
 
-    private MetadataDependencies dependencies;
+    private Dependencies dependencies;
 
 
     //==================================================================================================================
 
     @Getter
     @Setter
-    public static class MetadataLink {
+    public static class Links {
         private Link dependencies;
     }
 
     @Getter
     @Setter
-    public static class MetadataDependencies implements Iterable<StarterInfo> {
+    public static class Dependencies implements Iterable<StarterInfo> {
         private String type;
         private List<Module> values;
 
