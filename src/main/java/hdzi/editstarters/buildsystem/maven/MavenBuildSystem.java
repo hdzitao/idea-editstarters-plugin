@@ -36,7 +36,7 @@ public class MavenBuildSystem extends BuildSystem {
             throw new ShowErrorException("Not a maven project!");
         }
         List<Dependency> dependencies = mavenProject.getDependencies().stream()
-                .map(d -> new Dependency(d.getGroupId(), d.getArtifactId(), d.getVersion()))
+                .map(d -> new Dependency(d.getGroupId(), d.getArtifactId(), d.getBaseVersion()))
                 .collect(Collectors.toList());
         return new MavenBuildSystem(context, dependencies, pomXml);
     }
