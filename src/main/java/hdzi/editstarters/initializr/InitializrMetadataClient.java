@@ -15,8 +15,8 @@ import java.util.List;
 @Getter
 @Setter
 public class InitializrMetadataClient {
-    @SerializedName("_link")
-    private Links link;
+    @SerializedName("_links")
+    private Links links;
 
     private Dependencies dependencies;
 

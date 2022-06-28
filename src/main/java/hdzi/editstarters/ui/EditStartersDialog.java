@@ -59,7 +59,7 @@ public class EditStartersDialog {
         });
 
         Map<String, List<StarterInfo>> modules = springBoot.getModules().stream()
-                .collect(Collectors.toMap(Module::getName, Module::getValues));
+                .collect(Collectors.toMap(Module::getName, Module::getValues, (o, n) -> o, LinkedHashMap::new));
         // Module列表
         this.moduleList.setModel(new CollectionListModel<>(modules.keySet()));
         this.moduleList.addMouseListener(new MouseAdapter() {

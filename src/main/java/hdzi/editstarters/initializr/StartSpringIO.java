@@ -63,7 +63,7 @@ public class StartSpringIO {
     }
 
     public String getDependenciesUrl() {
-        return this.metadataClient.getLink().getDependencies().getHref()
+        return this.metadataClient.getLinks().getDependencies().getHref()
                 .replace("{?bootVersion}", "?bootVersion=" + version.getOriginalText());
     }
 
