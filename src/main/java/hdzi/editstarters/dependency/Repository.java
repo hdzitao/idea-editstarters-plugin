@@ -1,5 +1,6 @@
 package hdzi.editstarters.dependency;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ public class Repository implements Point {
     protected String id;
     protected String name;
     protected String url;
+    @SerializedName(value = "snapshotEnabled", alternate = "snapshotsEnabled")
     protected boolean snapshotEnabled = false;
 
     public Repository(String id, String name, String url, boolean snapshotEnabled) {

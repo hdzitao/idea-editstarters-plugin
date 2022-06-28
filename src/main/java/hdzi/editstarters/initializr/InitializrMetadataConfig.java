@@ -143,23 +143,12 @@ public class InitializrMetadataConfig {
     @Setter
     public static class CRepository extends Repository {
         private boolean releasesEnabled = true;
-        private boolean snapshotsEnabled;
-
-        @Override
-        public boolean isSnapshotEnabled() { // snapshot(s)Enabled/snapshotEnabled这两个字段是一个意思
-            return this.snapshotsEnabled;
-        }
-
-        @Override
-        public void setSnapshotEnabled(boolean snapshotEnabled) {
-            this.snapshotsEnabled = snapshotEnabled;
-        }
 
         public CRepository resolve() {
             CRepository repository = new CRepository();
             repository.name = this.name;
             repository.url = this.url;
-            repository.snapshotsEnabled = this.snapshotsEnabled;
+            repository.snapshotEnabled = this.snapshotEnabled;
             return repository;
         }
     }
