@@ -37,21 +37,27 @@ public abstract class OthersHub {
     public abstract String toString();
 
     @SneakyThrows
-    public InitializrMetadataClient getMetaData() {
+    public void init() {
         String metadataMapUrl = getMetaDataMapUrl();
         JsonArray metadataMap = HttpRequests.request(metadataMapUrl).connect(request ->
                 gson.fromJson(request.readString(), JsonArray.class));
         for (JsonElement element : metadataMap) {
             Configure configure = gson.fromJson(element, Configure.class);
             if (Versions.parseRange(configure.versionRange).match(this.version)) {
+                // 找到第一个
                 this.configure = configure;
-                String metadataPath = getMetaDataUrl();
-                return HttpRequests.request(metadataPath).connect(request ->
-                        gson.fromJson(request.readString(), InitializrMetadataClient.class));
+                return;
             }
         }
 
         throw new ShowErrorException("Can't find metadata from OthersHub!");
+    }
+
+    @SneakyThrows
+    public InitializrMetadataClient getMetaDataClient() {
+        String metadataPath = getMetaDataClientUrl();
+        return HttpRequests.request(metadataPath).connect(request ->
+                gson.fromJson(request.readString(), InitializrMetadataClient.class));
     }
 
     @SneakyThrows
@@ -61,16 +67,27 @@ public abstract class OthersHub {
                 gson.fromJson(request.readString(), InitializrDependencies.class));
     }
 
+    @SneakyThrows
+    public InitializrMetadataConfig getMetaDataConfig() {
+        String metadataPath = getMetaDataConfigUrl();
+        return HttpRequests.request(metadataPath).connect(request ->
+                gson.fromJson(request.readString(), InitializrMetadataConfig.class));
+    }
+
     private String getMetaDataMapUrl() {
         return basePath() + this.site + "/metadata_map.json";
     }
 
-    private String getMetaDataUrl() {
-        return basePath() + this.site + "/" + this.configure.metadata + "/metadata.json ";
+    private String getMetaDataClientUrl() {
+        return basePath() + this.site + "/" + this.configure.metadataClient + "/metadata_client.json ";
     }
 
     private String getDependenciesUrl() {
         return basePath() + this.site + "/" + configure.dependencies + "/dependencies.json";
+    }
+
+    private String getMetaDataConfigUrl() {
+        return basePath() + this.site + "/" + this.configure.metadataClient + "/metadata_config.json ";
     }
 
     //==================================================================================================================
@@ -79,8 +96,10 @@ public abstract class OthersHub {
     @Setter
     public static class Configure {
         private String versionRange;
-        private String metadata;
+        private String metadataClient;
         private String dependencies;
+        private String metadataConfig;
+        private StartSpringIO.Mode mode;
     }
 
     public static class GitHub extends OthersHub {

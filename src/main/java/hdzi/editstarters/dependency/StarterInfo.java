@@ -28,7 +28,7 @@ public class StarterInfo implements Dependency {
 
     public void addRepository(Repository repository) {
         if (repository != null && ContainerUtil.find(this.repositories,
-                it -> Objects.equals(it.getUrl(), repository.getUrl())) == null) {
+                it -> Objects.equals(it.point(), repository.point())) == null) {
             this.repositories.add(repository);
         }
     }
