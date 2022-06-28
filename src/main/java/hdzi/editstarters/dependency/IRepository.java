@@ -6,6 +6,8 @@ package hdzi.editstarters.dependency;
 public interface IRepository extends Point {
     String getId();
 
+    void setId(String id);
+
     String getName();
 
     boolean isSnapshotEnabled();

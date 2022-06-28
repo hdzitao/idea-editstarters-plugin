@@ -20,6 +20,11 @@ public class ProjectRepository implements IRepository {
     }
 
     @Override
+    public void setId(String id) {
+        throw ShowErrorException.internal();
+    }
+
+    @Override
     public String getName() {
         throw ShowErrorException.internal();
     }

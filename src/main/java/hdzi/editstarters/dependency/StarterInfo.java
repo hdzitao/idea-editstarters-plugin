@@ -26,9 +26,10 @@ public class StarterInfo implements IDependency {
     private final List<IRepository> repositories = new ArrayList<>();
     private IBom bom;
 
-    public void addRepository(IRepository repository) {
+    public void addRepository(String id, IRepository repository) {
         if (repository != null && ContainerUtil.find(this.repositories,
                 it -> Objects.equals(it.point(), repository.point())) == null) {
+            repository.setId(id);
             this.repositories.add(repository);
         }
     }

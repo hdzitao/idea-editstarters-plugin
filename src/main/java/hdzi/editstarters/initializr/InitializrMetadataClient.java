@@ -35,14 +35,12 @@ public class InitializrMetadataClient {
                     starterInfo.setBom(bom);
                     for (String rid : bom.getRepositories()) {
                         InitializrRepository repository = initializrDependencies.getRepositories().get(rid);
-                        repository.setId(rid);
-                        starterInfo.addRepository(repository);
+                        starterInfo.addRepository(rid, repository);
                     }
                 }
                 InitializrRepository repository = initializrDependencies.getRepositories().get(dependency.getRepository());
                 if (repository != null) {
-                    repository.setId(dependency.getRepository());
-                    starterInfo.addRepository(repository);
+                    starterInfo.addRepository(dependency.getRepository(), repository);
                 }
             }
         }

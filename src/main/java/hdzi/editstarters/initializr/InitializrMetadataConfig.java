@@ -70,14 +70,14 @@ public class InitializrMetadataConfig {
                     starterInfo.setBom(bom);
                     for (String rid : bom.getRepositories()) {
                         Repository repository = this.configuration.env.repositories.get(rid);
-                        repository = repository.resolve(rid);
-                        starterInfo.addRepository(repository);
+                        repository = repository.resolve();
+                        starterInfo.addRepository(rid, repository);
                     }
                 }
 
                 Repository repository = this.configuration.env.repositories.get(repositoryId);
                 if (repository != null) {
-                    starterInfo.addRepository(repository.resolve(repositoryId));
+                    starterInfo.addRepository(repositoryId, repository.resolve());
                 }
             }
         }
@@ -156,9 +156,8 @@ public class InitializrMetadataConfig {
             return this.snapshotsEnabled;
         }
 
-        public Repository resolve(String rid) {
+        public Repository resolve() {
             Repository repository = new Repository();
-            repository.id = rid;
             repository.name = this.name;
             repository.url = this.url;
             repository.snapshotsEnabled = this.snapshotsEnabled;
