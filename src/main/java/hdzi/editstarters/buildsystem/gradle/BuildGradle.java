@@ -7,8 +7,8 @@ import com.intellij.util.containers.ContainerUtil;
 import hdzi.editstarters.buildsystem.ProjectBom;
 import hdzi.editstarters.buildsystem.ProjectDependency;
 import hdzi.editstarters.buildsystem.ProjectRepository;
-import hdzi.editstarters.dependency.Bom;
-import hdzi.editstarters.dependency.Repository;
+import hdzi.editstarters.dependency.IBom;
+import hdzi.editstarters.dependency.IRepository;
 import hdzi.editstarters.dependency.StarterInfo;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
@@ -76,7 +76,7 @@ public class BuildGradle extends GradleSyntax<GrClosableBlock> {
     }
 
     @Override
-    public void createBomTag(GrClosableBlock bomsTag, Bom bom) {
+    public void createBomTag(GrClosableBlock bomsTag, IBom bom) {
         Instruction instruction = bomInstruction(bom);
         GrStatement statement = factory.createStatementFromText(instruction.toInstString("$inst '$point'"));
         bomsTag.addStatementBefore(statement, null);
@@ -98,7 +98,7 @@ public class BuildGradle extends GradleSyntax<GrClosableBlock> {
     }
 
     @Override
-    public void createRepositoryTag(GrClosableBlock repositoriesTag, Repository repository) {
+    public void createRepositoryTag(GrClosableBlock repositoriesTag, IRepository repository) {
         Instruction instruction = repositoryInstruction(repository);
         GrStatement statement = factory.createStatementFromText(instruction.toInstString("$inst { url '$point' }"));
         repositoriesTag.addStatementBefore(statement, null);

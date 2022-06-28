@@ -11,4 +11,8 @@ public class ShowErrorException extends RuntimeException {
     public ShowErrorException(String s, Throwable throwable) {
         super(s, throwable);
     }
+
+    public static ShowErrorException internal() {
+        return new ShowErrorException("!!! internal error !!!");
+    }
 }

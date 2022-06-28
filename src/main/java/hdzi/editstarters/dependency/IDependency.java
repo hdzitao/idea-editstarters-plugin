@@ -3,7 +3,7 @@ package hdzi.editstarters.dependency;
 /**
  * 依赖
  */
-public interface Dependency extends Point {
+public interface IDependency extends Point {
     String getGroupId();
 
     String getArtifactId();

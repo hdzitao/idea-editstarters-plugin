@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
-public class StarterInfo implements Dependency {
+public class StarterInfo implements IDependency {
     private String id;
     private String name;
 
@@ -23,10 +23,10 @@ public class StarterInfo implements Dependency {
     private DependencyScope scope;
     private String version;
 
-    private final List<Repository> repositories = new ArrayList<>();
-    private Bom bom;
+    private final List<IRepository> repositories = new ArrayList<>();
+    private IBom bom;
 
-    public void addRepository(Repository repository) {
+    public void addRepository(IRepository repository) {
         if (repository != null && ContainerUtil.find(this.repositories,
                 it -> Objects.equals(it.point(), repository.point())) == null) {
             this.repositories.add(repository);

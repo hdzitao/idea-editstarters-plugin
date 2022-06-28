@@ -13,7 +13,7 @@ public class InitializrChain {
 
     public SpringBoot initialize(InitializrParameters parameters) {
         if (i >= CHAIN.length) {
-            throw new ShowErrorException("!!! internal error !!!");
+            throw ShowErrorException.internal();
         }
         return CHAIN[i++].initialize(parameters, this);
     }

@@ -1,12 +1,12 @@
 package hdzi.editstarters.buildsystem;
 
-import hdzi.editstarters.dependency.Bom;
+import hdzi.editstarters.dependency.IBom;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProjectBom implements Bom {
+public class ProjectBom implements IBom {
     private final String groupId;
     private final String artifactId;
     private final String version;

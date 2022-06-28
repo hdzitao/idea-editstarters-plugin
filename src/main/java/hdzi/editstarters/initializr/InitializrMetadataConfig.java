@@ -1,8 +1,7 @@
 package hdzi.editstarters.initializr;
 
-import hdzi.editstarters.dependency.Link;
 import hdzi.editstarters.dependency.Module;
-import hdzi.editstarters.dependency.StarterInfo;
+import hdzi.editstarters.dependency.*;
 import hdzi.editstarters.version.Version;
 import hdzi.editstarters.version.Versions;
 import lombok.Getter;
@@ -67,17 +66,18 @@ public class InitializrMetadataConfig {
 
                 Bom bom = this.configuration.env.boms.get(bomId);
                 if (bom != null) {
-                    InitializrBom initializrBom = bom.initializr(version);
-                    for (String rid : initializrBom.getRepositories()) {
+                    bom = bom.resolve(version);
+                    starterInfo.setBom(bom);
+                    for (String rid : bom.getRepositories()) {
                         Repository repository = this.configuration.env.repositories.get(rid);
-                        InitializrRepository initializrRepository = repository.initializr(rid);
-                        starterInfo.addRepository(initializrRepository);
+                        repository = repository.resolve(rid);
+                        starterInfo.addRepository(repository);
                     }
                 }
 
                 Repository repository = this.configuration.env.repositories.get(repositoryId);
                 if (repository != null) {
-                    starterInfo.addRepository(repository.initializr(repositoryId));
+                    starterInfo.addRepository(repository.resolve(repositoryId));
                 }
             }
         }
@@ -102,7 +102,7 @@ public class InitializrMetadataConfig {
 
     @Getter
     @Setter
-    public static class Bom {
+    public static class Bom implements IBom {
         private String groupId;
         private String artifactId;
         private String version;
@@ -111,52 +111,58 @@ public class InitializrMetadataConfig {
         // mapping 字段
         private String compatibilityRange;
 
-        public InitializrBom initializr(Version version) {
-            InitializrBom initializrBom = new InitializrBom();
-            initializrBom.setGroupId(this.groupId);
-            initializrBom.setArtifactId(this.artifactId);
-            initializrBom.setVersion(this.version);
-            initializrBom.setRepositories(this.repositories);
+        public Bom resolve(Version version) {
+            Bom bom = new Bom();
+            bom.groupId = this.groupId;
+            bom.artifactId = this.artifactId;
+            bom.version = this.version;
+            bom.repositories = this.repositories;
 
             List<Bom> bomMappings = this.getMappings();
             if (CollectionUtils.isNotEmpty(bomMappings)) {
                 for (Bom mapping : bomMappings) {
                     if (Versions.parseRange(mapping.compatibilityRange).match(version)) {
                         if (StringUtils.isNoneBlank(this.groupId)) {
-                            initializrBom.setGroupId(this.groupId);
+                            bom.groupId = this.groupId;
                         }
                         if (StringUtils.isNoneBlank(this.artifactId)) {
-                            initializrBom.setArtifactId(this.artifactId);
+                            bom.artifactId = this.artifactId;
                         }
                         if (StringUtils.isNoneBlank(this.version)) {
-                            initializrBom.setVersion(this.version);
+                            bom.version = this.version;
                         }
                         if (CollectionUtils.isNotEmpty(this.repositories)) {
-                            initializrBom.setRepositories(this.repositories);
+                            bom.repositories = this.repositories;
                         }
                     }
                 }
             }
 
-            return initializrBom;
+            return bom;
         }
     }
 
     @Getter
     @Setter
-    public static class Repository {
+    public static class Repository implements IRepository {
+        private String id;
         private String name;
         private String url;
         private boolean releasesEnabled = true;
         private boolean snapshotsEnabled;
 
-        public InitializrRepository initializr(String rid) {
-            InitializrRepository initializrRepository = new InitializrRepository();
-            initializrRepository.setId(rid);
-            initializrRepository.setName(this.name);
-            initializrRepository.setUrl(this.url);
-            initializrRepository.setSnapshotEnabled(this.snapshotsEnabled);
-            return initializrRepository;
+        @Override
+        public boolean isSnapshotEnabled() { // snapshot(s)Enabled/snapshotEnabled这两个字段是一个意思
+            return this.snapshotsEnabled;
+        }
+
+        public Repository resolve(String rid) {
+            Repository repository = new Repository();
+            repository.id = rid;
+            repository.name = this.name;
+            repository.url = this.url;
+            repository.snapshotsEnabled = this.snapshotsEnabled;
+            return repository;
         }
     }
 

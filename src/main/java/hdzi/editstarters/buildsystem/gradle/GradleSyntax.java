@@ -74,11 +74,11 @@ public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> 
         return instructions;
     }
 
-    protected Instruction bomInstruction(Bom bom) {
+    protected Instruction bomInstruction(IBom bom) {
         return new Instruction(TAG_BOM, String.join(":", bom.getGroupId(), bom.getArtifactId(), bom.getVersion()));
     }
 
-    protected Instruction repositoryInstruction(Repository repository) {
+    protected Instruction repositoryInstruction(IRepository repository) {
         return new Instruction(TAG_REPOSITORY, repository.getUrl());
     }
 

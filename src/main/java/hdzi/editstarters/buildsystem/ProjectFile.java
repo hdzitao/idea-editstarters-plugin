@@ -2,9 +2,9 @@ package hdzi.editstarters.buildsystem;
 
 import com.intellij.psi.PsiElement;
 import hdzi.editstarters.EditStarters;
-import hdzi.editstarters.dependency.Bom;
+import hdzi.editstarters.dependency.IBom;
+import hdzi.editstarters.dependency.IRepository;
 import hdzi.editstarters.dependency.Point;
-import hdzi.editstarters.dependency.Repository;
 import hdzi.editstarters.dependency.StarterInfo;
 import hdzi.editstarters.ui.ShowErrorException;
 import org.apache.commons.collections.CollectionUtils;
@@ -49,12 +49,12 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
             T dependenciesTag = getOrCreateDependenciesTag();
             for (StarterInfo dependency : dependencies) {
                 createDependencyTag(dependenciesTag, dependency);
-                Bom bom = dependency.getBom();
+                IBom bom = dependency.getBom();
                 if (bom != null) {
                     addBom(bom);
                 }
 
-                List<Repository> repositories = dependency.getRepositories();
+                List<IRepository> repositories = dependency.getRepositories();
                 if (CollectionUtils.isNotEmpty(repositories)) {
                     addRepositories(repositories);
                 }
@@ -69,7 +69,7 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
     /**
      * 添加bom信息
      */
-    private void addBom(Bom bom) {
+    private void addBom(IBom bom) {
         T bomTag = getOrCreateBomsTag();
         // 去重后新建
         List<ProjectBom> allBoms = findAllBoms(bomTag);
@@ -81,11 +81,11 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
     /**
      * 添加仓库信息
      */
-    private void addRepositories(Collection<Repository> repositories) {
+    private void addRepositories(Collection<IRepository> repositories) {
         T repositoriesTag = getOrCreateRepositoriesTag();
         List<ProjectRepository> existingRepos = findAllRepositories(repositoriesTag);
         Set<String> existingRepoPointSet = existingRepos.stream().map(Point::point).collect(Collectors.toSet());
-        for (Repository repository : repositories) {
+        for (IRepository repository : repositories) {
             if (!existingRepoPointSet.contains(repository.point())) {
                 createRepositoryTag(repositoriesTag, repository);
             }
@@ -102,11 +102,11 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
 
     protected abstract List<ProjectBom> findAllBoms(T bomsTag);
 
-    protected abstract void createBomTag(T bomsTag, Bom bom);
+    protected abstract void createBomTag(T bomsTag, IBom bom);
 
     protected abstract T getOrCreateRepositoriesTag();
 
     protected abstract List<ProjectRepository> findAllRepositories(T repositoriesTag);
 
-    protected abstract void createRepositoryTag(T repositoriesTag, Repository repository);
+    protected abstract void createRepositoryTag(T repositoriesTag, IRepository repository);
 }

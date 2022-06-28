@@ -1,6 +1,6 @@
 package hdzi.editstarters.dependency;
 
-public interface Bom extends Point {
+public interface IBom extends Point {
     String getGroupId();
 
     String getArtifactId();

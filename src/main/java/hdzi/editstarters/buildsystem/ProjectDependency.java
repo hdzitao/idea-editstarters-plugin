@@ -1,13 +1,13 @@
 package hdzi.editstarters.buildsystem;
 
 import com.intellij.psi.PsiElement;
-import hdzi.editstarters.dependency.Dependency;
+import hdzi.editstarters.dependency.IDependency;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProjectDependency implements Dependency {
+public class ProjectDependency implements IDependency {
     private final String groupId;
     private final String artifactId;
     private final String version;
