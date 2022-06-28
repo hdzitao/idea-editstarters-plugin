@@ -37,6 +37,6 @@ public class SpringInitializr implements Initializr {
         }
         startSpringIO.setDependencies(dependencies);
 
-        return new SpringBoot(parameters.getVersion().toVersionID(), startSpringIO.getDeclaredModules());
+        return new SpringBoot(parameters.getVersion(), startSpringIO.getDeclaredModules());
     }
 }

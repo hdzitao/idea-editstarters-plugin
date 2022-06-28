@@ -5,6 +5,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.intellij.util.io.HttpRequests;
 import hdzi.editstarters.ui.ShowErrorException;
+import hdzi.editstarters.version.Version;
+import hdzi.editstarters.version.Versions;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -14,14 +16,14 @@ public abstract class OthersHub {
     private final String site;
 
     @Getter
-    private final Versions.Version version;
+    private final Version version;
 
     @Getter
     private Configure configure;
 
     private final Gson gson = new Gson();
 
-    protected OthersHub(String site, Versions.Version version) {
+    protected OthersHub(String site, Version version) {
         this.site = site;
         this.version = version;
     }
@@ -41,7 +43,7 @@ public abstract class OthersHub {
                 gson.fromJson(request.readString(), JsonArray.class));
         for (JsonElement element : metadataMap) {
             Configure configure = gson.fromJson(element, Configure.class);
-            if (this.version.inRange(Versions.parseRange(configure.versionRange))) {
+            if (Versions.parseRange(configure.versionRange).match(this.version)) {
                 this.configure = configure;
                 String metadataPath = getMetaDataUrl();
                 return HttpRequests.request(metadataPath).connect(request ->
@@ -82,7 +84,7 @@ public abstract class OthersHub {
     }
 
     public static class GitHub extends OthersHub {
-        public GitHub(String site, Versions.Version version) {
+        public GitHub(String site, Version version) {
             super(site, version);
         }
 
@@ -98,7 +100,7 @@ public abstract class OthersHub {
     }
 
 //    public static class Gitee extends OthersHub {
-//        public Gitee(String site, Versions.Version version) {
+//        public Gitee(String site, Version version) {
 //            super(site, version);
 //        }
 //

@@ -8,6 +8,7 @@ import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.dependency.Module;
 import hdzi.editstarters.dependency.SpringBoot;
 import hdzi.editstarters.dependency.StarterInfo;
+import hdzi.editstarters.version.Version;
 import org.apache.commons.lang.WordUtils;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class EditStartersDialog {
     private JPanel root;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JComboBox<String> versionComboBox;
+    private JComboBox<Version> versionComboBox;
     private JList<String> moduleList;
     private JList<StarterInfo> starterList;
     private JList<StarterInfo> selectList;

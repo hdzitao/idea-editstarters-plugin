@@ -3,6 +3,8 @@ package hdzi.editstarters.initializr;
 import hdzi.editstarters.dependency.DependencyScope;
 import hdzi.editstarters.dependency.Module;
 import hdzi.editstarters.dependency.StarterInfo;
+import hdzi.editstarters.version.Version;
+import hdzi.editstarters.version.Versions;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +17,7 @@ import java.util.List;
 @Setter
 public class StartSpringIO {
 
-    private Versions.Version version;
+    private Version version;
 
     private InitializrMetadata metaData;
 
@@ -37,10 +39,10 @@ public class StartSpringIO {
 
     public String getDependenciesUrl() {
         return this.metaData.getLink().getDependencies().getHref()
-                .replace("{?bootVersion}", "?bootVersion=" + version.toVersionID());
+                .replace("{?bootVersion}", "?bootVersion=" + version.getOriginalText());
     }
 
-    public void setMetaData(Versions.Version version, InitializrMetadata metaData) {
+    public void setMetaData(Version version, InitializrMetadata metaData) {
         this.version = version;
         this.metaData = metaData;
     }
@@ -84,7 +86,7 @@ public class StartSpringIO {
                     // 检查坐标
                     infoIterator.remove();
                 } else if ((StringUtils.isNoneBlank(starterInfo.getVersionRange())
-                        && !version.inRange(Versions.parseRange(starterInfo.getVersionRange())))) {
+                        && !Versions.parseRange(starterInfo.getVersionRange()).match(this.version))) {
                     // 版本范围检查
                     infoIterator.remove();
                 }

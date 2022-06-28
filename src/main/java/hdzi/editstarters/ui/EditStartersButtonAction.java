@@ -13,7 +13,8 @@ import hdzi.editstarters.dependency.SpringBoot;
 import hdzi.editstarters.initializr.CachePersistentComponent;
 import hdzi.editstarters.initializr.InitializrChain;
 import hdzi.editstarters.initializr.InitializrParameters;
-import hdzi.editstarters.initializr.Versions;
+import hdzi.editstarters.version.Version;
+import hdzi.editstarters.version.Versions;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +35,7 @@ public abstract class EditStartersButtonAction extends AnAction {
                 throw new ShowErrorException("Not a Spring Boot Project!");
             }
             // spring boot version
-            Versions.Version version = Versions.parse(buildSystem.getSpringbootDependency().getVersion());
+            Version version = Versions.parse(buildSystem.getSpringbootDependency().getVersion());
             // 取缓存中的url作为弹出框的默认值
             String url = CachePersistentComponent.getInstance(e.getProject()).getUrl();
             // 弹出spring initializr地址输入框

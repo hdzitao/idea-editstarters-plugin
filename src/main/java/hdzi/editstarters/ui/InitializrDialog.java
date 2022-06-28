@@ -2,7 +2,7 @@ package hdzi.editstarters.ui;
 
 import com.intellij.ui.CollectionComboBoxModel;
 import hdzi.editstarters.initializr.OthersHub;
-import hdzi.editstarters.initializr.Versions;
+import hdzi.editstarters.version.Version;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,7 +31,7 @@ public class InitializrDialog extends JDialog {
 
     private final Pattern urlCheck = Pattern.compile("^https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 
-    public InitializrDialog(String url, Versions.Version version) {
+    public InitializrDialog(String url, Version version) {
         setTitle("Spring Initializr Url");
         setContentPane(contentPane);
         setModal(true);

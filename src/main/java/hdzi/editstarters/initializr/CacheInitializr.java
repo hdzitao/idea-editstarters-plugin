@@ -6,12 +6,12 @@ public class CacheInitializr implements Initializr {
     @Override
     public SpringBoot initialize(InitializrParameters parameters, InitializrChain chain) {
         String url = parameters.getUrl();
-        String versionID = parameters.getVersion().toVersionID();
+        String version = parameters.getVersion().getOriginalText();
         CachePersistentComponent cachePersistentComponent = CachePersistentComponent.getInstance(parameters.getProject());
 
         if (parameters.isEnableCache()) {
             // 如果启用缓存,检查缓存
-            SpringBoot springBoot = cachePersistentComponent.get(url, versionID);
+            SpringBoot springBoot = cachePersistentComponent.get(url, version);
             if (springBoot != null) {
                 return springBoot;
             }
@@ -19,7 +19,7 @@ public class CacheInitializr implements Initializr {
         // 不启用缓存,或缓存为空,继续执行
         SpringBoot springBoot = chain.initialize(parameters);
         // 执行完后,不管起不起用缓存都保存最新的结果
-        cachePersistentComponent.put(url, versionID, springBoot);
+        cachePersistentComponent.put(url, version, springBoot);
         return springBoot;
     }
 }

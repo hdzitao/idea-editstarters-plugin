@@ -2,6 +2,7 @@ package hdzi.editstarters.initializr;
 
 import com.intellij.openapi.project.Project;
 import hdzi.editstarters.buildsystem.BuildSystem;
+import hdzi.editstarters.version.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,5 +14,5 @@ public class InitializrParameters {
     private Project project;
     private boolean enableCache = true;
     private OthersHub othersHub;
-    private Versions.Version version;
+    private Version version;
 }
