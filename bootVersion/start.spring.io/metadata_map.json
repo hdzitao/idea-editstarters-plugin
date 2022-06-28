@@ -1,11 +1,13 @@
 [
   {
-    "versionRange": "[2.2.2,2.2.x]",
-    "initializr": "2.2.2"
+    "versionRange": "2.2.2",
+    "metadataConfig": "2.2.2",
+    "mode": "config"
   },
   {
-    "versionRange": "[2.2.2,2.2.x]",
-    "metadata": "2.2.2",
-    "dependencies": "2.2.2"
+    "versionRange": "[2.2.11,2.2.x]",
+    "metadataClient": "2.2.2",
+    "dependencies": "2.2.11",
+    "mode": "client"
   }
 ]
