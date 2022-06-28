@@ -11,8 +11,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import hdzi.editstarters.EditStarters;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import hdzi.editstarters.buildsystem.ProjectDependency;
 import hdzi.editstarters.buildsystem.ProjectFile;
+import hdzi.editstarters.dependency.Dependency;
 import hdzi.editstarters.ui.ShowErrorException;
 import lombok.SneakyThrows;
 import org.jetbrains.kotlin.psi.KtFile;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("ConstantConditions")
 public class GradleBuildSystem extends BuildSystem {
 
-    private GradleBuildSystem(DataContext context, List<ProjectDependency> dependencies, EditStarters editStarters) {
+    private GradleBuildSystem(DataContext context, List<Dependency> dependencies, EditStarters editStarters) {
         super(context, dependencies, editStarters);
     }
 
@@ -51,10 +51,10 @@ public class GradleBuildSystem extends BuildSystem {
 
         @SuppressWarnings("all")
         DataNode<ProjectData> projectData = ExternalSystemApiUtil.findProjectData(project, GradleConstants.SYSTEM_ID, project.getBasePath());
-        List<ProjectDependency> dependencies = projectData.getChildren().stream()
+        List<Dependency> dependencies = projectData.getChildren().stream()
                 .filter(node -> ProjectKeys.LIBRARY.equals(node.getKey()))
                 .map(node -> (LibraryData) node.getData())
-                .map(lib -> new ProjectDependency(lib.getGroupId(), lib.getArtifactId(), lib.getVersion()))
+                .map(lib -> new Dependency(lib.getGroupId(), lib.getArtifactId(), lib.getVersion()))
                 .collect(Collectors.toList());
 
         return new GradleBuildSystem(context, dependencies, projectFile);

@@ -16,17 +16,17 @@ import java.util.Map;
 @Getter
 @Setter
 public class InitializrMetadataConfig {
-    private Configuration configuration;
-    private Dependencies dependencies;
+    private CConfiguration configuration;
+    private CDependencies dependencies;
 
     public List<Module> getModules(Version version) {
         List<Module> modules = new ArrayList<>();
-        for (DependenciesContent dependenciesContent : dependencies.content) {
+        for (CDependenciesContent dependenciesContent : dependencies.content) {
             Module module = new Module();
             module.setName(dependenciesContent.name);
             module.setValues(new ArrayList<>());
-            List<DependencyContent> dependencyContent = dependenciesContent.getContent();
-            for (DependencyContent content : dependencyContent) {
+            List<CDependencyContent> dependencyContent = dependenciesContent.getContent();
+            for (CDependencyContent content : dependencyContent) {
                 StarterInfo starterInfo = new StarterInfo();
                 starterInfo.setId(content.id);
                 starterInfo.setName(content.name);
@@ -40,9 +40,9 @@ public class InitializrMetadataConfig {
                 String repositoryId = content.repository;
                 String bomId = content.bom;
 
-                List<DependencyContent> dependencyMappings = content.getMappings();
+                List<CDependencyContent> dependencyMappings = content.getMappings();
                 if (CollectionUtils.isNotEmpty(dependencyMappings)) {
-                    for (DependencyContent mapping : dependencyMappings) {
+                    for (CDependencyContent mapping : dependencyMappings) {
                         if (Versions.parseRange(mapping.compatibilityRange).match(version)) {
                             if (StringUtils.isNoneBlank(mapping.groupId)) {
                                 starterInfo.setGroupId(mapping.groupId);
@@ -64,18 +64,18 @@ public class InitializrMetadataConfig {
                     }
                 }
 
-                Bom bom = this.configuration.env.boms.get(bomId);
+                CBom bom = this.configuration.env.boms.get(bomId);
                 if (bom != null) {
                     bom = bom.resolve(version);
                     starterInfo.setBom(bom);
                     for (String rid : bom.getRepositories()) {
-                        Repository repository = this.configuration.env.repositories.get(rid);
+                        CRepository repository = this.configuration.env.repositories.get(rid);
                         repository = repository.resolve();
                         starterInfo.addRepository(rid, repository);
                     }
                 }
 
-                Repository repository = this.configuration.env.repositories.get(repositoryId);
+                CRepository repository = this.configuration.env.repositories.get(repositoryId);
                 if (repository != null) {
                     starterInfo.addRepository(repositoryId, repository.resolve());
                 }
@@ -89,38 +89,35 @@ public class InitializrMetadataConfig {
 
     @Getter
     @Setter
-    public static class Configuration {
-        private Env env;
+    public static class CConfiguration {
+        private CEnv env;
     }
 
     @Getter
     @Setter
-    public static class Env {
-        private Map<String, Bom> boms;
-        private Map<String, Repository> repositories;
+    public static class CEnv {
+        private Map<String, CBom> boms;
+        private Map<String, CRepository> repositories;
     }
 
     @Getter
     @Setter
-    public static class Bom implements IBom {
-        private String groupId;
-        private String artifactId;
-        private String version;
+    public static class CBom extends Bom {
         private List<String> repositories = new ArrayList<>();
-        private List<Bom> mappings;
+        private List<CBom> mappings;
         // mapping 字段
         private String compatibilityRange;
 
-        public Bom resolve(Version version) {
-            Bom bom = new Bom();
+        public CBom resolve(Version version) {
+            CBom bom = new CBom();
             bom.groupId = this.groupId;
             bom.artifactId = this.artifactId;
             bom.version = this.version;
             bom.repositories = this.repositories;
 
-            List<Bom> bomMappings = this.getMappings();
+            List<CBom> bomMappings = this.getMappings();
             if (CollectionUtils.isNotEmpty(bomMappings)) {
-                for (Bom mapping : bomMappings) {
+                for (CBom mapping : bomMappings) {
                     if (Versions.parseRange(mapping.compatibilityRange).match(version)) {
                         if (StringUtils.isNoneBlank(this.groupId)) {
                             bom.groupId = this.groupId;
@@ -144,10 +141,7 @@ public class InitializrMetadataConfig {
 
     @Getter
     @Setter
-    public static class Repository implements IRepository {
-        private String id;
-        private String name;
-        private String url;
+    public static class CRepository extends Repository {
         private boolean releasesEnabled = true;
         private boolean snapshotsEnabled;
 
@@ -156,8 +150,13 @@ public class InitializrMetadataConfig {
             return this.snapshotsEnabled;
         }
 
-        public Repository resolve() {
-            Repository repository = new Repository();
+        @Override
+        public void setSnapshotEnabled(boolean snapshotEnabled) {
+            this.snapshotsEnabled = snapshotEnabled;
+        }
+
+        public CRepository resolve() {
+            CRepository repository = new CRepository();
             repository.name = this.name;
             repository.url = this.url;
             repository.snapshotsEnabled = this.snapshotsEnabled;
@@ -167,20 +166,20 @@ public class InitializrMetadataConfig {
 
     @Getter
     @Setter
-    public static class Dependencies {
-        private List<DependenciesContent> content;
+    public static class CDependencies {
+        private List<CDependenciesContent> content;
     }
 
     @Getter
     @Setter
-    public static class DependenciesContent {
+    public static class CDependenciesContent {
         private String name;
-        private List<DependencyContent> content;
+        private List<CDependencyContent> content;
     }
 
     @Getter
     @Setter
-    public static class DependencyContent {
+    public static class CDependencyContent {
         private String id;
         private String name;
         private String description;
@@ -192,6 +191,6 @@ public class InitializrMetadataConfig {
         private String compatibilityRange;
         private String bom;
         private String repository;
-        private List<DependencyContent> mappings;
+        private List<CDependencyContent> mappings;
     }
 }

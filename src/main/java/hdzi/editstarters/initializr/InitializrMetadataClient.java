@@ -1,7 +1,6 @@
 package hdzi.editstarters.initializr;
 
 import com.google.gson.annotations.SerializedName;
-import hdzi.editstarters.dependency.DependencyScope;
 import hdzi.editstarters.dependency.Link;
 import hdzi.editstarters.dependency.Module;
 import hdzi.editstarters.dependency.StarterInfo;
@@ -16,9 +15,9 @@ import java.util.List;
 @Setter
 public class InitializrMetadataClient {
     @SerializedName("_links")
-    private Links links;
+    private CLinks links;
 
-    private Dependencies dependencies;
+    private CDependencies dependencies;
 
     public List<Module> getModules(InitializrDependencies initializrDependencies) {
         // 组合 dependencies 和 metaData
@@ -28,7 +27,7 @@ public class InitializrMetadataClient {
                 starterInfo.setGroupId(dependency.getGroupId());
                 starterInfo.setArtifactId(dependency.getArtifactId());
                 starterInfo.setVersion(dependency.getVersion());
-                starterInfo.setScope(DependencyScope.getByScope(dependency.getScope()));
+                starterInfo.setScope(dependency.getScope());
 
                 InitializrBom bom = initializrDependencies.getBoms().get(dependency.getBom());
                 if (bom != null) {
@@ -53,13 +52,13 @@ public class InitializrMetadataClient {
 
     @Getter
     @Setter
-    public static class Links {
+    public static class CLinks {
         private Link dependencies;
     }
 
     @Getter
     @Setter
-    public static class Dependencies implements Iterable<StarterInfo> {
+    public static class CDependencies implements Iterable<StarterInfo> {
         private String type;
         private List<Module> values;
 

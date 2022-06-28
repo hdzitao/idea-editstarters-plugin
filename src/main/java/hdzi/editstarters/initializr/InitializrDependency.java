@@ -1,17 +1,14 @@
 package hdzi.editstarters.initializr;
 
 
-import hdzi.editstarters.dependency.IDependency;
+import hdzi.editstarters.dependency.Dependency;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class InitializrDependency implements IDependency {
-    private String groupId;
-    private String artifactId;
-    private String scope;
-    private String version;
+public class InitializrDependency extends Dependency {
+
     private String repository;
     private String bom;
 }

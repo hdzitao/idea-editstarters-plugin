@@ -4,11 +4,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
-import hdzi.editstarters.buildsystem.ProjectBom;
-import hdzi.editstarters.buildsystem.ProjectDependency;
-import hdzi.editstarters.buildsystem.ProjectRepository;
-import hdzi.editstarters.dependency.IBom;
-import hdzi.editstarters.dependency.IRepository;
+import hdzi.editstarters.buildsystem.DependencyElement;
+import hdzi.editstarters.dependency.Bom;
+import hdzi.editstarters.dependency.Dependency;
+import hdzi.editstarters.dependency.Repository;
 import hdzi.editstarters.dependency.StarterInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.kotlin.psi.*;
@@ -40,11 +39,11 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     }
 
     @Override
-    public List<ProjectDependency> findAllDependencies(KtBlockExpression dependenciesTag) {
+    public List<Dependency> findAllDependencies(KtBlockExpression dependenciesTag) {
         return PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, KtCallExpression.class).stream()
                 .map(it -> {
                     GradlePoint gradlePoint = getDependencyGroupArtifact(it);
-                    return new ProjectDependency(gradlePoint.getGroupId(), gradlePoint.getArtifactId(), it);
+                    return new DependencyElement(gradlePoint.getGroupId(), gradlePoint.getArtifactId(), it);
                 }).collect(Collectors.toList());
     }
 
@@ -62,16 +61,16 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     }
 
     @Override
-    public List<ProjectBom> findAllBoms(KtBlockExpression bomsTag) {
+    public List<Bom> findAllBoms(KtBlockExpression bomsTag) {
         return findAllCallExpression(bomsTag, TAG_BOM).stream()
                 .map(it -> {
                     GradlePoint gradlePoint = splitGroupArtifact(getCallFirstParam(it));
-                    return new ProjectBom(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
+                    return new Bom(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
                 }).collect(Collectors.toList());
     }
 
     @Override
-    public void createBomTag(KtBlockExpression bomsTag, IBom bom) {
+    public void createBomTag(KtBlockExpression bomsTag, Bom bom) {
         Instruction instruction = bomInstruction(bom);
         addExpression(bomsTag, instruction.toInstString("$inst(\"$point\")"));
     }
@@ -82,7 +81,7 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     }
 
     @Override
-    public List<ProjectRepository> findAllRepositories(KtBlockExpression repositoriesTag) {
+    public List<Repository> findAllRepositories(KtBlockExpression repositoriesTag) {
         return findAllCallExpression(repositoriesTag, TAG_REPOSITORY).stream()
                 .map(it -> {
                     List<KtValueArgument> arguments = it.getValueArguments();
@@ -98,12 +97,12 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
                             url = getCallFirstParam(it);
                         }
                     }
-                    return new ProjectRepository(url);
+                    return new Repository(url);
                 }).collect(Collectors.toList());
     }
 
     @Override
-    public void createRepositoryTag(KtBlockExpression repositoriesTag, IRepository repository) {
+    public void createRepositoryTag(KtBlockExpression repositoriesTag, Repository repository) {
         Instruction instruction = repositoryInstruction(repository);
         addExpression(repositoriesTag, instruction.toInstString("$inst { url = uri(\"$point\") }"));
     }

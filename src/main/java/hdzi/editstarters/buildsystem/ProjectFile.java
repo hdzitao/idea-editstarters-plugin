@@ -2,10 +2,7 @@ package hdzi.editstarters.buildsystem;
 
 import com.intellij.psi.PsiElement;
 import hdzi.editstarters.EditStarters;
-import hdzi.editstarters.dependency.IBom;
-import hdzi.editstarters.dependency.IRepository;
-import hdzi.editstarters.dependency.Point;
-import hdzi.editstarters.dependency.StarterInfo;
+import hdzi.editstarters.dependency.*;
 import hdzi.editstarters.ui.ShowErrorException;
 import org.apache.commons.collections.CollectionUtils;
 
@@ -23,13 +20,13 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
         try {
             T dependenciesTag = getOrCreateDependenciesTag();
             // 取已存在的依赖
-            List<ProjectDependency> extDependencies = findAllDependencies(dependenciesTag);
+            List<Dependency> extDependencies = findAllDependencies(dependenciesTag);
             // 转化待删除的依赖成字符串形式，方便对比
             Set<String> removeDependencies = dependencies.stream().map(Point::point).collect(Collectors.toSet());
             // 遍历存在的依赖，如果待删除的依赖包含它，就删除
-            for (ProjectDependency extDependency : extDependencies) {
-                if (removeDependencies.contains(extDependency.point())) {
-                    PsiElement element = extDependency.getElement();
+            for (Dependency extDependency : extDependencies) {
+                if (removeDependencies.contains(extDependency.point()) && extDependency instanceof DependencyElement) {
+                    PsiElement element = ((DependencyElement) extDependency).getElement();
                     if (element != null) {
                         element.delete();
                     }
@@ -49,12 +46,12 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
             T dependenciesTag = getOrCreateDependenciesTag();
             for (StarterInfo dependency : dependencies) {
                 createDependencyTag(dependenciesTag, dependency);
-                IBom bom = dependency.getBom();
+                Bom bom = dependency.getBom();
                 if (bom != null) {
                     addBom(bom);
                 }
 
-                List<IRepository> repositories = dependency.getRepositories();
+                List<Repository> repositories = dependency.getRepositories();
                 if (CollectionUtils.isNotEmpty(repositories)) {
                     addRepositories(repositories);
                 }
@@ -69,10 +66,10 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
     /**
      * 添加bom信息
      */
-    private void addBom(IBom bom) {
+    private void addBom(Bom bom) {
         T bomTag = getOrCreateBomsTag();
         // 去重后新建
-        List<ProjectBom> allBoms = findAllBoms(bomTag);
+        List<Bom> allBoms = findAllBoms(bomTag);
         if (allBoms.stream().noneMatch(b -> Objects.equals(b.point(), bom.point()))) {
             createBomTag(bomTag, bom);
         }
@@ -81,11 +78,11 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
     /**
      * 添加仓库信息
      */
-    private void addRepositories(Collection<IRepository> repositories) {
+    private void addRepositories(Collection<Repository> repositories) {
         T repositoriesTag = getOrCreateRepositoriesTag();
-        List<ProjectRepository> existingRepos = findAllRepositories(repositoriesTag);
+        List<Repository> existingRepos = findAllRepositories(repositoriesTag);
         Set<String> existingRepoPointSet = existingRepos.stream().map(Point::point).collect(Collectors.toSet());
-        for (IRepository repository : repositories) {
+        for (Repository repository : repositories) {
             if (!existingRepoPointSet.contains(repository.point())) {
                 createRepositoryTag(repositoriesTag, repository);
             }
@@ -94,19 +91,19 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
 
     protected abstract T getOrCreateDependenciesTag();
 
-    protected abstract List<ProjectDependency> findAllDependencies(T dependenciesTag);
+    protected abstract List<Dependency> findAllDependencies(T dependenciesTag);
 
     protected abstract void createDependencyTag(T dependenciesTag, StarterInfo info);
 
     protected abstract T getOrCreateBomsTag();
 
-    protected abstract List<ProjectBom> findAllBoms(T bomsTag);
+    protected abstract List<Bom> findAllBoms(T bomsTag);
 
-    protected abstract void createBomTag(T bomsTag, IBom bom);
+    protected abstract void createBomTag(T bomsTag, Bom bom);
 
     protected abstract T getOrCreateRepositoriesTag();
 
-    protected abstract List<ProjectRepository> findAllRepositories(T repositoriesTag);
+    protected abstract List<Repository> findAllRepositories(T repositoriesTag);
 
-    protected abstract void createRepositoryTag(T repositoriesTag, IRepository repository);
+    protected abstract void createRepositoryTag(T repositoriesTag, Repository repository);
 }

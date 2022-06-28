@@ -2,14 +2,9 @@ package hdzi.editstarters.buildsystem.maven;
 
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
-import hdzi.editstarters.buildsystem.ProjectBom;
-import hdzi.editstarters.buildsystem.ProjectDependency;
+import hdzi.editstarters.buildsystem.DependencyElement;
 import hdzi.editstarters.buildsystem.ProjectFile;
-import hdzi.editstarters.buildsystem.ProjectRepository;
-import hdzi.editstarters.dependency.DependencyScope;
-import hdzi.editstarters.dependency.IBom;
-import hdzi.editstarters.dependency.IRepository;
-import hdzi.editstarters.dependency.StarterInfo;
+import hdzi.editstarters.dependency.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -45,9 +40,9 @@ public class PomXml extends ProjectFile<XmlTag> {
     }
 
     @Override
-    public List<ProjectDependency> findAllDependencies(XmlTag dependenciesTag) {
+    public List<Dependency> findAllDependencies(XmlTag dependenciesTag) {
         return Arrays.stream(dependenciesTag.findSubTags(TAG_DEPENDENCY))
-                .map(tag -> new ProjectDependency(getTagText(tag, TAG_GROUP_ID), getTagText(tag, TAG_ARTIFACT_ID), tag))
+                .map(tag -> new DependencyElement(getTagText(tag, TAG_GROUP_ID), getTagText(tag, TAG_ARTIFACT_ID), tag))
                 .collect(Collectors.toList());
     }
 
@@ -56,7 +51,7 @@ public class PomXml extends ProjectFile<XmlTag> {
         XmlTag dependency = createSubTag(dependenciesTag, TAG_DEPENDENCY);
         addSubTagWithTextBody(dependency, TAG_GROUP_ID, info.getGroupId());
         addSubTagWithTextBody(dependency, TAG_ARTIFACT_ID, info.getArtifactId());
-        DependencyScope scope = info.getScope();
+        DependencyScope scope = DependencyScope.getByScope(info.getScope());
         addSubTagWithTextBody(dependency, TAG_SCOPE, resolveScope(scope));
         if (scope == DependencyScope.ANNOTATION_PROCESSOR || scope == DependencyScope.COMPILE_ONLY) {
             addSubTagWithTextBody(dependency, "optional", "true");
@@ -71,14 +66,14 @@ public class PomXml extends ProjectFile<XmlTag> {
 
 
     @Override
-    public List<ProjectBom> findAllBoms(XmlTag bomsTag) {
+    public List<Bom> findAllBoms(XmlTag bomsTag) {
         return Arrays.stream(bomsTag.findSubTags(TAG_DEPENDENCY))
-                .map(tag -> new ProjectBom(getTagText(tag, TAG_GROUP_ID), getTagText(tag, TAG_ARTIFACT_ID)))
+                .map(tag -> new Bom(getTagText(tag, TAG_GROUP_ID), getTagText(tag, TAG_ARTIFACT_ID)))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void createBomTag(XmlTag bomsTag, IBom bom) {
+    public void createBomTag(XmlTag bomsTag, Bom bom) {
         XmlTag dependencyTag = createSubTag(bomsTag, TAG_DEPENDENCY);
         addSubTagWithTextBody(dependencyTag, TAG_GROUP_ID, bom.getGroupId());
         addSubTagWithTextBody(dependencyTag, TAG_ARTIFACT_ID, bom.getArtifactId());
@@ -93,14 +88,14 @@ public class PomXml extends ProjectFile<XmlTag> {
     }
 
     @Override
-    public List<ProjectRepository> findAllRepositories(XmlTag repositoriesTag) {
+    public List<Repository> findAllRepositories(XmlTag repositoriesTag) {
         return Arrays.stream(repositoriesTag.findSubTags(TAG_REPOSITORY))
-                .map(tag -> new ProjectRepository(getTagText(tag, "url")))
+                .map(tag -> new Repository(getTagText(tag, "url")))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void createRepositoryTag(XmlTag repositoriesTag, IRepository repository) {
+    public void createRepositoryTag(XmlTag repositoriesTag, Repository repository) {
         XmlTag repositoryTag = createSubTag(repositoriesTag, TAG_REPOSITORY);
         addSubTagWithTextBody(repositoryTag, "id", repository.getId());
         addSubTagWithTextBody(repositoryTag, "name", repository.getName());

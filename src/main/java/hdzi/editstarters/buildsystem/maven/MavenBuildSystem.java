@@ -6,7 +6,7 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.xml.XmlFile;
 import hdzi.editstarters.EditStarters;
 import hdzi.editstarters.buildsystem.BuildSystem;
-import hdzi.editstarters.buildsystem.ProjectDependency;
+import hdzi.editstarters.dependency.Dependency;
 import hdzi.editstarters.ui.ShowErrorException;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.utils.actions.MavenActionUtil;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class MavenBuildSystem extends BuildSystem {
 
 
-    private MavenBuildSystem(DataContext context, List<ProjectDependency> dependencies, EditStarters editStarters) {
+    private MavenBuildSystem(DataContext context, List<Dependency> dependencies, EditStarters editStarters) {
         super(context, dependencies, editStarters);
     }
 
@@ -35,8 +35,8 @@ public class MavenBuildSystem extends BuildSystem {
         if (mavenProject == null) {
             throw new ShowErrorException("Not a maven project!");
         }
-        List<ProjectDependency> dependencies = mavenProject.getDependencies().stream()
-                .map(d -> new ProjectDependency(d.getGroupId(), d.getArtifactId(), d.getVersion()))
+        List<Dependency> dependencies = mavenProject.getDependencies().stream()
+                .map(d -> new Dependency(d.getGroupId(), d.getArtifactId(), d.getVersion()))
                 .collect(Collectors.toList());
         return new MavenBuildSystem(context, dependencies, pomXml);
     }

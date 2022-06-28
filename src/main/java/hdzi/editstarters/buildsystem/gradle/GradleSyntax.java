@@ -68,17 +68,17 @@ public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> 
         List<Instruction> instructions = new ArrayList<>();
         String point = info.getGroupId() + ":" + info.getArtifactId()
                 + (StringUtils.isNoneBlank(info.getVersion()) ? ":" + info.getVersion() : "");
-        for (String inst : resolveScope(info.getScope())) {
+        for (String inst : resolveScope(DependencyScope.getByScope(info.getScope()))) {
             instructions.add(new Instruction(inst, point));
         }
         return instructions;
     }
 
-    protected Instruction bomInstruction(IBom bom) {
+    protected Instruction bomInstruction(Bom bom) {
         return new Instruction(TAG_BOM, String.join(":", bom.getGroupId(), bom.getArtifactId(), bom.getVersion()));
     }
 
-    protected Instruction repositoryInstruction(IRepository repository) {
+    protected Instruction repositoryInstruction(Repository repository) {
         return new Instruction(TAG_REPOSITORY, repository.getUrl());
     }
 

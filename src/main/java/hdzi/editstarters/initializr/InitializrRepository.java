@@ -1,14 +1,10 @@
 package hdzi.editstarters.initializr;
 
-import hdzi.editstarters.dependency.IRepository;
+import hdzi.editstarters.dependency.Repository;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class InitializrRepository implements IRepository {
-    private String id;
-    private String name;
-    private String url;
-    private boolean snapshotEnabled = false;
+public class InitializrRepository extends Repository {
 }

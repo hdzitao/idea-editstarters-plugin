@@ -4,11 +4,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.containers.ContainerUtil;
-import hdzi.editstarters.buildsystem.ProjectBom;
-import hdzi.editstarters.buildsystem.ProjectDependency;
-import hdzi.editstarters.buildsystem.ProjectRepository;
-import hdzi.editstarters.dependency.IBom;
-import hdzi.editstarters.dependency.IRepository;
+import hdzi.editstarters.buildsystem.DependencyElement;
+import hdzi.editstarters.dependency.Bom;
+import hdzi.editstarters.dependency.Dependency;
+import hdzi.editstarters.dependency.Repository;
 import hdzi.editstarters.dependency.StarterInfo;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
@@ -43,11 +42,11 @@ public class BuildGradle extends GradleSyntax<GrClosableBlock> {
     }
 
     @Override
-    public List<ProjectDependency> findAllDependencies(GrClosableBlock dependenciesTag) {
+    public List<Dependency> findAllDependencies(GrClosableBlock dependenciesTag) {
         return PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall.class).stream()
                 .map(it -> {
                     GradlePoint gradlePoint = getDependencyGroupArtifact(it);
-                    return new ProjectDependency(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
+                    return new DependencyElement(gradlePoint.getGroupId(), gradlePoint.getArtifactId(), it);
                 }).collect(Collectors.toList());
     }
 
@@ -67,16 +66,16 @@ public class BuildGradle extends GradleSyntax<GrClosableBlock> {
     }
 
     @Override
-    public List<ProjectBom> findAllBoms(GrClosableBlock bomsTag) {
+    public List<Bom> findAllBoms(GrClosableBlock bomsTag) {
         return findAllMethod(bomsTag, TAG_BOM).stream()
                 .map(it -> {
                     GradlePoint gradlePoint = splitGroupArtifact(getMethodFirstParam(it));
-                    return new ProjectBom(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
+                    return new Bom(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
                 }).collect(Collectors.toList());
     }
 
     @Override
-    public void createBomTag(GrClosableBlock bomsTag, IBom bom) {
+    public void createBomTag(GrClosableBlock bomsTag, Bom bom) {
         Instruction instruction = bomInstruction(bom);
         GrStatement statement = factory.createStatementFromText(instruction.toInstString("$inst '$point'"));
         bomsTag.addStatementBefore(statement, null);
@@ -89,16 +88,16 @@ public class BuildGradle extends GradleSyntax<GrClosableBlock> {
 
 
     @Override
-    public List<ProjectRepository> findAllRepositories(GrClosableBlock repositoriesTag) {
+    public List<Repository> findAllRepositories(GrClosableBlock repositoriesTag) {
         return findAllMethod(repositoriesTag, TAG_REPOSITORY).stream()
                 .map(it -> {
                     GrMethodCall urlCall = findMethod(it.getClosureArguments()[0], "url");
-                    return new ProjectRepository(urlCall != null ? getMethodFirstParam(urlCall) : "");
+                    return new Repository(urlCall != null ? getMethodFirstParam(urlCall) : "");
                 }).collect(Collectors.toList());
     }
 
     @Override
-    public void createRepositoryTag(GrClosableBlock repositoriesTag, IRepository repository) {
+    public void createRepositoryTag(GrClosableBlock repositoriesTag, Repository repository) {
         Instruction instruction = repositoryInstruction(repository);
         GrStatement statement = factory.createStatementFromText(instruction.toInstString("$inst { url '$point' }"));
         repositoriesTag.addStatementBefore(statement, null);
