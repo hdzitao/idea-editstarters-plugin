@@ -49,3 +49,5 @@ ${changelog.get(project.version.replaceAll(~/^(\d+\.\d+\.\d+)(-.+)?$/, '$1')).to
 <a href="https://github.com/hdzitao/idea-editstarters-plugin/blob/3.x/CHANGELOG.md">ChangeLog</a>
       """
 }
+
+test.enabled = false
