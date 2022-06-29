@@ -123,17 +123,17 @@ public class InitializrMetadataConfig {
             if (CollectionUtils.isNotEmpty(bomMappings)) {
                 for (CBom mapping : bomMappings) {
                     if (Versions.parseRange(mapping.compatibilityRange).match(version)) {
-                        if (StringUtils.isNoneBlank(this.groupId)) {
-                            bom.groupId = this.groupId;
+                        if (StringUtils.isNoneBlank(mapping.groupId)) {
+                            bom.groupId = mapping.groupId;
                         }
-                        if (StringUtils.isNoneBlank(this.artifactId)) {
-                            bom.artifactId = this.artifactId;
+                        if (StringUtils.isNoneBlank(mapping.artifactId)) {
+                            bom.artifactId = mapping.artifactId;
                         }
-                        if (StringUtils.isNoneBlank(this.version)) {
-                            bom.version = this.version;
+                        if (StringUtils.isNoneBlank(mapping.version)) {
+                            bom.version = mapping.version;
                         }
-                        if (CollectionUtils.isNotEmpty(this.repositories)) {
-                            bom.repositories = this.repositories;
+                        if (CollectionUtils.isNotEmpty(mapping.repositories)) {
+                            bom.repositories = mapping.repositories;
                         }
                     }
                 }
