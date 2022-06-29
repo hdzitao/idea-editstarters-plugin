@@ -1,6 +1,5 @@
 package hdzi.editstarters.dependency;
 
-import com.intellij.util.containers.ContainerUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,8 +20,7 @@ public class StarterInfo extends Dependency {
     private Bom bom;
 
     public void addRepository(String id, Repository repository) {
-        if (repository != null && ContainerUtil.find(this.repositories,
-                it -> Objects.equals(it.point(), repository.point())) == null) {
+        if (repository != null && !Points.contains(this.repositories, repository)) {
             repository.setId(id);
             this.repositories.add(repository);
         }
@@ -33,12 +31,12 @@ public class StarterInfo extends Dependency {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StarterInfo that = (StarterInfo) o;
-        return Objects.equals(point(), that.point());
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(point());
+        return Objects.hash(id);
     }
 
     @Override

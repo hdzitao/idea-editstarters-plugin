@@ -3,14 +3,12 @@ package hdzi.editstarters.buildsystem;
 import com.intellij.openapi.actionSystem.DataContext;
 import hdzi.editstarters.EditStarters;
 import hdzi.editstarters.dependency.Dependency;
-import hdzi.editstarters.dependency.Point;
+import hdzi.editstarters.dependency.Points;
 import hdzi.editstarters.dependency.StarterInfo;
 import lombok.Getter;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 构建工具父类
@@ -22,7 +20,7 @@ public abstract class BuildSystem implements EditStarters {
     private final EditStarters editStarters;
 
     @Getter
-    private final Map<String, Dependency> existsDependencyDB;
+    private final List<Dependency> dependencies;
 
     @Getter
     private final Dependency springbootDependency;
@@ -33,8 +31,8 @@ public abstract class BuildSystem implements EditStarters {
     protected BuildSystem(DataContext context, List<Dependency> dependencies, EditStarters editStarters) {
         this.context = context;
         this.editStarters = editStarters;
-        this.existsDependencyDB = dependencies.stream().collect(Collectors.toMap(Point::point, d -> d, (o, n) -> n));
-        this.springbootDependency = this.existsDependencyDB.get(new Dependency("org.springframework.boot", "spring-boot").point());
+        this.dependencies = dependencies;
+        this.springbootDependency = Points.find(this.dependencies, new Dependency("org.springframework.boot", "spring-boot"));
         this.springBootProject = this.springbootDependency != null;
     }
 

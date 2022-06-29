@@ -6,8 +6,7 @@ import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
 import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.dependency.Module;
-import hdzi.editstarters.dependency.SpringBoot;
-import hdzi.editstarters.dependency.StarterInfo;
+import hdzi.editstarters.dependency.*;
 import hdzi.editstarters.version.Version;
 import org.apache.commons.lang.WordUtils;
 
@@ -96,14 +95,14 @@ public class EditStartersDialog {
             }
         };
 
-        Set<String> existDependencies = buildSystem.getExistsDependencyDB().keySet();
+        List<Dependency> existDependencies = buildSystem.getDependencies();
         // Starter列表
         this.starterList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // 按两下选择
                     StarterInfo starterInfo = starterList.getSelectedValue();
-                    if (existDependencies.contains(starterInfo.point())) { // 对于已存在的starter，添加就是从删除列表里删除
+                    if (Points.contains(existDependencies, starterInfo)) { // 对于已存在的starter，添加就是从删除列表里删除
                         removeStarters.remove(starterInfo);
                     } else { // 对于不存在的starter，添加直接加入添加列表
                         addStarters.add(starterInfo);
@@ -121,7 +120,7 @@ public class EditStartersDialog {
         // selected列表
         List<StarterInfo> existStarters = modules.values().stream()
                 .flatMap(List::stream)
-                .filter(info -> existDependencies.contains(info.point()))
+                .filter(info -> Points.contains(existDependencies, info))
                 .collect(Collectors.toList());
         this.selectList.setModel(new CollectionListModel<>(existStarters));
         this.selectList.addMouseListener(new MouseAdapter() {
@@ -129,7 +128,7 @@ public class EditStartersDialog {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) { // 按两下删除
                     StarterInfo starterInfo = selectList.getSelectedValue();
-                    if (existDependencies.contains(starterInfo.point())) { // 对于已存在的starter，删除就是加入删除列表
+                    if (Points.contains(existDependencies, starterInfo)) { // 对于已存在的starter，删除就是加入删除列表
                         removeStarters.add(starterInfo);
                     } else { // 对于不存在的starter，删除是从添加列表里删除
                         addStarters.remove(starterInfo);

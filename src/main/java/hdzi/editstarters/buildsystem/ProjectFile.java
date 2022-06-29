@@ -4,13 +4,10 @@ import com.intellij.psi.PsiElement;
 import hdzi.editstarters.EditStarters;
 import hdzi.editstarters.dependency.*;
 import hdzi.editstarters.ui.ShowErrorException;
-import org.apache.commons.collections.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class ProjectFile<T extends PsiElement> implements EditStarters {
 
@@ -21,11 +18,9 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
             T dependenciesTag = getOrCreateDependenciesTag();
             // 取已存在的依赖
             List<Dependency> extDependencies = findAllDependencies(dependenciesTag);
-            // 转化待删除的依赖成字符串形式，方便对比
-            Set<String> removeDependencies = dependencies.stream().map(Point::point).collect(Collectors.toSet());
             // 遍历存在的依赖，如果待删除的依赖包含它，就删除
             for (Dependency extDependency : extDependencies) {
-                if (removeDependencies.contains(extDependency.point()) && extDependency instanceof DependencyElement) {
+                if (Points.contains(dependencies, extDependency) && extDependency instanceof DependencyElement) {
                     PsiElement element = ((DependencyElement) extDependency).getElement();
                     if (element != null) {
                         element.delete();
@@ -44,18 +39,15 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
     public void addStarters(Collection<StarterInfo> dependencies) {
         try {
             T dependenciesTag = getOrCreateDependenciesTag();
-            for (StarterInfo dependency : dependencies) {
-                createDependencyTag(dependenciesTag, dependency);
-                Bom bom = dependency.getBom();
-                if (bom != null) {
-                    addBom(bom);
-                }
-
-                List<Repository> repositories = dependency.getRepositories();
-                if (CollectionUtils.isNotEmpty(repositories)) {
-                    addRepositories(repositories);
-                }
+            List<Bom> boms = new ArrayList<>();
+            List<Repository> repositories = new ArrayList<>();
+            for (StarterInfo starterInfo : dependencies) {
+                createDependencyTag(dependenciesTag, starterInfo);
+                Points.addUniq(boms, starterInfo.getBom());
+                Points.addAllUniq(repositories, starterInfo.getRepositories());
             }
+            addBoms(boms);
+            addRepositories(repositories);
         } catch (ShowErrorException e) {
             throw e;
         } catch (Exception e) {
@@ -66,12 +58,14 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
     /**
      * 添加bom信息
      */
-    private void addBom(Bom bom) {
+    private void addBoms(List<Bom> boms) {
         T bomTag = getOrCreateBomsTag();
         // 去重后新建
         List<Bom> allBoms = findAllBoms(bomTag);
-        if (allBoms.stream().noneMatch(b -> Objects.equals(b.point(), bom.point()))) {
-            createBomTag(bomTag, bom);
+        for (Bom bom : boms) {
+            if (!Points.contains(allBoms, bom)) {
+                createBomTag(bomTag, bom);
+            }
         }
     }
 
@@ -80,10 +74,9 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
      */
     private void addRepositories(Collection<Repository> repositories) {
         T repositoriesTag = getOrCreateRepositoriesTag();
-        List<Repository> existingRepos = findAllRepositories(repositoriesTag);
-        Set<String> existingRepoPointSet = existingRepos.stream().map(Point::point).collect(Collectors.toSet());
+        List<Repository> allRepos = findAllRepositories(repositoriesTag);
         for (Repository repository : repositories) {
-            if (!existingRepoPointSet.contains(repository.point())) {
+            if (!Points.contains(allRepos, repository)) {
                 createRepositoryTag(repositoriesTag, repository);
             }
         }
