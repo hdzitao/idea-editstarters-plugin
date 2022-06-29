@@ -12,12 +12,11 @@ import hdzi.editstarters.version.Version;
 import org.apache.commons.lang.WordUtils;
 
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 public class EditStartersDialog {
     private JPanel root;
@@ -46,8 +45,17 @@ public class EditStartersDialog {
         ));
         this.versionComboBox.setEnabled(false);
 
-        // 取消按钮
-        this.buttonCancel.addActionListener(e -> this.frame.dispose());
+        // 点击 X 时调用 onCancel()
+        this.frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        this.frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                onCancel();
+            }
+        });
+
+        // 遇到 ESCAPE 时调用 onCancel()
+        this.root.registerKeyboardAction(e -> onCancel(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         // ok按钮
         this.buttonOK.addActionListener(e -> {
@@ -143,6 +151,10 @@ public class EditStartersDialog {
                 starterList.setModel(new CollectionComboBoxModel<>(result));
             }
         });
+    }
+
+    private void onCancel() {
+        this.frame.dispose();
     }
 
     public void show() {
