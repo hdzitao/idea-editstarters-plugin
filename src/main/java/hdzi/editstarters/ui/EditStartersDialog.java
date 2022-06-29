@@ -60,6 +60,7 @@ public class EditStartersDialog {
 
 
         // ok按钮
+        this.frame.getRootPane().setDefaultButton(this.buttonOK);
         this.buttonOK.addActionListener(e -> {
             WriteCommandAction.runWriteCommandAction(buildSystem.getContext().getData(CommonDataKeys.PROJECT), () -> {
                 buildSystem.addStarters(this.addStarters);
