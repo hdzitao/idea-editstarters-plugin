@@ -87,7 +87,7 @@ public abstract class OthersHub {
     }
 
     private String getMetaDataConfigUrl() {
-        return basePath() + this.site + "/" + this.configure.metadataClient + "/metadata_config.json ";
+        return basePath() + this.site + "/" + this.configure.metadataConfig + "/metadata_config.json ";
     }
 
     //==================================================================================================================
