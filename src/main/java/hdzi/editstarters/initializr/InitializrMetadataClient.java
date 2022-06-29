@@ -6,6 +6,8 @@ import hdzi.editstarters.dependency.Module;
 import hdzi.editstarters.dependency.StarterInfo;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
@@ -29,17 +31,24 @@ public class InitializrMetadataClient {
                 starterInfo.setVersion(dependency.getVersion());
                 starterInfo.setScope(dependency.getScope());
 
-                InitializrBom bom = initializrDependencies.getBoms().get(dependency.getBom());
-                if (bom != null) {
+                String bomId = dependency.getBom();
+                InitializrBom bom;
+                if (StringUtils.isNoneBlank(bomId) && (bom = initializrDependencies.getBoms().get(bomId)) != null) {
                     starterInfo.setBom(bom);
-                    for (String rid : bom.getRepositories()) {
-                        InitializrRepository repository = initializrDependencies.getRepositories().get(rid);
-                        starterInfo.addRepository(rid, repository);
+
+                    List<String> repositories = bom.getRepositories();
+                    if (CollectionUtils.isNotEmpty(repositories)) {
+                        for (String rid : repositories) {
+                            InitializrRepository repository = initializrDependencies.getRepositories().get(rid);
+                            starterInfo.addRepository(rid, repository);
+                        }
                     }
                 }
-                InitializrRepository repository = initializrDependencies.getRepositories().get(dependency.getRepository());
-                if (repository != null) {
-                    starterInfo.addRepository(dependency.getRepository(), repository);
+
+                String repositoryId = dependency.getRepository();
+                if (StringUtils.isNoneBlank(repositoryId)) {
+                    InitializrRepository repository = initializrDependencies.getRepositories().get(repositoryId);
+                    starterInfo.addRepository(repositoryId, repository);
                 }
             }
         }

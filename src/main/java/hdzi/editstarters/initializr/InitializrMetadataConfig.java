@@ -32,56 +32,44 @@ public class InitializrMetadataConfig {
                 StarterInfo starterInfo = new StarterInfo();
                 module.getValues().add(starterInfo);
 
+                content = content.resolve(version);
+
                 starterInfo.setId(content.id);
                 starterInfo.setName(content.name);
                 starterInfo.setDescription(content.description);
                 starterInfo.setVersionRange(content.compatibilityRange);
 
-                starterInfo.setGroupId(content.groupId);
-                starterInfo.setArtifactId(content.artifactId);
-                starterInfo.setVersion(content.version);
+                starterInfo.setGroupId(content.getGroupId());
+                starterInfo.setArtifactId(content.getArtifactId());
+                starterInfo.setVersion(content.getVersion());
+                starterInfo.setScope(content.getScope());
 
-                String repositoryId = content.repository;
                 String bomId = content.bom;
+                CBom bom;
+                if (StringUtils.isNoneBlank(bomId) && (bom = this.configuration.env.boms.get(bomId)) != null) {
+                    bom = bom.resolve(version);
 
-                List<CDependencyContent> dependencyMappings = content.getMappings();
-                if (CollectionUtils.isNotEmpty(dependencyMappings)) {
-                    for (CDependencyContent mapping : dependencyMappings) {
-                        if (Versions.parseRange(mapping.compatibilityRange).match(version)) {
-                            if (StringUtils.isNoneBlank(mapping.groupId)) {
-                                starterInfo.setGroupId(mapping.groupId);
-                            }
-                            if (StringUtils.isNoneBlank(mapping.artifactId)) {
-                                starterInfo.setArtifactId(mapping.artifactId);
-                            }
-                            if (StringUtils.isNoneBlank(mapping.version)) {
-                                starterInfo.setVersion(mapping.version);
-                            }
-                            if (StringUtils.isNoneBlank(mapping.repository)) {
-                                repositoryId = mapping.repository;
-                            }
-                            if (StringUtils.isNoneBlank(mapping.bom)) {
-                                bomId = mapping.bom;
-                            }
-                            break;
+                    starterInfo.setBom(bom);
+
+                    List<String> repositories = bom.getRepositories();
+                    if (CollectionUtils.isNotEmpty(repositories)) {
+                        for (String rid : repositories) {
+                            CRepository repository = this.configuration.env.repositories.get(rid);
+
+                            repository = repository.resolve();
+
+                            starterInfo.addRepository(rid, repository);
                         }
                     }
                 }
 
-                CBom bom = this.configuration.env.boms.get(bomId);
-                if (bom != null) {
-                    bom = bom.resolve(version);
-                    starterInfo.setBom(bom);
-                    for (String rid : bom.getRepositories()) {
-                        CRepository repository = this.configuration.env.repositories.get(rid);
-                        repository = repository.resolve();
-                        starterInfo.addRepository(rid, repository);
-                    }
-                }
+                String repositoryId = content.repository;
+                if (StringUtils.isNoneBlank(repositoryId)) {
+                    CRepository repository = this.configuration.env.repositories.get(repositoryId);
 
-                CRepository repository = this.configuration.env.repositories.get(repositoryId);
-                if (repository != null) {
-                    starterInfo.addRepository(repositoryId, repository.resolve());
+                    repository = repository.resolve();
+
+                    starterInfo.addRepository(repositoryId, repository);
                 }
             }
         }
@@ -107,7 +95,7 @@ public class InitializrMetadataConfig {
     @Getter
     @Setter
     public static class CBom extends Bom {
-        private List<String> repositories = new ArrayList<>();
+        private List<String> repositories;
         private List<CBom> mappings;
         // mapping 字段
         private String compatibilityRange;
@@ -119,23 +107,26 @@ public class InitializrMetadataConfig {
             bom.version = this.version;
             bom.repositories = this.repositories;
 
-            List<CBom> bomMappings = this.getMappings();
-            if (CollectionUtils.isNotEmpty(bomMappings)) {
-                for (CBom mapping : bomMappings) {
-                    if (Versions.parseRange(mapping.compatibilityRange).match(version)) {
-                        if (StringUtils.isNoneBlank(mapping.groupId)) {
-                            bom.groupId = mapping.groupId;
-                        }
-                        if (StringUtils.isNoneBlank(mapping.artifactId)) {
-                            bom.artifactId = mapping.artifactId;
-                        }
-                        if (StringUtils.isNoneBlank(mapping.version)) {
-                            bom.version = mapping.version;
-                        }
-                        if (CollectionUtils.isNotEmpty(mapping.repositories)) {
-                            bom.repositories = mapping.repositories;
-                        }
+            if (CollectionUtils.isEmpty(this.mappings)) {
+                return bom;
+            }
+
+            for (CBom mapping : this.mappings) {
+                if (Versions.parseRange(mapping.compatibilityRange).match(version)) {
+                    if (StringUtils.isNoneBlank(mapping.groupId)) {
+                        bom.groupId = mapping.groupId;
                     }
+                    if (StringUtils.isNoneBlank(mapping.artifactId)) {
+                        bom.artifactId = mapping.artifactId;
+                    }
+                    if (StringUtils.isNoneBlank(mapping.version)) {
+                        bom.version = mapping.version;
+                    }
+                    if (CollectionUtils.isNotEmpty(mapping.repositories)) {
+                        bom.repositories = mapping.repositories;
+                    }
+
+                    return bom;
                 }
             }
 
@@ -172,18 +163,59 @@ public class InitializrMetadataConfig {
 
     @Getter
     @Setter
-    public static class CDependencyContent {
+    public static class CDependencyContent extends Dependency {
         private String id;
         private String name;
         private String description;
         private List<Link> links;
-        private String groupId;
-        private String artifactId;
-        private String version;
-        private String scope;
         private String compatibilityRange;
         private String bom;
         private String repository;
         private List<CDependencyContent> mappings;
+
+        public CDependencyContent resolve(Version version) {
+            CDependencyContent dependency = new CDependencyContent();
+
+            dependency.id = this.id;
+            dependency.name = this.name;
+            dependency.description = this.description;
+            dependency.compatibilityRange = this.compatibilityRange;
+
+            dependency.groupId = this.groupId;
+            dependency.artifactId = this.artifactId;
+            dependency.version = this.version;
+            dependency.scope = this.scope;
+
+            dependency.bom = this.bom;
+            dependency.repository = this.repository;
+
+            if (CollectionUtils.isEmpty(this.mappings)) {
+                return dependency;
+            }
+
+            for (CDependencyContent mapping : this.mappings) {
+                if (Versions.parseRange(mapping.compatibilityRange).match(version)) {
+                    if (StringUtils.isNoneBlank(mapping.groupId)) {
+                        dependency.groupId = mapping.groupId;
+                    }
+                    if (StringUtils.isNoneBlank(mapping.artifactId)) {
+                        dependency.artifactId = mapping.artifactId;
+                    }
+                    if (StringUtils.isNoneBlank(mapping.version)) {
+                        dependency.version = mapping.version;
+                    }
+                    if (StringUtils.isNoneBlank(mapping.bom)) {
+                        dependency.bom = mapping.bom;
+                    }
+                    if (StringUtils.isNoneBlank(mapping.repository)) {
+                        dependency.repository = mapping.repository;
+                    }
+
+                    return dependency;
+                }
+            }
+
+            return dependency;
+        }
     }
 }
