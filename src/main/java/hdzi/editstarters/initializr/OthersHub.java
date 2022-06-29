@@ -83,7 +83,7 @@ public abstract class OthersHub {
     }
 
     private String getDependenciesUrl() {
-        return basePath() + this.site + "/" + configure.dependencies + "/dependencies.json";
+        return basePath() + this.site + "/" + this.configure.dependencies + "/dependencies.json";
     }
 
     private String getMetaDataConfigUrl() {

@@ -1,5 +1,6 @@
 package hdzi.editstarters.initializr;
 
+import com.google.gson.annotations.SerializedName;
 import hdzi.editstarters.dependency.Module;
 import hdzi.editstarters.dependency.StarterInfo;
 import hdzi.editstarters.version.Version;
@@ -26,7 +27,9 @@ public class StartSpringIO {
     private Mode mode;
 
     public enum Mode {
+        @SerializedName("client")
         CLIENT,
+        @SerializedName("config")
         CONFIG
     }
 
