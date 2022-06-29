@@ -7,7 +7,7 @@ public class OthersInitializr implements Initializr {
     @Override
     public SpringBoot initialize(InitializrParameters parameters, InitializrChain chain) {
         OthersHub othersHub = parameters.getOthersHub();
-        othersHub.init();
+        othersHub.initConfigure();
         StartSpringIO startSpringIO = new StartSpringIO(parameters.getVersion());
         StartSpringIO.Mode mode = othersHub.getConfigure().getMode();
         if (StartSpringIO.Mode.CONFIG == mode) {

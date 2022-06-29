@@ -37,7 +37,7 @@ public abstract class OthersHub {
     public abstract String toString();
 
     @SneakyThrows
-    public void init() {
+    public void initConfigure() {
         String metadataMapUrl = getMetaDataMapUrl();
         JsonArray metadataMap = HttpRequests.request(metadataMapUrl).connect(request ->
                 gson.fromJson(request.readString(), JsonArray.class));

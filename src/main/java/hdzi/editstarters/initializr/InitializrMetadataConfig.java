@@ -24,11 +24,14 @@ public class InitializrMetadataConfig {
         for (CDependenciesContent dependenciesContent : dependencies.content) {
             Module module = new Module();
             modules.add(module);
+
             module.setName(dependenciesContent.name);
             module.setValues(new ArrayList<>());
             List<CDependencyContent> dependencyContent = dependenciesContent.getContent();
             for (CDependencyContent content : dependencyContent) {
                 StarterInfo starterInfo = new StarterInfo();
+                module.getValues().add(starterInfo);
+
                 starterInfo.setId(content.id);
                 starterInfo.setName(content.name);
                 starterInfo.setDescription(content.description);
