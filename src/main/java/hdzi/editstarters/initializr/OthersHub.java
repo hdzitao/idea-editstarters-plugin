@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.intellij.util.io.HttpRequests;
+import hdzi.editstarters.initializr.StartSpringIO.Mode;
 import hdzi.editstarters.ui.ShowErrorException;
 import hdzi.editstarters.version.Version;
 import hdzi.editstarters.version.Versions;
@@ -43,8 +44,8 @@ public abstract class OthersHub {
                 gson.fromJson(request.readString(), JsonArray.class));
         for (JsonElement element : metadataMap) {
             Configure configure = gson.fromJson(element, Configure.class);
-            if (Versions.parseRange(configure.versionRange).match(this.version)) {
-                // 找到第一个
+            if (configure.enable && Versions.parseRange(configure.versionRange).match(this.version)) {
+                // 找到第一个启用的配置
                 this.configure = configure;
                 return;
             }
@@ -99,7 +100,9 @@ public abstract class OthersHub {
         private String metadataClient;
         private String dependencies;
         private String metadataConfig;
-        private StartSpringIO.Mode mode;
+        private Mode mode;
+
+        private boolean enable = true; // 默认启用
     }
 
     public static class GitHub extends OthersHub {
