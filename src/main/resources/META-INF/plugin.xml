@@ -4,8 +4,9 @@
     <vendor email="taojinhou@qq.com" url="http://github.com/hdzitao">HdziTao</vendor>
 
     <description><![CDATA[
-    <p>This plugin provides the ability to modify Spring Boot Starters.</p>
-    <p>If the latest version is reviewing, you can download it on <a href="https://github.com/hdzitao/idea-editstarters-plugin/releases">Github</a></p>
+    <p>这个插件让你在开发过程中也能方便添加修改spring boot starter.</p>
+    <p/>
+    <p>This plug-in allows you to easily add or modify spring boot starters during the development process.</p>
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
