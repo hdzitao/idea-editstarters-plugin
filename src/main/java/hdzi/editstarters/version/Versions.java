@@ -16,9 +16,9 @@ public final class Versions {
     private static final Pattern RANGE_REGEX = Pattern.compile("([(\\[])(.*),(.*)([)\\]])");
 
     public static Version parse(String text) {
-        Matcher matcher = VERSION_REGEX.matcher(text);
+        Matcher matcher = VERSION_REGEX.matcher(text.trim());
         if (!matcher.find()) {
-            throw new ShowErrorException("Unsupported spring version!");
+            throw new ShowErrorException("Unsupported version format: " + text);
         }
         Integer major = Integer.valueOf(matcher.group(1));
         String minorStr = matcher.group(2);
