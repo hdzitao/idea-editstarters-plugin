@@ -23,6 +23,7 @@ public class InitializrMetadataConfig {
         List<Module> modules = new ArrayList<>();
         for (CDependenciesContent dependenciesContent : dependencies.content) {
             Module module = new Module();
+            modules.add(module);
             module.setName(dependenciesContent.name);
             module.setValues(new ArrayList<>());
             List<CDependencyContent> dependencyContent = dependenciesContent.getContent();
