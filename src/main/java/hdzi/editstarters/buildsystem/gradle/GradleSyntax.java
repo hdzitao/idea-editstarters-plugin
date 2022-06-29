@@ -123,7 +123,7 @@ public abstract class GradleSyntax<T extends PsiElement> extends ProjectFile<T> 
         while ((st < len) && (ArrayUtils.contains(chars, val[st]))) {
             st++;
         }
-        while ((st < len) && (ArrayUtils.contains(chars, val[st]))) {
+        while ((st < len) && (ArrayUtils.contains(chars, val[len - 1]))) {
             len--;
         }
         return ((st > 0) || (len < s.length())) ? s.substring(st, len) : s;
