@@ -4,6 +4,7 @@ import com.intellij.psi.PsiElement;
 import hdzi.editstarters.EditStarters;
 import hdzi.editstarters.dependency.*;
 import hdzi.editstarters.ui.ShowErrorException;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +16,10 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
     @Override
     public void removeStarters(Collection<StarterInfo> dependencies) {
         try {
+            if (CollectionUtils.isEmpty(dependencies)) {
+                return;
+            }
+
             T dependenciesTag = getOrCreateDependenciesTag();
             // 取已存在的依赖
             List<Dependency> extDependencies = findAllDependencies(dependenciesTag);
@@ -38,6 +43,10 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
     @Override
     public void addStarters(Collection<StarterInfo> dependencies) {
         try {
+            if (CollectionUtils.isEmpty(dependencies)) {
+                return;
+            }
+
             T dependenciesTag = getOrCreateDependenciesTag();
             List<Bom> boms = new ArrayList<>();
             List<Repository> repositories = new ArrayList<>();
@@ -46,6 +55,7 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
                 Points.addUniq(boms, starterInfo.getBom());
                 Points.addAllUniq(repositories, starterInfo.getRepositories());
             }
+
             addBoms(boms);
             addRepositories(repositories);
         } catch (ShowErrorException e) {
@@ -59,6 +69,10 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
      * 添加bom信息
      */
     private void addBoms(List<Bom> boms) {
+        if (CollectionUtils.isEmpty(boms)) {
+            return;
+        }
+
         T bomTag = getOrCreateBomsTag();
         // 去重后新建
         List<Bom> allBoms = findAllBoms(bomTag);
@@ -73,6 +87,10 @@ public abstract class ProjectFile<T extends PsiElement> implements EditStarters 
      * 添加仓库信息
      */
     private void addRepositories(Collection<Repository> repositories) {
+        if (CollectionUtils.isEmpty(repositories)) {
+            return;
+        }
+
         T repositoriesTag = getOrCreateRepositoriesTag();
         List<Repository> allRepos = findAllRepositories(repositoriesTag);
         for (Repository repository : repositories) {
