@@ -13,6 +13,7 @@ import hdzi.editstarters.dependency.SpringBoot;
 import hdzi.editstarters.initializr.CachePersistentComponent;
 import hdzi.editstarters.initializr.InitializrChain;
 import hdzi.editstarters.initializr.InitializrParameters;
+import hdzi.editstarters.initializr.InitializrStatus;
 import hdzi.editstarters.version.Version;
 import hdzi.editstarters.version.Versions;
 import org.apache.commons.lang3.StringUtils;
@@ -55,14 +56,16 @@ public abstract class EditStartersButtonAction extends AnAction {
             parameters.setEnableCache(initializrDialog.isEnableCache());
             parameters.setVersion(version);
             parameters.setOthersHub(initializrDialog.getOthersHub());
+            // 初始化状态
+            InitializrStatus status = new InitializrStatus(parameters);
             // 执行
             ProgressManager progressManager = ProgressManager.getInstance();
             SpringBoot springBoot =
                     progressManager.runProcessWithProgressSynchronously((ThrowableComputable<SpringBoot, Exception>) () -> {
                         progressManager.getProgressIndicator().setIndeterminate(true);
-                        return new InitializrChain().initialize(parameters);
+                        return new InitializrChain().initialize(parameters, status);
                     }, "Loading " + url, true, e.getData(CommonDataKeys.PROJECT));
-            new EditStartersDialog(buildSystem, springBoot).show();
+            new EditStartersDialog(buildSystem, springBoot, status).show();
         } catch (Throwable throwable) { // 所有异常弹错误框
             String message;
 

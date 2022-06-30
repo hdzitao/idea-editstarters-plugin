@@ -11,10 +11,10 @@ public class InitializrChain {
     };
     private int i = 0;
 
-    public SpringBoot initialize(InitializrParameters parameters) {
+    public SpringBoot initialize(InitializrParameters parameters, InitializrStatus status) {
         if (i >= CHAIN.length) {
             throw ShowErrorException.internal();
         }
-        return CHAIN[i++].initialize(parameters, this);
+        return CHAIN[i++].initialize(parameters, status, this);
     }
 }

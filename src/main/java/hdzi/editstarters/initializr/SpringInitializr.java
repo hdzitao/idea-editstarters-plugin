@@ -8,7 +8,7 @@ import lombok.SneakyThrows;
 public class SpringInitializr implements Initializr {
     @Override
     @SneakyThrows
-    public SpringBoot initialize(InitializrParameters parameters, InitializrChain chain) {
+    public SpringBoot initialize(InitializrParameters parameters, InitializrStatus status, InitializrChain chain) {
         Gson gson = new Gson();
 
         StartSpringIO startSpringIO = new StartSpringIO(parameters.getVersion());
@@ -18,7 +18,7 @@ public class SpringInitializr implements Initializr {
                 gson.fromJson(request.readString(), InitializrMetadataConfig.class));
 
         if (!metadata.match(parameters.getVersion())) { // 不匹配配置中的版本,继续传递
-            return chain.initialize(parameters);
+            return chain.initialize(parameters, status);
         }
 
         startSpringIO.setMetadataConfig(metadata);

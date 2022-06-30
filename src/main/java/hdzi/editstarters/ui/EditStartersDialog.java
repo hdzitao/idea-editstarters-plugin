@@ -7,11 +7,13 @@ import com.intellij.ui.CollectionListModel;
 import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.dependency.Module;
 import hdzi.editstarters.dependency.*;
+import hdzi.editstarters.initializr.InitializrStatus;
 import hdzi.editstarters.version.Version;
 import org.apache.commons.lang.WordUtils;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,15 +28,40 @@ public class EditStartersDialog {
     private JList<StarterInfo> starterList;
     private JList<StarterInfo> selectList;
     private JTextField searchField;
+    private JCheckBox cachedBox;
+    private JCheckBox ohubBox;
     private final JFrame frame;
     private final Set<StarterInfo> addStarters = new HashSet<>(64);
     private final Set<StarterInfo> removeStarters = new HashSet<>(64);
     private final WeakHashMap<StarterInfo, String> toolTipTextCache = new WeakHashMap<>(); // 加个缓存
     private final WeakHashMap<StarterInfo, String> searchCache = new WeakHashMap<>(); // 搜索缓存
 
-    public EditStartersDialog(BuildSystem buildSystem, SpringBoot springBoot) {
+    public EditStartersDialog(BuildSystem buildSystem, SpringBoot springBoot, InitializrStatus status) {
         this.frame = new JFrame("Edit Starters");
         this.frame.setContentPane(this.root);
+
+        // 是否使用缓存
+        if (status.isEnableCache()) {
+            this.cachedBox.setSelected(true);
+            this.cachedBox.addMouseMotionListener(new MouseAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    cachedBox.setToolTipText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                            .format(new Date(status.getCacheUpdateTime())));
+                }
+            });
+        }
+
+        // 是否启用Ohub
+        if (status.isEnableOHub()) {
+            this.ohubBox.setSelected(true);
+            this.ohubBox.addMouseMotionListener(new MouseAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    ohubBox.setToolTipText(status.getOHubName());
+                }
+            });
+        }
 
         // boot版本选框
         this.versionComboBox.setModel(new CollectionComboBoxModel<>(

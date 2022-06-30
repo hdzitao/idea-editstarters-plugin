@@ -50,4 +50,4 @@ ${changelog.get(project.version.replaceAll(~/^(\d+\.\d+\.\d+)(-.+)?$/, '$1')).to
       """
 }
 
-test.enabled = false
+//test.enabled = false

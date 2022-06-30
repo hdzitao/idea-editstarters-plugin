@@ -28,7 +28,7 @@ public class CachePersistentComponent implements PersistentStateComponent<CacheP
         private String projectJson;
         private String url;
         private String version;
-        private Long updateTime;
+        private long updateTime;
     }
 
     private State state;
@@ -60,6 +60,14 @@ public class CachePersistentComponent implements PersistentStateComponent<CacheP
         }
 
         return "https://start.spring.io/";
+    }
+
+    public long getUpdateTime() {
+        if (this.state != null) {
+            return this.state.updateTime;
+        }
+
+        return 0L;
     }
 
     @Nullable
