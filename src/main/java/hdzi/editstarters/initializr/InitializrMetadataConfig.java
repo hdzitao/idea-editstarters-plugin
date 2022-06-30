@@ -20,6 +20,10 @@ public class InitializrMetadataConfig {
     private CConfiguration configuration;
     private CDependencies dependencies;
 
+    public boolean match(Version version) {
+        return Versions.parseRange(this.configuration.env.platform.compatibilityRange).match(version);
+    }
+
     public List<Module> getModules(Version version) {
         List<Module> modules = new ArrayList<>();
         for (CDependenciesContent dependenciesContent : dependencies.content) {
@@ -91,6 +95,14 @@ public class InitializrMetadataConfig {
     public static class CEnv {
         private Map<String, CBom> boms;
         private Map<String, CRepository> repositories;
+
+        private CPlatform platform;
+    }
+
+    @Getter
+    @Setter
+    public static class CPlatform {
+        private String compatibilityRange;
     }
 
     @Getter

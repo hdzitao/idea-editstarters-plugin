@@ -9,14 +9,7 @@ public class OthersInitializr implements Initializr {
         OthersHub othersHub = parameters.getOthersHub();
         othersHub.initConfigure();
         StartSpringIO startSpringIO = new StartSpringIO(parameters.getVersion());
-        StartSpringIO.Mode mode = othersHub.getConfigure().getMode();
-        if (StartSpringIO.Mode.CONFIG == mode) {
-            startSpringIO.setMetadataConfig(othersHub.getMetaDataConfig());
-        } else {
-            startSpringIO.setMetadataClient(othersHub.getMetaDataClient());
-            startSpringIO.setDependencies(othersHub.getDependencies());
-        }
-
+        startSpringIO.setMetadataConfig(othersHub.getMetaDataConfig());
         return new SpringBoot(parameters.getVersion(), startSpringIO.getDeclaredModules());
     }
 }

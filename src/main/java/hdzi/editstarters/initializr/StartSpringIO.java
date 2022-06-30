@@ -1,6 +1,5 @@
 package hdzi.editstarters.initializr;
 
-import com.google.gson.annotations.SerializedName;
 import hdzi.editstarters.dependency.Module;
 import hdzi.editstarters.dependency.StarterInfo;
 import hdzi.editstarters.version.Version;
@@ -19,36 +18,10 @@ public class StartSpringIO {
 
     private final Version version;
 
-    private InitializrMetadataClient metadataClient;
-
-    private InitializrDependencies dependencies;
-
     private InitializrMetadataConfig metadataConfig;
-    private Mode mode;
-
-    public enum Mode {
-        @SerializedName("client")
-        CLIENT,
-        @SerializedName("config")
-        CONFIG
-    }
 
     public StartSpringIO(Version version) {
         this.version = version;
-    }
-
-    public String spliceMetadataClientLink(String url) {
-        if (url.endsWith("/")) {
-            url = url.substring(0, url.length() - 1);
-        }
-
-        String metadataLink = "/metadata/client";
-
-        if (url.endsWith(metadataLink)) {
-            return url;
-        }
-
-        return url + metadataLink;
     }
 
     public String spliceMetadataConfigLink(String url) {
@@ -65,36 +38,12 @@ public class StartSpringIO {
         return url + metadataLink;
     }
 
-    public String getDependenciesUrl() {
-        return this.metadataClient.getLinks().getDependencies().getHref()
-                .replace("{?bootVersion}", "?bootVersion=" + version.getOriginalText());
-    }
-
-    public void setMetadataClient(InitializrMetadataClient metadataClient) {
-        this.mode = Mode.CLIENT;
-        this.metadataClient = metadataClient;
-    }
-
-    public void setDependencies(InitializrDependencies dependencies) {
-        this.mode = Mode.CLIENT;
-        this.dependencies = dependencies;
-    }
-
     public void setMetadataConfig(InitializrMetadataConfig metadataConfig) {
-        this.mode = Mode.CONFIG;
         this.metadataConfig = metadataConfig;
     }
 
     public List<Module> getDeclaredModules() {
-        List<Module> modules = new ArrayList<>();
-        switch (this.mode) {
-            case CLIENT:
-                modules.addAll(this.metadataClient.getModules(this.dependencies));
-                break;
-            case CONFIG:
-                modules.addAll(this.metadataConfig.getModules(this.version));
-                break;
-        }
+        List<Module> modules = new ArrayList<>(this.metadataConfig.getModules(this.version));
         // 删除无效项
         Iterator<Module> moduleIterator = modules.iterator();
         while (moduleIterator.hasNext()) {

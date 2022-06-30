@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.intellij.util.io.HttpRequests;
-import hdzi.editstarters.initializr.StartSpringIO.Mode;
 import hdzi.editstarters.ui.ShowErrorException;
 import hdzi.editstarters.version.Version;
 import hdzi.editstarters.version.Versions;
@@ -55,20 +54,6 @@ public abstract class OthersHub {
     }
 
     @SneakyThrows
-    public InitializrMetadataClient getMetaDataClient() {
-        String metadataPath = getMetaDataClientUrl();
-        return HttpRequests.request(metadataPath).connect(request ->
-                gson.fromJson(request.readString(), InitializrMetadataClient.class));
-    }
-
-    @SneakyThrows
-    public InitializrDependencies getDependencies() {
-        String dependenciesUrl = getDependenciesUrl();
-        return HttpRequests.request(dependenciesUrl).connect(request ->
-                gson.fromJson(request.readString(), InitializrDependencies.class));
-    }
-
-    @SneakyThrows
     public InitializrMetadataConfig getMetaDataConfig() {
         String metadataPath = getMetaDataConfigUrl();
         return HttpRequests.request(metadataPath).connect(request ->
@@ -77,14 +62,6 @@ public abstract class OthersHub {
 
     private String getMetaDataMapUrl() {
         return basePath() + this.site + "/metadata_map.json";
-    }
-
-    private String getMetaDataClientUrl() {
-        return basePath() + this.site + "/" + this.configure.metadataClient + "/metadata_client.json ";
-    }
-
-    private String getDependenciesUrl() {
-        return basePath() + this.site + "/" + this.configure.dependencies + "/dependencies.json";
     }
 
     private String getMetaDataConfigUrl() {
@@ -97,10 +74,7 @@ public abstract class OthersHub {
     @Setter
     public static class Configure {
         private String versionRange;
-        private String metadataClient;
-        private String dependencies;
         private String metadataConfig;
-        private Mode mode;
 
         private boolean enable = true; // 默认启用
     }
