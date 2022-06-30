@@ -50,9 +50,9 @@
             </constraints>
             <properties>
               <horizontalAlignment value="2"/>
-              <horizontalTextPosition value="10"/>
+              <horizontalTextPosition value="11"/>
               <selected value="true"/>
-              <text value="Use Cached:"/>
+              <text value="Cached"/>
             </properties>
           </component>
           <component id="4224d" class="javax.swing.JLabel">
