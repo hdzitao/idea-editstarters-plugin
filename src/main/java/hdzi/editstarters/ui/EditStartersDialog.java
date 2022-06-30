@@ -191,7 +191,8 @@ public class EditStartersDialog {
     private String getStarterInfoToolTipText(StarterInfo starter) {
         return toolTipTextCache.computeIfAbsent(starter, info -> {
             StringBuilder buffer = new StringBuilder();
-            buffer.append("GroupId: ").append(info.getGroupId()).append("<br/>")
+            buffer.append("Name: ").append(info.getName()).append("<br/>")
+                    .append("GroupId: ").append(info.getGroupId()).append("<br/>")
                     .append("ArtifactId: ").append(info.getArtifactId()).append("<br/>")
                     .append("Scope: ").append(info.getScope()).append("<br/>");
             if (info.getVersion() != null) {
