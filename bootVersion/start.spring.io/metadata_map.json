@@ -2,14 +2,6 @@
   {
     "versionRange": "[1.5.0,1.5.x]",
     "metadataConfig": "1.5.0",
-    "mode": "config",
     "enable": true
-  },
-  {
-    "versionRange": "[1.5.0,1.5.x]",
-    "metadataClient": "1.5.0",
-    "dependencies": "1.5.0",
-    "mode": "client",
-    "enable": false
   }
 ]
