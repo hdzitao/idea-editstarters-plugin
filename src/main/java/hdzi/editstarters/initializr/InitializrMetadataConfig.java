@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -111,23 +112,25 @@ public class InitializrMetadataConfig {
                 return bom;
             }
 
-            for (CBom mapping : this.mappings) {
-                if (Versions.parseRange(mapping.compatibilityRange).match(version)) {
-                    if (StringUtils.isNoneBlank(mapping.groupId)) {
-                        bom.groupId = mapping.groupId;
-                    }
-                    if (StringUtils.isNoneBlank(mapping.artifactId)) {
-                        bom.artifactId = mapping.artifactId;
-                    }
-                    if (StringUtils.isNoneBlank(mapping.version)) {
-                        bom.version = mapping.version;
-                    }
-                    if (CollectionUtils.isNotEmpty(mapping.repositories)) {
-                        bom.repositories = mapping.repositories;
-                    }
+            Optional<CBom> findMapping = this.mappings.stream()
+                    .filter(mapping -> Versions.parseRange(mapping.compatibilityRange).match(version))
+                    .findFirst();
+            if (findMapping.isEmpty()) {
+                return bom;
+            }
 
-                    return bom;
-                }
+            CBom mapping = findMapping.get();
+            if (StringUtils.isNoneBlank(mapping.groupId)) {
+                bom.groupId = mapping.groupId;
+            }
+            if (StringUtils.isNoneBlank(mapping.artifactId)) {
+                bom.artifactId = mapping.artifactId;
+            }
+            if (StringUtils.isNoneBlank(mapping.version)) {
+                bom.version = mapping.version;
+            }
+            if (CollectionUtils.isNotEmpty(mapping.repositories)) {
+                bom.repositories = mapping.repositories;
             }
 
             return bom;
@@ -193,26 +196,28 @@ public class InitializrMetadataConfig {
                 return dependency;
             }
 
-            for (CDependencyContent mapping : this.mappings) {
-                if (Versions.parseRange(mapping.compatibilityRange).match(version)) {
-                    if (StringUtils.isNoneBlank(mapping.groupId)) {
-                        dependency.groupId = mapping.groupId;
-                    }
-                    if (StringUtils.isNoneBlank(mapping.artifactId)) {
-                        dependency.artifactId = mapping.artifactId;
-                    }
-                    if (StringUtils.isNoneBlank(mapping.version)) {
-                        dependency.version = mapping.version;
-                    }
-                    if (StringUtils.isNoneBlank(mapping.bom)) {
-                        dependency.bom = mapping.bom;
-                    }
-                    if (StringUtils.isNoneBlank(mapping.repository)) {
-                        dependency.repository = mapping.repository;
-                    }
+            Optional<CDependencyContent> findMapping = this.mappings.stream()
+                    .filter(mapping -> Versions.parseRange(mapping.compatibilityRange).match(version))
+                    .findFirst();
+            if (findMapping.isEmpty()) {
+                return dependency;
+            }
 
-                    return dependency;
-                }
+            CDependencyContent mapping = findMapping.get();
+            if (StringUtils.isNoneBlank(mapping.groupId)) {
+                dependency.groupId = mapping.groupId;
+            }
+            if (StringUtils.isNoneBlank(mapping.artifactId)) {
+                dependency.artifactId = mapping.artifactId;
+            }
+            if (StringUtils.isNoneBlank(mapping.version)) {
+                dependency.version = mapping.version;
+            }
+            if (StringUtils.isNoneBlank(mapping.bom)) {
+                dependency.bom = mapping.bom;
+            }
+            if (StringUtils.isNoneBlank(mapping.repository)) {
+                dependency.repository = mapping.repository;
             }
 
             return dependency;

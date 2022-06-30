@@ -41,9 +41,9 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     @Override
     public List<Dependency> findAllDependencies(KtBlockExpression dependenciesTag) {
         return PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, KtCallExpression.class).stream()
-                .map(it -> {
-                    GradlePoint gradlePoint = getDependencyGroupArtifact(it);
-                    return new DependencyElement(gradlePoint.getGroupId(), gradlePoint.getArtifactId(), it);
+                .map(tag -> {
+                    GradlePoint gradlePoint = getDependencyGroupArtifact(tag);
+                    return new DependencyElement(gradlePoint.getGroupId(), gradlePoint.getArtifactId(), tag);
                 }).collect(Collectors.toList());
     }
 
@@ -63,8 +63,8 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     @Override
     public List<Bom> findAllBoms(KtBlockExpression bomsTag) {
         return findAllCallExpression(bomsTag, TAG_BOM).stream()
-                .map(it -> {
-                    GradlePoint gradlePoint = splitGroupArtifact(getCallFirstParam(it));
+                .map(tag -> {
+                    GradlePoint gradlePoint = splitGroupArtifact(getCallFirstParam(tag));
                     return new Bom(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
                 }).collect(Collectors.toList());
     }
@@ -83,8 +83,8 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
     @Override
     public List<Repository> findAllRepositories(KtBlockExpression repositoriesTag) {
         return findAllCallExpression(repositoriesTag, TAG_REPOSITORY).stream()
-                .map(it -> {
-                    List<KtValueArgument> arguments = it.getValueArguments();
+                .map(tag -> {
+                    List<KtValueArgument> arguments = tag.getValueArguments();
                     String url = "";
                     KtValueArgument first;
                     if ((first = ContainerUtil.getFirstItem(arguments)) != null) {
@@ -94,7 +94,7 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
                                     && "url".equals(((KtBinaryExpression) statement).getLeft().getText()));
                             url = getCallFirstParam(((KtCallExpression) ((KtBinaryExpression) urlStatement).getRight()));
                         } else {
-                            url = getCallFirstParam(it);
+                            url = getCallFirstParam(tag);
                         }
                     }
                     return new Repository(url);
@@ -153,10 +153,10 @@ class BuildGradleKts extends GradleSyntax<KtBlockExpression> {
 
     private GradlePoint getDependencyGroupArtifact(KtCallExpression ktCallExpression) {
         Map<String, String> namedArguments = ktCallExpression.getValueArguments().stream()
-                .filter(it -> it.getArgumentName() != null)
+                .filter(argument -> argument.getArgumentName() != null)
                 .collect(Collectors.toMap(
-                        it -> trimText(it.getArgumentName().getText()),
-                        it -> trimText(it.getArgumentExpression().getText())
+                        argument -> trimText(argument.getArgumentName().getText()),
+                        argument -> trimText(argument.getArgumentExpression().getText())
                 ));
 
         if (namedArguments.isEmpty()) {

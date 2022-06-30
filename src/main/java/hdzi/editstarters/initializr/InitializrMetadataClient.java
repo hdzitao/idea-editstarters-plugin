@@ -74,7 +74,7 @@ public class InitializrMetadataClient {
         @NotNull
         @Override
         public Iterator<StarterInfo> iterator() {
-            return this.values.stream().flatMap(it -> it.getValues().stream()).iterator();
+            return this.values.stream().flatMap(module -> module.getValues().stream()).iterator();
         }
     }
 }
