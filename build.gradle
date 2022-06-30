@@ -41,7 +41,7 @@ changelog {
 }
 
 patchPluginXml {
-    sinceBuild = '201'
+    sinceBuild = '181'
     untilBuild = ''
 
     changeNotes = """

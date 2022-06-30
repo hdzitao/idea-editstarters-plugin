@@ -1,7 +1,10 @@
 package hdzi.editstarters.initializr;
 
 import com.google.gson.Gson;
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.RoamingType;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import hdzi.editstarters.dependency.SpringBoot;
 import lombok.Getter;
@@ -19,7 +22,7 @@ public class CachePersistentComponent implements PersistentStateComponent<CacheP
     private final Gson gson = new Gson();
 
     public static CachePersistentComponent getInstance(Project project) {
-        return ServiceManager.getService(project, CachePersistentComponent.class);
+        return project.getService(CachePersistentComponent.class);
     }
 
     @Getter

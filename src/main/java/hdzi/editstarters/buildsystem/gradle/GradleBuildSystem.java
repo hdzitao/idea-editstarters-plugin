@@ -6,7 +6,6 @@ import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.ProjectKeys;
 import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.ProjectData;
-import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import hdzi.editstarters.EditStarters;
@@ -14,6 +13,7 @@ import hdzi.editstarters.buildsystem.BuildSystem;
 import hdzi.editstarters.buildsystem.ProjectFile;
 import hdzi.editstarters.dependency.Dependency;
 import hdzi.editstarters.ui.ShowErrorException;
+import hdzi.editstarters.utils.CompatibilityUtils;
 import lombok.SneakyThrows;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
@@ -49,8 +49,7 @@ public class GradleBuildSystem extends BuildSystem {
                 throw new ShowErrorException("Not support extension!");
         }
 
-        @SuppressWarnings("all")
-        DataNode<ProjectData> projectData = ExternalSystemApiUtil.findProjectData(project, GradleConstants.SYSTEM_ID, project.getBasePath());
+        DataNode<ProjectData> projectData = CompatibilityUtils.findProjectData(project, GradleConstants.SYSTEM_ID, project.getBasePath());
         List<Dependency> dependencies = projectData.getChildren().stream()
                 .filter(node -> ProjectKeys.LIBRARY.equals(node.getKey()))
                 .map(node -> (LibraryData) node.getData())
