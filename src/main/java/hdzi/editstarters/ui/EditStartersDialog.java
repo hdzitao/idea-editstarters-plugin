@@ -127,18 +127,16 @@ public class EditStartersDialog {
         this.starterList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // 按两下选择
-                    StarterInfo starterInfo = starterList.getSelectedValue();
-                    if (Points.contains(existDependencies, starterInfo)) { // 对于已存在的starter，添加就是从删除列表里删除
-                        removeStarters.remove(starterInfo);
-                    } else { // 对于不存在的starter，添加直接加入添加列表
-                        addStarters.add(starterInfo);
-                    }
-                    // 去重显示
-                    CollectionListModel<StarterInfo> listModel = (CollectionListModel<StarterInfo>) selectList.getModel();
-                    if (!listModel.contains(starterInfo)) {
-                        listModel.add(starterInfo);
-                    }
+                StarterInfo starterInfo = starterList.getSelectedValue();
+                if (Points.contains(existDependencies, starterInfo)) { // 对于已存在的starter，添加就是从删除列表里删除
+                    removeStarters.remove(starterInfo);
+                } else { // 对于不存在的starter，添加直接加入添加列表
+                    addStarters.add(starterInfo);
+                }
+                // 去重显示
+                CollectionListModel<StarterInfo> listModel = (CollectionListModel<StarterInfo>) selectList.getModel();
+                if (!listModel.contains(starterInfo)) {
+                    listModel.add(starterInfo);
                 }
             }
         });
@@ -153,16 +151,14 @@ public class EditStartersDialog {
         this.selectList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // 按两下删除
-                    StarterInfo starterInfo = selectList.getSelectedValue();
-                    if (Points.contains(existDependencies, starterInfo)) { // 对于已存在的starter，删除就是加入删除列表
-                        removeStarters.add(starterInfo);
-                    } else { // 对于不存在的starter，删除是从添加列表里删除
-                        addStarters.remove(starterInfo);
-                    }
-                    // 显示
-                    ((CollectionListModel<StarterInfo>) selectList.getModel()).remove(starterInfo);
+                StarterInfo starterInfo = selectList.getSelectedValue();
+                if (Points.contains(existDependencies, starterInfo)) { // 对于已存在的starter，删除就是加入删除列表
+                    removeStarters.add(starterInfo);
+                } else { // 对于不存在的starter，删除是从添加列表里删除
+                    addStarters.remove(starterInfo);
                 }
+                // 显示
+                ((CollectionListModel<StarterInfo>) selectList.getModel()).remove(starterInfo);
             }
         });
         this.selectList.addMouseMotionListener(showDescAdapter);
