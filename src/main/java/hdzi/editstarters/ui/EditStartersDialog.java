@@ -30,6 +30,8 @@ public class EditStartersDialog {
     private JTextField searchField;
     private JCheckBox cachedBox;
     private JCheckBox ohubBox;
+    private JButton addButton;
+    private JButton removeButton;
     private final JFrame frame;
     private final Set<StarterInfo> addStarters = new HashSet<>(64);
     private final Set<StarterInfo> removeStarters = new HashSet<>(64);
@@ -124,10 +126,12 @@ public class EditStartersDialog {
 
         List<Dependency> existDependencies = buildSystem.getDependencies();
         // Starter列表
-        this.starterList.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                StarterInfo starterInfo = starterList.getSelectedValue();
+        this.starterList.setCellRenderer(new StarterListCellRenderer());
+        this.starterList.setSelectionModel(new StarterListSelectionModel());
+        this.starterList.addMouseMotionListener(showDescAdapter);
+        // 添加按钮
+        this.addButton.addActionListener(e -> {
+            for (StarterInfo starterInfo : starterList.getSelectedValuesList()) {
                 if (Points.contains(existDependencies, starterInfo)) { // 对于已存在的starter，添加就是从删除列表里删除
                     removeStarters.remove(starterInfo);
                 } else { // 对于不存在的starter，添加直接加入添加列表
@@ -139,19 +143,22 @@ public class EditStartersDialog {
                     listModel.add(starterInfo);
                 }
             }
+            // 清空选择
+            starterList.clearSelection();
         });
-        this.starterList.addMouseMotionListener(showDescAdapter);
 
         // selected列表
+        this.selectList.setCellRenderer(new StarterListCellRenderer());
+        this.selectList.setSelectionModel(new StarterListSelectionModel());
         List<StarterInfo> existStarters = modules.values().stream()
                 .flatMap(List::stream)
                 .filter(info -> Points.contains(existDependencies, info))
                 .collect(Collectors.toList());
         this.selectList.setModel(new CollectionListModel<>(existStarters));
-        this.selectList.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                StarterInfo starterInfo = selectList.getSelectedValue();
+        this.selectList.addMouseMotionListener(showDescAdapter);
+        // 删除按钮
+        this.removeButton.addActionListener(e -> {
+            for (StarterInfo starterInfo : selectList.getSelectedValuesList()) {
                 if (Points.contains(existDependencies, starterInfo)) { // 对于已存在的starter，删除就是加入删除列表
                     removeStarters.add(starterInfo);
                 } else { // 对于不存在的starter，删除是从添加列表里删除
@@ -160,8 +167,9 @@ public class EditStartersDialog {
                 // 显示
                 ((CollectionListModel<StarterInfo>) selectList.getModel()).remove(starterInfo);
             }
+            // 清空选择
+            selectList.clearSelection();
         });
-        this.selectList.addMouseMotionListener(showDescAdapter);
 
         // 搜索框
         this.searchField.addKeyListener(new KeyAdapter() {
