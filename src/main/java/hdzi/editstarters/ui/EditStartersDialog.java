@@ -131,7 +131,8 @@ public class EditStartersDialog {
                 .collect(Collectors.toList()));
         // Starter列表
         this.starterList.setCellRenderer(new StarterListCellRenderer(selectedListModel));
-        this.starterList.setSelectionModel(new StarterListSelectionModel());
+        this.starterList.setSelectionModel(new StarterListSelectionModel(
+                (StarterListCellRenderer) this.starterList.getCellRenderer()));
         this.starterList.addMouseMotionListener(showDescAdapter);
         // 添加按钮
         this.addButton.addActionListener(e -> {
