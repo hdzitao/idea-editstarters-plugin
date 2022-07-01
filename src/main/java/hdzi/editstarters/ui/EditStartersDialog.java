@@ -169,7 +169,7 @@ public class EditStartersDialog {
             }
             // 清空选择
             selectList.clearSelection();
-            starterList.setModel(starterList.getModel());
+            starterList.updateUI();
         });
 
         // 搜索框
