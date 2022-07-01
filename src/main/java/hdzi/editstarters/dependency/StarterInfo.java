@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
-public class StarterInfo extends Dependency {
+public final class StarterInfo extends Dependency {
     private String id;
     private String name;
 

@@ -125,8 +125,12 @@ public class EditStartersDialog {
         };
 
         List<Dependency> existDependencies = buildSystem.getDependencies();
+        CollectionListModel<StarterInfo> selectedListModel = new CollectionListModel<>(modules.values().stream()
+                .flatMap(List::stream)
+                .filter(info -> Points.contains(existDependencies, info))
+                .collect(Collectors.toList()));
         // Starter列表
-        this.starterList.setCellRenderer(new StarterListCellRenderer());
+        this.starterList.setCellRenderer(new StarterListCellRenderer(selectedListModel));
         this.starterList.setSelectionModel(new StarterListSelectionModel());
         this.starterList.addMouseMotionListener(showDescAdapter);
         // 添加按钮
@@ -150,11 +154,7 @@ public class EditStartersDialog {
         // selected列表
         this.selectList.setCellRenderer(new StarterListCellRenderer());
         this.selectList.setSelectionModel(new StarterListSelectionModel());
-        List<StarterInfo> existStarters = modules.values().stream()
-                .flatMap(List::stream)
-                .filter(info -> Points.contains(existDependencies, info))
-                .collect(Collectors.toList());
-        this.selectList.setModel(new CollectionListModel<>(existStarters));
+        this.selectList.setModel(selectedListModel);
         this.selectList.addMouseMotionListener(showDescAdapter);
         // 删除按钮
         this.removeButton.addActionListener(e -> {
@@ -169,6 +169,7 @@ public class EditStartersDialog {
             }
             // 清空选择
             selectList.clearSelection();
+            starterList.setModel(starterList.getModel());
         });
 
         // 搜索框
