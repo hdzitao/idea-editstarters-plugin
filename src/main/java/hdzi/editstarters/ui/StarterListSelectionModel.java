@@ -1,14 +1,9 @@
 package hdzi.editstarters.ui;
 
-import lombok.NoArgsConstructor;
+public class StarterListSelectionModel extends EditStartersSelectionModel {
+    private final StarterListRenderer renderer;
 
-import javax.swing.*;
-
-@NoArgsConstructor
-public class StarterListSelectionModel extends DefaultListSelectionModel {
-    private StarterListCellRenderer renderer;
-
-    public StarterListSelectionModel(StarterListCellRenderer renderer) {
+    public StarterListSelectionModel(StarterListRenderer renderer) {
         this.renderer = renderer;
     }
 
@@ -18,10 +13,6 @@ public class StarterListSelectionModel extends DefaultListSelectionModel {
             return;
         }
 
-        if (isSelectedIndex(index0)) {
-            removeSelectionInterval(index0, index1);
-        } else {
-            addSelectionInterval(index0, index1);
-        }
+        super.setSelectionInterval(index0, index1);
     }
 }

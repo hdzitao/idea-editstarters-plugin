@@ -130,9 +130,9 @@ public class EditStartersDialog {
                 .filter(info -> Points.contains(existDependencies, info))
                 .collect(Collectors.toList()));
         // Starter列表
-        this.starterList.setCellRenderer(new StarterListCellRenderer(selectedListModel));
+        this.starterList.setCellRenderer(new StarterListRenderer(selectedListModel));
         this.starterList.setSelectionModel(new StarterListSelectionModel(
-                (StarterListCellRenderer) this.starterList.getCellRenderer()));
+                (StarterListRenderer) this.starterList.getCellRenderer()));
         this.starterList.addMouseMotionListener(showDescAdapter);
         // 添加按钮
         this.addButton.addActionListener(e -> {
@@ -153,8 +153,8 @@ public class EditStartersDialog {
         });
 
         // selected列表
-        this.selectList.setCellRenderer(new StarterListCellRenderer());
-        this.selectList.setSelectionModel(new StarterListSelectionModel());
+        this.selectList.setCellRenderer(new EditStartersRenderer());
+        this.selectList.setSelectionModel(new EditStartersSelectionModel());
         this.selectList.setModel(selectedListModel);
         this.selectList.addMouseMotionListener(showDescAdapter);
         // 删除按钮
