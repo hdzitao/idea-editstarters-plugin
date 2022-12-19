@@ -1,5 +1,6 @@
 package hdzi.editstarters.initializr;
 
+import com.github.hdzitao.editstarters.initializr.InitializrMetadataConfig;
 import com.google.gson.Gson;
 import com.intellij.util.io.HttpRequests;
 import org.junit.Test;
