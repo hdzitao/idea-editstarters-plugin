@@ -1,8 +1,5 @@
-package hdzi.editstarters.version;
+package com.github.hdzitao.editstarters.version;
 
-import com.github.hdzitao.editstarters.version.Version;
-import com.github.hdzitao.editstarters.version.VersionRange;
-import com.github.hdzitao.editstarters.version.Versions;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
