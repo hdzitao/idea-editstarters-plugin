@@ -1,8 +1,12 @@
 # Change Log
 
+## 3.2.0
+
+- 优化代码
+- 优化UI
+
 ## 3.1.0
 
-- 修改到com.github.hdzitao包名下
 - 新UI
 
 ## 3.0.0

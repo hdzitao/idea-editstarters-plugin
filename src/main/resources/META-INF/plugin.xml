@@ -4,9 +4,9 @@
     <vendor email="taojinhou@qq.com" url="http://github.com/hdzitao">HdziTao</vendor>
 
     <description><![CDATA[
-    <p>这个插件让你在开发过程中也能方便添加修改spring boot starter.</p>
+    <p>添加修改spring boot starter.</p>
     <p/>
-    <p>This plug-in allows you to easily add or modify spring boot starters during the development process.</p>
+    <p>Add or modify spring boot starters.</p>
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
