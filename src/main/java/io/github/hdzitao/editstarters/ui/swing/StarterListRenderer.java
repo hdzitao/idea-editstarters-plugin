@@ -2,36 +2,29 @@ package io.github.hdzitao.editstarters.ui.swing;
 
 import com.intellij.ui.CollectionListModel;
 import io.github.hdzitao.editstarters.dependency.Starter;
-import lombok.Getter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashSet;
-import java.util.Set;
 
+/**
+ * starter list的渲染器
+ *
+ * @version 3.2.0
+ */
 public class StarterListRenderer extends EditStartersRenderer {
-    private final CollectionListModel<Starter> selectedListModel;
-    @Getter
-    private final Set<Integer> disableIndex = new HashSet<>();
+    private final JList<Starter> selectedList;
 
-    public StarterListRenderer(CollectionListModel<Starter> selectedListModel) {
-        this.selectedListModel = selectedListModel;
+    public StarterListRenderer(JList<Starter> selectedList) {
+        this.selectedList = selectedList;
     }
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends Starter> list, Starter value, int index, boolean isSelected, boolean cellHasFocus) {
-        super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+    public Component getListCellRendererComponent(JList<? extends Starter> list, Starter starter, int index, boolean isSelected, boolean cellHasFocus) {
+        super.getListCellRendererComponent(list, starter, index, isSelected, cellHasFocus);
 
-        if (this.selectedListModel != null && this.selectedListModel.contains(value)) {
-            this.setSelected(false);
-            this.setEnabled(false);
-
-            this.disableIndex.add(index);
-        } else {
-            this.setSelected(isSelected);
-            this.setEnabled(true);
-
-            this.disableIndex.remove(index);
+        CollectionListModel<Starter> selectedListModel = (CollectionListModel<Starter>) selectedList.getModel();
+        if (selectedListModel.contains(starter)) {
+            setSelected(true);
         }
 
         return this;

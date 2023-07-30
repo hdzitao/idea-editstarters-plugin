@@ -2,6 +2,11 @@ package io.github.hdzitao.editstarters.ui.swing;
 
 import javax.swing.*;
 
+/**
+ * 顶层ListSelectionModel
+ *
+ * @version 3.2.0
+ */
 public class EditStartersSelectionModel extends DefaultListSelectionModel {
 
     @Override
