@@ -44,6 +44,7 @@ public class EditStartersDialog {
     private JTextField searchField;
     private JCheckBox cachedBox;
     private JButton removeButton;
+    private JTextPane descPane;
     private final JFrame frame;
     private final Set<Starter> addStarters = new HashSet<>(64);
     private final Set<Starter> removeStarters = new HashSet<>(64);
@@ -115,7 +116,7 @@ public class EditStartersDialog {
                 searchField.setText("");
                 String name = moduleList.getSelectedValue();
                 starterList.setModel(new CollectionListModel<>(modules.getOrDefault(name, Collections.emptyList())));
-                starterList.updateUI();
+//                starterList.updateUI();
             }
         });
 
@@ -163,10 +164,35 @@ public class EditStartersDialog {
 
         // Starter列表
         this.starterList.setCellRenderer(new StarterListRenderer(this.selectList));
-        this.starterList.setSelectionModel(new StarterListSelectionModel(
-                existDependencies,
-                starterList, selectList,
-                addStarters, removeStarters));
+        this.starterList.setSelectionModel(new StarterListSelectionModel(this.starterList,
+                // 选中回调
+                starter -> {
+                    if (Points.contains(existDependencies, starter)) {
+                        // 已经存在,不删除
+                        removeStarters.remove(starter);
+                    } else {
+                        // 不存在,需要添加
+                        addStarters.add(starter);
+                    }
+
+                    CollectionListModel<Starter> selectListModel = (CollectionListModel<Starter>) selectList.getModel();
+                    if (!selectListModel.contains(starter)) {
+                        selectListModel.add(starter);
+                    }
+                },
+                // 取消回调
+                starter -> {
+                    if (Points.contains(existDependencies, starter)) {
+                        // 如果已存在,需要删除
+                        removeStarters.add(starter);
+                    } else {
+                        // 不存在,不添加
+                        addStarters.remove(starter);
+                    }
+
+                    CollectionListModel<Starter> selectListModel = (CollectionListModel<Starter>) selectList.getModel();
+                    selectListModel.remove(starter);
+                }));
         this.starterList.addMouseMotionListener(showDescAdapter);
 
         // 搜索框
