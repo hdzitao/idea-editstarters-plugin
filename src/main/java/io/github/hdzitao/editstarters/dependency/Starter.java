@@ -21,6 +21,7 @@ public final class Starter extends Dependency {
     private String id;
     private String name;
     private String description;
+    private String versionRange;
 
     private final List<Repository> repositories = new ArrayList<>();
     private Bom bom;
