@@ -26,4 +26,15 @@ public final class Points {
         return find(points, point) != null;
     }
 
+    public static <P extends Point> void addUniq(Collection<P> points, P point) {
+        if (point != null && !contains(points, point)) {
+            points.add(point);
+        }
+    }
+
+    public static <P extends Point> void addAllUniq(Collection<P> points, Collection<P> others) {
+        for (P o : others) {
+            addUniq(points, o);
+        }
+    }
 }
