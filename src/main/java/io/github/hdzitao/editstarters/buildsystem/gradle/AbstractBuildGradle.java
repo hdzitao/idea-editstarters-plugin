@@ -61,7 +61,7 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
 
         @Override
         public String point() {
-            return this.groupId + ":" + this.artifactId;
+            return groupId + ":" + artifactId;
         }
     }
 

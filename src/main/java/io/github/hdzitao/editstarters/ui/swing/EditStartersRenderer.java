@@ -16,8 +16,8 @@ public class EditStartersRenderer extends JCheckBox implements ListCellRenderer<
 
     @Override
     public Component getListCellRendererComponent(JList<? extends Starter> list, Starter value, int index, boolean isSelected, boolean cellHasFocus) {
-        this.setText(Objects.toString(value));
-        this.setSelected(isSelected);
+        setText(Objects.toString(value));
+        setSelected(isSelected);
 
         return this;
     }

@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("ConstantConditions")
 public abstract class EditStartersButtonAction extends AnAction {
     private final Initializr[] initializrs = {
+            new CacheInitializr(),
             new StartSpringInitializr(),
     };
 

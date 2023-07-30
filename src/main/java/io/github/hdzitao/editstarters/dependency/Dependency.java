@@ -36,6 +36,6 @@ public class Dependency implements Point {
 
     @Override
     public String point() {
-        return this.groupId + ":" + this.artifactId;
+        return groupId + ":" + artifactId;
     }
 }

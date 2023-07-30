@@ -42,7 +42,7 @@ public class PomXml extends ProjectFile<XmlTag> {
 
     @Override
     public XmlTag findOrCreateDependenciesTag() {
-        return getOrCreateXmlTag(this.rootTag, TAG_DEPENDENCIES);
+        return getOrCreateXmlTag(rootTag, TAG_DEPENDENCIES);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class PomXml extends ProjectFile<XmlTag> {
 
     @Override
     public XmlTag findOrCreateBomsTag() {
-        return getOrCreateXmlTag(getOrCreateXmlTag(this.rootTag, TAG_DEPENDENCY_MANAGEMENT), TAG_DEPENDENCIES);
+        return getOrCreateXmlTag(getOrCreateXmlTag(rootTag, TAG_DEPENDENCY_MANAGEMENT), TAG_DEPENDENCIES);
     }
 
 
@@ -90,7 +90,7 @@ public class PomXml extends ProjectFile<XmlTag> {
 
     @Override
     public XmlTag findOrCreateRepositoriesTag() {
-        return getOrCreateXmlTag(this.rootTag, TAG_REPOSITORIES);
+        return getOrCreateXmlTag(rootTag, TAG_REPOSITORIES);
     }
 
     @Override

@@ -52,15 +52,13 @@ public class EditStartersDialog {
     private final WeakHashMap<Starter, String> searchCache = new WeakHashMap<>(); // 搜索缓存
 
     public EditStartersDialog(InitializrParameter parameter, InitializrReturn ret) {
-
-
-        this.frame = new JFrame("Edit Starters");
-        this.frame.setContentPane(this.root);
+        frame = new JFrame("Edit Starters");
+        frame.setContentPane(root);
 
         // 是否使用缓存
         if (ret.isEnableCache()) {
-            this.cachedBox.setSelected(true);
-            this.cachedBox.addMouseMotionListener(new MouseAdapter() {
+            cachedBox.setSelected(true);
+            cachedBox.addMouseMotionListener(new MouseAdapter() {
                 @Override
                 public void mouseMoved(MouseEvent e) {
                     cachedBox.setToolTipText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -73,44 +71,44 @@ public class EditStartersDialog {
         SpringBoot springBoot = ret.getSpringBoot();
 
         // boot版本选框
-        this.versionComboBox.setModel(new CollectionComboBoxModel<>(
+        versionComboBox.setModel(new CollectionComboBoxModel<>(
 //                springBoot.getVersion().getValues().stream().map(InitializrVersion.Value::getId).collect(Collectors.toList()),
                 Collections.singletonList(springBoot.getVersion()),
                 springBoot.getVersion()
         ));
-        this.versionComboBox.setEnabled(false);
+        versionComboBox.setEnabled(false);
 
         // 取消按钮
-        this.buttonCancel.addActionListener(e -> onCancel());
+        buttonCancel.addActionListener(e -> onCancel());
         // 点击 X 时调用 onCancel()
-        this.frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        this.frame.addWindowListener(new WindowAdapter() {
+        frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 onCancel();
             }
         });
         // 遇到 ESCAPE 时调用 onCancel()
-        this.root.registerKeyboardAction(e -> onCancel(),
+        root.registerKeyboardAction(e -> onCancel(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         // build system
         BuildSystem buildSystem = parameter.getBuildSystem();
 
         // ok按钮
-        this.frame.getRootPane().setDefaultButton(this.buttonOK);
-        this.buttonOK.addActionListener(e -> {
+        frame.getRootPane().setDefaultButton(buttonOK);
+        buttonOK.addActionListener(e -> {
             WriteCommandAction.runWriteCommandAction(buildSystem.getContext().getData(CommonDataKeys.PROJECT), () -> {
-                buildSystem.addStarters(this.addStarters);
-                buildSystem.removeStarters(this.removeStarters);
+                buildSystem.addStarters(addStarters);
+                buildSystem.removeStarters(removeStarters);
             });
-            this.frame.dispose();
+            frame.dispose();
         });
 
         Map<String, List<Starter>> modules = springBoot.getModules().stream()
                 .collect(Collectors.toMap(Module::getName, Module::getValues, (o, n) -> o, LinkedHashMap::new));
         // Module列表
-        this.moduleList.setModel(new CollectionListModel<>(modules.keySet()));
-        this.moduleList.addMouseListener(new MouseAdapter() {
+        moduleList.setModel(new CollectionListModel<>(modules.keySet()));
+        moduleList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 searchField.setText("");
@@ -137,15 +135,15 @@ public class EditStartersDialog {
         List<Dependency> existDependencies = buildSystem.getDependencies();
 
         // selected列表
-        this.selectList.setCellRenderer(new EditStartersRenderer());
-        this.selectList.setSelectionModel(new EditStartersSelectionModel());
-        this.selectList.setModel(new CollectionListModel<>(modules.values().stream()
+        selectList.setCellRenderer(new EditStartersRenderer());
+        selectList.setSelectionModel(new EditStartersSelectionModel());
+        selectList.setModel(new CollectionListModel<>(modules.values().stream()
                 .flatMap(List::stream)
                 .filter(info -> Points.contains(existDependencies, info))
                 .collect(Collectors.toList())));
-        this.selectList.addMouseMotionListener(showDescAdapter);
+        selectList.addMouseMotionListener(showDescAdapter);
         // 删除按钮
-        this.removeButton.addActionListener(e -> {
+        removeButton.addActionListener(e -> {
             for (Starter Starter : selectList.getSelectedValuesList()) {
                 if (Points.contains(existDependencies, Starter)) {
                     // 已存在, 需要删除
@@ -163,8 +161,8 @@ public class EditStartersDialog {
         });
 
         // Starter列表
-        this.starterList.setCellRenderer(new StarterListRenderer(this.selectList));
-        this.starterList.setSelectionModel(new StarterListSelectionModel(this.starterList,
+        starterList.setCellRenderer(new StarterListRenderer(selectList));
+        starterList.setSelectionModel(new StarterListSelectionModel(starterList,
                 // 选中回调
                 starter -> {
                     if (Points.contains(existDependencies, starter)) {
@@ -193,10 +191,10 @@ public class EditStartersDialog {
                     CollectionListModel<Starter> selectListModel = (CollectionListModel<Starter>) selectList.getModel();
                     selectListModel.remove(starter);
                 }));
-        this.starterList.addMouseMotionListener(showDescAdapter);
+        starterList.addMouseMotionListener(showDescAdapter);
 
         // 搜索框
-        this.searchField.addKeyListener(new KeyAdapter() {
+        searchField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 moduleList.clearSelection();
@@ -215,13 +213,13 @@ public class EditStartersDialog {
     }
 
     private void onCancel() {
-        this.frame.dispose();
+        frame.dispose();
     }
 
     public void show() {
-        this.frame.pack();
-        this.frame.setLocationRelativeTo(null); // 中间显示
-        this.frame.setVisible(true);
+        frame.pack();
+        frame.setLocationRelativeTo(null); // 中间显示
+        frame.setVisible(true);
     }
 
     private String getStarterToolTipText(Starter starter) {

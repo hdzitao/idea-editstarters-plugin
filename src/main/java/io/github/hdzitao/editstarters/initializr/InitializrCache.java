@@ -1,11 +1,12 @@
 package io.github.hdzitao.editstarters.initializr;
 
-import com.google.gson.Gson;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.xmlb.annotations.OptionTag;
+import io.github.hdzitao.editstarters.utils.JSONConverter;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
@@ -23,8 +24,6 @@ import java.util.Objects;
         storages = @Storage(value = "editstarters/initializr-cache.xml", roamingType = RoamingType.DISABLED))
 public class InitializrCache implements PersistentStateComponent<InitializrCache.State> {
 
-    private final Gson gson = new Gson();
-
     public static InitializrCache getInstance(Project project) {
         return project.getService(InitializrCache.class);
     }
@@ -32,46 +31,51 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
     @Getter
     @Setter
     public static class State {
-        private String projectJson;
+        @OptionTag(converter = SpringBootConverter.class)
+        private SpringBoot springBoot;
         private String url;
         private String version;
         private long updateTime;
     }
 
+    public static class SpringBootConverter extends JSONConverter<SpringBoot> {
+    }
+
+
     private State state;
 
     public SpringBoot get(String url, String version) {
         // 检查缓存
-        if (this.state != null
-                && Objects.equals(url, this.state.url)
-                && Objects.equals(version, this.state.version)) {
-            return gson.fromJson(this.state.projectJson, SpringBoot.class);
+        if (state != null
+                && Objects.equals(url, state.url)
+                && Objects.equals(version, state.version)) {
+            return state.springBoot;
         }
 
         return null;
     }
 
     public void put(String url, String version, SpringBoot project) {
-        if (this.state == null) {
-            this.state = new State();
+        if (state == null) {
+            state = new State();
         }
-        this.state.url = url;
-        this.state.version = version;
-        this.state.projectJson = gson.toJson(project);
-        this.state.updateTime = System.currentTimeMillis();
+        state.url = url;
+        state.version = version;
+        state.springBoot = project;
+        state.updateTime = System.currentTimeMillis();
     }
 
     public String getUrl() {
-        if (this.state != null && StringUtils.isNoneBlank(this.state.url)) {
-            return this.state.url;
+        if (state != null && StringUtils.isNoneBlank(state.url)) {
+            return state.url;
         }
 
         return "https://start.spring.io/";
     }
 
     public long getUpdateTime() {
-        if (this.state != null) {
-            return this.state.updateTime;
+        if (state != null) {
+            return state.updateTime;
         }
 
         return 0L;
@@ -80,7 +84,7 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
     @Nullable
     @Override
     public InitializrCache.State getState() {
-        return this.state;
+        return state;
     }
 
     @Override

@@ -48,7 +48,7 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
         return PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall.class).stream()
                 .map(tag -> {
                     GradlePoint gradlePoint = getDependencyGroupArtifact(tag);
-                    return new DependencyElement(gradlePoint.getGroupId(), gradlePoint.getArtifactId(), tag);
+                    return new DependencyElement<>(gradlePoint.getGroupId(), gradlePoint.getArtifactId(), tag);
                 }).collect(Collectors.toList());
     }
 

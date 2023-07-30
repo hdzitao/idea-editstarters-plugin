@@ -57,6 +57,6 @@ public enum DependencyScope {
 
     @Override
     public String toString() {
-        return this.scope;
+        return scope;
     }
 }

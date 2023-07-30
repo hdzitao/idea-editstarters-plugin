@@ -29,6 +29,6 @@ public class Bom implements Point {
 
     @Override
     public String point() {
-        return this.groupId + ":" + this.artifactId;
+        return groupId + ":" + artifactId;
     }
 }

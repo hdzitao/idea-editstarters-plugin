@@ -33,6 +33,6 @@ public class Repository implements Point {
 
     @Override
     public String point() {
-        return this.url;
+        return url;
     }
 }

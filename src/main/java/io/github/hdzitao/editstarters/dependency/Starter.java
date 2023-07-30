@@ -27,9 +27,9 @@ public final class Starter extends Dependency {
     private Bom bom;
 
     public void addRepository(String id, Repository repository) {
-        if (repository != null && !Points.contains(this.repositories, repository)) {
+        if (repository != null && !Points.contains(repositories, repository)) {
             repository.setId(id);
-            this.repositories.add(repository);
+            repositories.add(repository);
         }
     }
 
@@ -48,6 +48,6 @@ public final class Starter extends Dependency {
 
     @Override
     public String toString() {
-        return this.name;
+        return name;
     }
 }
