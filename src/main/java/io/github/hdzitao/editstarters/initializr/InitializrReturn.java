@@ -11,5 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InitializrReturn {
+    private final InitializrParameter parameter;
     private SpringBoot springBoot;
+
+    public InitializrReturn(InitializrParameter parameter) {
+        this.parameter = parameter;
+    }
 }

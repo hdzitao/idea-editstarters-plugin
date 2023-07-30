@@ -1,6 +1,5 @@
-package com.github.hdzitao.editstarters.initializr;
+package io.github.hdzitao.editstarters.initializr;
 
-import com.github.hdzitao.editstarters.dependency.SpringBoot;
 import com.google.gson.Gson;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
@@ -15,14 +14,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-@State(name = "spring_boot_project_cache",
-        storages = @Storage(value = "editstarters.xml", roamingType = RoamingType.DISABLED))
-public class CachePersistentComponent implements PersistentStateComponent<CachePersistentComponent.State> {
+@State(name = "editstarters-initializr-cache",
+        storages = @Storage(value = "editstarters/initializr-cache.xml", roamingType = RoamingType.DISABLED))
+public class InitializrCache implements PersistentStateComponent<InitializrCache.State> {
 
     private final Gson gson = new Gson();
 
-    public static CachePersistentComponent getInstance(Project project) {
-        return project.getService(CachePersistentComponent.class);
+    public static InitializrCache getInstance(Project project) {
+        return project.getService(InitializrCache.class);
     }
 
     @Getter
@@ -75,12 +74,12 @@ public class CachePersistentComponent implements PersistentStateComponent<CacheP
 
     @Nullable
     @Override
-    public CachePersistentComponent.State getState() {
+    public InitializrCache.State getState() {
         return this.state;
     }
 
     @Override
-    public void loadState(@NotNull CachePersistentComponent.State state) {
+    public void loadState(@NotNull InitializrCache.State state) {
         this.state = state;
     }
 

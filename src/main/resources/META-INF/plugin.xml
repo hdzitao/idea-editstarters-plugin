@@ -23,17 +23,17 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <projectService serviceImplementation="com.github.hdzitao.editstarters.initializr.CachePersistentComponent"/>
+        <projectService serviceImplementation="io.github.hdzitao.editstarters.initializr.InitializrCache"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
-        <action id="EditStarters.MavenButton" class="com.github.hdzitao.editstarters.ui.MavenButtonAction"
+        <action id="EditStarters.MavenButton" class="io.github.hdzitao.editstarters.ui.MavenButtonAction"
                 text="Edit Starters"
                 description="Edit maven spring boot starters" icon="/icons/button.png">
             <add-to-group group-id="GenerateGroup" anchor="first"/>
         </action>
-        <action id="EditStarters.GradleButton" class="com.github.hdzitao.editstarters.ui.GradleButtonAction"
+        <action id="EditStarters.GradleButton" class="io.github.hdzitao.editstarters.ui.GradleButtonAction"
                 text="Edit Starters"
                 description="Edit gradle spring boot starters" icon="/icons/button.png">
             <add-to-group group-id="GenerateGroup" anchor="first"/>

@@ -1,8 +1,6 @@
-package com.github.hdzitao.editstarters.ui;
+package io.github.hdzitao.editstarters.ui;
 
-import com.github.hdzitao.editstarters.initializr.OthersHub;
-import com.github.hdzitao.editstarters.version.Version;
-import com.intellij.ui.CollectionComboBoxModel;
+import io.github.hdzitao.editstarters.version.Version;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -10,7 +8,6 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 
 public class InitializrDialog extends JDialog {
@@ -18,7 +15,6 @@ public class InitializrDialog extends JDialog {
     private JButton buttonOK;
     private JTextField urlInput;
     private JCheckBox enableCacheCheckBox;
-    private JComboBox<OthersHub> ohubComboBox;
 
     @Getter
     private String url;
@@ -26,10 +22,7 @@ public class InitializrDialog extends JDialog {
     @Getter
     private boolean enableCache;
 
-    @Getter
-    private OthersHub othersHub;
-
-    private final Pattern urlCheck = Pattern.compile("^https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+    private final static Pattern urlCheck = Pattern.compile("^https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 
     public InitializrDialog(String url, Version version) {
         setTitle("Spring Initializr Url");
@@ -40,15 +33,6 @@ public class InitializrDialog extends JDialog {
         urlInput.setText(url);
 
         buttonOK.addActionListener(e -> onOK());
-
-        // OthersHub
-        String site = OthersHub.url2site(url);
-        OthersHub[] othersHubs = {
-                new OthersHub.GitHub(site, version),
-        };
-        ohubComboBox.setModel(new CollectionComboBoxModel<>(
-                Arrays.asList(othersHubs),
-                othersHubs[0]));
 
         // 点击 X 时调用 onCancel()
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -68,7 +52,6 @@ public class InitializrDialog extends JDialog {
         if (StringUtils.isNoneBlank(url) && urlCheck.matcher(url).find()) {
             this.url = url;
             this.enableCache = enableCacheCheckBox.isSelected();
-            this.othersHub = (OthersHub) ohubComboBox.getSelectedItem();
             dispose();
         }
     }

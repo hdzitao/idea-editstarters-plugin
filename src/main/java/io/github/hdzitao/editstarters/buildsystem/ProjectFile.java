@@ -78,10 +78,10 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
                     }
                 }
             }
-        } catch (com.github.hdzitao.editstarters.ui.ShowErrorException e) {
+        } catch (ShowErrorException e) {
             throw e;
         } catch (Exception e) {
-            throw new com.github.hdzitao.editstarters.ui.ShowErrorException("Syntax error!", e);
+            throw new ShowErrorException("Syntax error!", e);
         }
 
     }
