@@ -23,9 +23,7 @@ public class StarterListRenderer extends EditStartersRenderer {
         super.getListCellRendererComponent(list, starter, index, isSelected, cellHasFocus);
 
         CollectionListModel<Starter> selectedListModel = (CollectionListModel<Starter>) selectedList.getModel();
-        if (selectedListModel.contains(starter)) {
-            setSelected(true);
-        }
+        setSelected(selectedListModel.contains(starter));
 
         return this;
     }

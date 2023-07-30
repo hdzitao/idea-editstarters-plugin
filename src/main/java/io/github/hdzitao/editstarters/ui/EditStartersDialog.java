@@ -109,6 +109,7 @@ public class EditStartersDialog {
                 searchField.setText("");
                 String name = moduleList.getSelectedValue();
                 starterList.setModel(new CollectionListModel<>(modules.getOrDefault(name, Collections.emptyList())));
+                starterList.updateUI();
             }
         });
 
