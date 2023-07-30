@@ -10,6 +10,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.regex.Pattern;
 
+/**
+ * Initializr UI
+ *
+ * @version 3.2.0
+ */
 public class InitializrDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;

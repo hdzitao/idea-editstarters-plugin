@@ -7,6 +7,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 拷贝自 spring-io/initializr,删除不必要功能
+ */
 public final class Versions {
     private Versions() {
     }

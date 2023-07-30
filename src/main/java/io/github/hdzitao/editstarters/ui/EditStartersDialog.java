@@ -27,6 +27,11 @@ import java.util.stream.Collectors;
 
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
+/**
+ * EditStarters UI
+ *
+ * @version 3.2.0
+ */
 public class EditStartersDialog {
     private JPanel root;
     private JButton buttonOK;

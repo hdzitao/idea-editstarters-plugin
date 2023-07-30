@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by taojinhou on 2019/1/11.
+ * maven构建系统
+ *
+ * @version 3.2.0
  */
 //@SuppressWarnings("ConstantConditions")
 public class MavenBuildSystem extends BuildSystem {

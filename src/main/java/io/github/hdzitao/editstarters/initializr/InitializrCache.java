@@ -14,6 +14,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
+/**
+ * 缓存
+ *
+ * @version 3.2.0
+ */
 @State(name = "editstarters-initializr-cache",
         storages = @Storage(value = "editstarters/initializr-cache.xml", roamingType = RoamingType.DISABLED))
 public class InitializrCache implements PersistentStateComponent<InitializrCache.State> {

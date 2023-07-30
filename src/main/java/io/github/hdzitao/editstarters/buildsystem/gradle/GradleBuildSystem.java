@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by taojinhou on 2019/1/14.
+ * gradle构建系统
+ *
+ * @version 3.2.0
  */
 @SuppressWarnings("ConstantConditions")
 public class GradleBuildSystem extends BuildSystem {

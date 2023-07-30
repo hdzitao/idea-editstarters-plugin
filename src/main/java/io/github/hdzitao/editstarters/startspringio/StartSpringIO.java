@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
+ * start.spring.io
+ *
  * @version 3.2.0
  */
 @Getter
