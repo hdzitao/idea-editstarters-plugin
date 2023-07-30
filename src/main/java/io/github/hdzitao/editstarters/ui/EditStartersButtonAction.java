@@ -6,6 +6,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiFile;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.initializr.*;
@@ -57,9 +58,10 @@ public abstract class EditStartersButtonAction extends AnAction {
             InitializrReturn ret = new InitializrReturn(parameter);
             // 执行
             ProgressManager progressManager = ProgressManager.getInstance();
-            progressManager.runProcessWithProgressSynchronously(() -> {
+            progressManager.runProcessWithProgressSynchronously((ThrowableComputable<Void, Exception>) () -> {
                 progressManager.getProgressIndicator().setIndeterminate(true);
                 new InitializrChain(initializrs).initialize(parameter, ret);
+                return null;
             }, "Loading " + url, true, e.getData(CommonDataKeys.PROJECT));
 
         } catch (Throwable throwable) { // 所有异常弹错误框
