@@ -34,7 +34,7 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
     protected abstract void createRepositoryTag(Psi repositoriesTag, Repository repository);
 
     @Override
-    public void addStarters(List<Starter> dependencies) {
+    public void addStarters(Collection<Starter> dependencies) {
         try {
             if (CollectionUtils.isEmpty(dependencies)) {
                 return;
@@ -59,7 +59,7 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
     }
 
     @Override
-    public void removeStarters(List<Starter> dependencies) {
+    public void removeStarters(Collection<Starter> dependencies) {
         try {
             if (CollectionUtils.isEmpty(dependencies)) {
                 return;

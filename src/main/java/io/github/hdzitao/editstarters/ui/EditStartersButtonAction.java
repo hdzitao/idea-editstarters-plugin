@@ -63,7 +63,8 @@ public abstract class EditStartersButtonAction extends AnAction {
                 new InitializrChain(initializrs).initialize(parameter, ret);
                 return null;
             }, "Loading " + url, true, e.getData(CommonDataKeys.PROJECT));
-
+            // 模块弹窗
+            new EditStartersDialog(parameter, ret).show();
         } catch (Throwable throwable) { // 所有异常弹错误框
             String message;
 

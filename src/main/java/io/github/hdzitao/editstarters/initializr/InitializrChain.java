@@ -18,7 +18,7 @@ public class InitializrChain {
 
     public void initialize(InitializrParameter parameter, InitializrReturn ret) {
         if (i >= chain.length) {
-            throw ShowErrorException.internal();
+            throw new ShowErrorException("Initialization Failed!");
         }
 
         chain[i++].initialize(parameter, ret, this);

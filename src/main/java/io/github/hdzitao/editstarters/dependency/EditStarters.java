@@ -1,7 +1,7 @@
 package io.github.hdzitao.editstarters.dependency;
 
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * 插件顶层接口
@@ -13,10 +13,10 @@ public interface EditStarters {
     /**
      * 添加starters
      */
-    void addStarters(List<Starter> dependencies);
+    void addStarters(Collection<Starter> dependencies);
 
     /**
      * 删除starters
      */
-    void removeStarters(List<Starter> dependencies);
+    void removeStarters(Collection<Starter> dependencies);
 }

@@ -7,6 +7,7 @@ import io.github.hdzitao.editstarters.dependency.Points;
 import io.github.hdzitao.editstarters.dependency.Starter;
 import lombok.Getter;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,12 +32,12 @@ public abstract class BuildSystem implements EditStarters {
     }
 
     @Override
-    public void addStarters(List<Starter> dependencies) {
+    public void addStarters(Collection<Starter> dependencies) {
         projectFile.addStarters(dependencies);
     }
 
     @Override
-    public void removeStarters(List<Starter> dependencies) {
+    public void removeStarters(Collection<Starter> dependencies) {
         projectFile.removeStarters(dependencies);
     }
 }
