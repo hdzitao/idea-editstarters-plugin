@@ -18,6 +18,7 @@ import io.github.hdzitao.editstarters.ui.swing.StarterListRenderer;
 import io.github.hdzitao.editstarters.ui.swing.StarterListSelectionModel;
 import io.github.hdzitao.editstarters.version.Version;
 import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -174,6 +175,10 @@ public class EditStartersDialog {
             public void keyReleased(KeyEvent e) {
                 moduleList.clearSelection();
                 String searchKey = searchField.getText().toLowerCase();
+                if (StringUtils.isBlank(searchKey)) {
+                    starterList.setModel(new CollectionComboBoxModel<>());
+                    return;
+                }
                 List<Starter> result = modules.values().stream().flatMap(starters -> starters.stream().filter(starter ->
                                 searchCache.computeIfAbsent(starter, key -> (key.getGroupId() + ":" + key.getArtifactId() + "\t" + key.getName()).toLowerCase())
                                         .contains(searchKey)))
