@@ -18,10 +18,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class OHubMetadataMap {
-    private List<OHubMetaData> metaDataChain;
+    private List<OHubMetaData> metaDataList;
 
     public OHubMetaData match(Version version) {
-        for (OHubMetaData metaDataElement : metaDataChain) {
+        for (OHubMetaData metaDataElement : metaDataList) {
             if (metaDataElement.isEnable() && Versions.parseRange(metaDataElement.getVersionRange()).match(version)) {
                 return metaDataElement;
             }

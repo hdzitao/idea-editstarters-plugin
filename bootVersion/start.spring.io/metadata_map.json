@@ -1,5 +1,5 @@
 {
-  "metaDataChain": [
+  "metaDataList": [
     {
       "versionRange": "2.3.0",
       "metadataConfig": "/2_x/metadata_config_2_3_0.json",
