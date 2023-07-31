@@ -149,6 +149,7 @@ public class EditStartersDialog {
                 JList<Starter> list = (JList<Starter>) e.getSource();
                 Starter starter = list.getSelectedValue();
                 descPane.setText(getStarterDesc(starter));
+                descPane.setCaretPosition(0);
             }
         };
 

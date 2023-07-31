@@ -171,7 +171,7 @@
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="-1" height="200"/>
+                    <preferred-size width="-1" height="175"/>
                   </grid>
                 </constraints>
                 <properties/>
@@ -217,25 +217,33 @@
                 <margin top="0" left="0" bottom="0" right="0"/>
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <preferred-size width="-1" height="50"/>
+                    <preferred-size width="-1" height="75"/>
                   </grid>
                 </constraints>
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="15671" class="javax.swing.JTextPane" binding="descPane">
+                  <scrollpane id="b639b">
                     <constraints>
-                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="50"/>
-                      </grid>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties>
-                      <autoscrolls value="false"/>
-                      <editable value="false"/>
-                      <enabled value="true"/>
+                      <horizontalScrollBarPolicy value="31"/>
                       <opaque value="false"/>
                     </properties>
-                  </component>
+                    <border type="empty"/>
+                    <children>
+                      <component id="15671" class="javax.swing.JTextPane" binding="descPane">
+                        <constraints/>
+                        <properties>
+                          <autoscrolls value="false"/>
+                          <editable value="false"/>
+                          <enabled value="true"/>
+                          <opaque value="false"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </scrollpane>
                 </children>
               </grid>
             </children>
