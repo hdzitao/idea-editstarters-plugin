@@ -2,24 +2,23 @@
 
 ## 3.2.0
 
-- 优化代码
-- 优化UI
+- 升级依赖
+- 优化代码，优化UI
+- 修改到io.github.hdzitao包名下
 
 ## 3.1.0
 
-- 新UI
+- 修改到com.github.hdzitao包名下(功能未变,未发布)
 
 ## 3.0.0
 
 - 最低版本为201
-- 支持spring boot旧版本
-- 支持start.aliyun.com
+- 支持spring boot旧版本(预览)
 - 本地缓存
 
 ## 2.4.0
 
 - 完善scope在不同build工具下的对应关系
-- 重构项目结构
 
 ## 2.3.0
 

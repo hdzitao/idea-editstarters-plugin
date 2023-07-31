@@ -46,7 +46,7 @@ public abstract class EditStartersButtonAction extends AnAction {
             // 获取url
             String url = initializrDialog.getUrl();
             if (StringUtils.isBlank(url)) {
-                throw new ShowErrorException("URL is empty.");
+                return;
             }
             // 组装参数
             InitializrParameter parameter = new InitializrParameter()
