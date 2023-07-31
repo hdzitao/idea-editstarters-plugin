@@ -4,6 +4,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
+import com.intellij.util.ui.JBUI;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Points;
@@ -42,10 +43,12 @@ public class EditStartersDialog {
     private JButton removeButton;
     private JCheckBox oHubBox;
     private JTextPane descPane;
+    private JTextField pointTextField;
     private final JFrame frame;
     private final Set<Starter> addStarters = new HashSet<>(64);
     private final Set<Starter> removeStarters = new HashSet<>(64);
-    private final WeakHashMap<Starter, String> descPaneCache = new WeakHashMap<>(); // 加个缓存
+    private final WeakHashMap<Starter, String> pointPaneCache = new WeakHashMap<>(); // point缓存
+    private final WeakHashMap<Starter, String> descPaneCache = new WeakHashMap<>(); // 详情缓存
     private final WeakHashMap<Starter, String> searchCache = new WeakHashMap<>(); // 搜索缓存
 
     public EditStartersDialog(InitializrParameter parameter, InitializrReturn ret) {
@@ -128,6 +131,7 @@ public class EditStartersDialog {
 
         // 显示详细信息
         descPane.setEditorKit(new WarpEditorKit());
+        pointTextField.setBorder(JBUI.Borders.empty());
         MouseAdapter showDescAdapter = new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
@@ -136,8 +140,12 @@ public class EditStartersDialog {
                 int index = list.locationToIndex(e.getPoint());
                 if (index > -1) {
                     Starter starter = list.getModel().getElementAt(index);
+                    // 详情
                     descPane.setText(getStarterDesc(starter));
                     descPane.setCaretPosition(0);
+                    // point
+                    pointTextField.setText(getPointText(starter));
+                    pointTextField.setCaretPosition(0);
                 }
             }
         };
@@ -218,7 +226,7 @@ public class EditStartersDialog {
                 List<Starter> result = modules.values().stream()
                         .flatMap(Collection::stream)
                         .parallel()
-                        .filter(starter -> searchCache.computeIfAbsent(starter, k -> getSearchText(k)).contains(searchKey))
+                        .filter(starter -> getSearchText(starter).contains(searchKey))
                         .collect(Collectors.toList());
                 starterList.setModel(new CollectionComboBoxModel<>(result));
             }
@@ -236,10 +244,17 @@ public class EditStartersDialog {
     }
 
     private String getStarterDesc(Starter starter) {
-        return descPaneCache.computeIfAbsent(starter, info -> info.getName() + "\n\n" + info.getDescription());
+        return descPaneCache.computeIfAbsent(starter, info ->
+                info.getName() + "\n\n" + info.getDescription());
     }
 
     private String getSearchText(Starter starter) {
-        return (starter.getGroupId() + ":" + starter.getArtifactId() + "\t" + starter.getName()).toLowerCase();
+        return searchCache.computeIfAbsent(starter, info ->
+                (info.getGroupId() + ":" + info.getArtifactId() + "\t" + info.getName()).toLowerCase());
+    }
+
+    private String getPointText(Starter starter) {
+        return pointPaneCache.computeIfAbsent(starter, info ->
+                info.getGroupId() + " > " + info.getArtifactId());
     }
 }
