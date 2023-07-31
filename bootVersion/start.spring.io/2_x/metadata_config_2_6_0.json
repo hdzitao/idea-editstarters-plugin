@@ -20,19 +20,11 @@
           "versionProperty": "spring-boot-admin.version",
           "mappings": [
             {
-              "compatibilityRange": "[2.3.0.M1,2.5.0-M1)",
-              "version": "2.4.3"
-            },
-            {
-              "compatibilityRange": "[2.5.0.M1,2.6.0-M1)",
-              "version": "2.5.6"
-            },
-            {
-              "compatibilityRange": "[2.6.0.M1,2.7.0-M1)",
+              "compatibilityRange": "[2.6.0,2.7.0-M1)",
               "version": "2.6.8"
             },
             {
-              "compatibilityRange": "[2.7.0.M1,3.0.0-M1)",
+              "compatibilityRange": "[2.7.0-M1,3.0.0-M1)",
               "version": "2.7.4"
             },
             {
@@ -52,7 +44,18 @@
           "mappings": [
             {
               "compatibilityRange": "[3.1.0-M1,3.2.0-M1)",
-              "version": "2.1.1"
+              "version": "2.1.4"
+            }
+          ]
+        },
+        "sentry": {
+          "groupId": "io.sentry",
+          "artifactId": "sentry-bom",
+          "versionProperty": "sentry.version",
+          "mappings": [
+            {
+              "compatibilityRange": "[2.7.0,3.2.0-M1)",
+              "version": "6.26.0"
             }
           ]
         },
@@ -62,11 +65,7 @@
           "versionProperty": "solace-spring-boot.version",
           "mappings": [
             {
-              "compatibilityRange": "[2.3.0.M1,2.6.0-M1)",
-              "version": "1.1.0"
-            },
-            {
-              "compatibilityRange": "[2.6.0.M1,3.0.0-M1)",
+              "compatibilityRange": "[2.6.0,3.0.0-M1)",
               "version": "1.2.2"
             },
             {
@@ -81,15 +80,7 @@
           "versionProperty": "solace-spring-cloud.version",
           "mappings": [
             {
-              "compatibilityRange": "[2.3.0.M1,2.4.0-M1)",
-              "version": "1.1.1"
-            },
-            {
-              "compatibilityRange": "[2.4.0.M1,2.6.0-M1)",
-              "version": "2.1.0"
-            },
-            {
-              "compatibilityRange": "[2.6.0.M1,3.0.0-M1)",
+              "compatibilityRange": "[2.6.0,3.0.0-M1)",
               "version": "2.3.2"
             },
             {
@@ -105,20 +96,12 @@
           "order": 50,
           "mappings": [
             {
-              "compatibilityRange": "[2.2.0.RELEASE,2.4.0.RELEASE)",
-              "version": "Hoxton.SR12"
-            },
-            {
-              "compatibilityRange": "[2.4.0.RELEASE,2.6.0)",
-              "version": "2020.0.6"
-            },
-            {
               "compatibilityRange": "[2.6.0,3.0.0)",
               "version": "2021.0.8"
             },
             {
               "compatibilityRange": "[3.0.0,3.2.0-M1)",
-              "version": "2022.0.3"
+              "version": "2022.0.4"
             }
           ]
         },
@@ -128,7 +111,7 @@
           "versionProperty": "spring-cloud-azure.version",
           "mappings": [
             {
-              "compatibilityRange": "[2.5.0.M1,3.0.0-M1)",
+              "compatibilityRange": "[2.6.0,3.0.0-M1)",
               "version": "4.9.0"
             },
             {
@@ -146,11 +129,7 @@
           ],
           "mappings": [
             {
-              "compatibilityRange": "[2.4.0-M1,2.6.0-M1)",
-              "version": "2.0.11"
-            },
-            {
-              "compatibilityRange": "[2.6.0-M1,3.0.0-M1)",
+              "compatibilityRange": "[2.6.0,3.0.0-M1)",
               "version": "3.5.4"
             },
             {
@@ -168,19 +147,7 @@
           ],
           "mappings": [
             {
-              "compatibilityRange": "[2.3.0.RELEASE,2.4.0-M1)",
-              "version": "2.3.0.RELEASE"
-            },
-            {
-              "compatibilityRange": "[2.4.0-M1,2.5.0-M1)",
-              "version": "2.4.1"
-            },
-            {
-              "compatibilityRange": "[2.5.0-M1,2.6.0-M1)",
-              "version": "3.3.0"
-            },
-            {
-              "compatibilityRange": "[2.6.0-M1,2.7.0-M1)",
+              "compatibilityRange": "[2.6.0,2.7.0-M1)",
               "version": "3.4.0"
             },
             {
@@ -188,8 +155,8 @@
               "version": "3.5.0"
             },
             {
-              "compatibilityRange": "[3.0.0,3.1.0-M1)",
-              "version": "4.0.0"
+              "compatibilityRange": "[3.0.0,3.2.0-M1)",
+              "version": "4.0.3"
             }
           ]
         },
@@ -213,15 +180,15 @@
           "mappings": [
             {
               "compatibilityRange": "[2.7.0,3.0.0-M1)",
-              "version": "2.1.11"
+              "version": "2.1.12"
             },
             {
               "compatibilityRange": "[3.0.0,3.1.0-M1)",
-              "version": "3.0.6"
+              "version": "3.0.7"
             },
             {
               "compatibilityRange": "[3.1.0,3.2.0-M1)",
-              "version": "3.1.2"
+              "version": "3.1.3"
             }
           ]
         },
@@ -237,24 +204,20 @@
           "versionProperty": "vaadin.version",
           "mappings": [
             {
-              "compatibilityRange": "[2.1.0.RELEASE,2.6.0-M1)",
-              "version": "14.10.3"
-            },
-            {
-              "compatibilityRange": "[2.6.0-M1,2.7.0-M1)",
+              "compatibilityRange": "[2.6.0,2.7.0-M1)",
               "version": "23.2.15"
             },
             {
               "compatibilityRange": "[2.7.0-M1,3.0.0-M1)",
-              "version": "23.3.16"
+              "version": "23.3.18"
             },
             {
               "compatibilityRange": "[3.0.0-M1,3.1.0-M1)",
-              "version": "24.0.9"
+              "version": "24.0.11"
             },
             {
               "compatibilityRange": "[3.1.0-M1,3.2.0-M1)",
-              "version": "24.1.2"
+              "version": "24.1.4"
             }
           ]
         },
@@ -264,15 +227,7 @@
           "versionProperty": "wavefront.version",
           "mappings": [
             {
-              "compatibilityRange": "[2.1.0.RELEASE,2.4.0-M1)",
-              "version": "2.0.2"
-            },
-            {
-              "compatibilityRange": "[2.4.0-M1,2.5.0-M1)",
-              "version": "2.1.1"
-            },
-            {
-              "compatibilityRange": "[2.5.0-M1,2.7.0-M1)",
+              "compatibilityRange": "[2.6.0,2.7.0-M1)",
               "version": "2.2.2"
             },
             {
@@ -298,18 +253,6 @@
           "url": "https://repo.spring.io/milestone",
           "releasesEnabled": true,
           "snapshotsEnabled": false
-        },
-        "spring-releases": {
-          "name": "Spring Releases",
-          "url": "https://repo.spring.io/release",
-          "releasesEnabled": true,
-          "snapshotsEnabled": false
-        },
-        "sonatype-snapshots": {
-          "name": "Sonatype Snapshots",
-          "url": "https://oss.sonatype.org/content/repositories/snapshots/",
-          "releasesEnabled": false,
-          "snapshotsEnabled": true
         }
       },
       "gradle": {
@@ -317,12 +260,7 @@
       },
       "kotlin": {
         "defaultVersion": null,
-        "mappings": [
-          {
-            "compatibilityRange": "[1.5.0.RELEASE,2.0.0.M1)",
-            "version": "1.2.51"
-          }
-        ]
+        "mappings": []
       },
       "maven": {
         "parent": {
@@ -334,9 +272,9 @@
         }
       },
       "platform": {
-        "compatibilityRange": "2.3.0.RELEASE",
-        "v1FormatCompatibilityRange": "[2.0.0.RELEASE,2.4.0-M1)",
-        "v2FormatCompatibilityRange": "2.4.0-M1"
+        "compatibilityRange": "2.6.0",
+        "v1FormatCompatibilityRange": null,
+        "v2FormatCompatibilityRange": null
       }
     }
   },
@@ -370,7 +308,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#using.devtools",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#using.devtools",
                 "templated": true
               }
             ]
@@ -395,7 +333,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#appendix.configuration-metadata.annotation-processor",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#appendix.configuration-metadata.annotation-processor",
                 "templated": true
               }
             ]
@@ -412,7 +350,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#features.docker-compose",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#features.docker-compose",
                 "templated": true
               }
             ]
@@ -470,7 +408,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web",
                 "templated": true
               },
               {
@@ -505,7 +443,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.reactive",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.reactive",
                 "templated": true
               }
             ]
@@ -520,7 +458,7 @@
             "artifactId": "spring-boot-starter-graphql",
             "scope": "compile",
             "description": "Build GraphQL applications with Spring for GraphQL and GraphQL Java.",
-            "compatibilityRange": "2.7.0.M1",
+            "compatibilityRange": "2.7.0-M1",
             "starter": true,
             "links": [
               {
@@ -530,7 +468,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/html/web.html#web.graphql",
+                "href": "https://docs.spring.io/spring-boot/docs/${bootVersion}/reference/htmlsinge/index.html#web.graphql",
                 "templated": true
               }
             ]
@@ -564,7 +502,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto.data-access.exposing-spring-data-repositories-as-rest",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#howto.data-access.exposing-spring-data-repositories-as-rest",
                 "templated": true
               }
             ]
@@ -609,7 +547,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.spring-hateoas",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.spring-hateoas",
                 "templated": true
               }
             ]
@@ -633,7 +571,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#io.webservices",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#io.webservices",
                 "templated": true
               }
             ]
@@ -652,7 +590,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.servlet.jersey",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.servlet.jersey",
                 "templated": true
               }
             ]
@@ -667,7 +605,7 @@
             "artifactId": "vaadin-spring-boot-starter",
             "scope": "compile",
             "description": "A web framework that allows you to write UI in pure Java without getting bogged down in JS, HTML, and CSS.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "vaadin",
             "starter": true,
             "links": [
@@ -728,7 +666,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.servlet.spring-mvc.template-engines",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.servlet.spring-mvc.template-engines",
                 "templated": true
               }
             ]
@@ -744,7 +682,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.servlet.spring-mvc.template-engines",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.servlet.spring-mvc.template-engines",
                 "templated": true
               }
             ]
@@ -755,12 +693,12 @@
             "groupId": "org.springframework.boot",
             "artifactId": "spring-boot-starter-mustache",
             "scope": "compile",
-            "description": "Logic-less Templates. There are no if statements, else clauses, or for loops. Instead there are only tags.",
+            "description": "Logic-less templates for both web and standalone environments. There are no if statements, else clauses, or for loops. Instead there are only tags.",
             "starter": true,
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.servlet.spring-mvc.template-engines",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.servlet.spring-mvc.template-engines",
                 "templated": true
               }
             ]
@@ -779,7 +717,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.servlet.spring-mvc.template-engines",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.servlet.spring-mvc.template-engines",
                 "templated": true
               }
             ]
@@ -815,7 +753,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.security",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.security",
                 "templated": true
               }
             ]
@@ -831,7 +769,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.security.oauth2.client",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.security.oauth2.client",
                 "templated": true
               }
             ]
@@ -848,7 +786,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.security.oauth2.authorization-server",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.security.oauth2.authorization-server",
                 "templated": true
               }
             ]
@@ -860,12 +798,11 @@
             "artifactId": "spring-boot-starter-oauth2-resource-server",
             "scope": "compile",
             "description": "Spring Boot integration for Spring Security's OAuth2 resource server features.",
-            "compatibilityRange": "2.1.0.M2",
             "starter": true,
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#web.security.oauth2.server",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#web.security.oauth2.server",
                 "templated": true
               }
             ]
@@ -881,7 +818,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.ldap",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.ldap",
                 "templated": true
               }
             ]
@@ -893,34 +830,7 @@
             "artifactId": "okta-spring-boot-starter",
             "mappings": [
               {
-                "compatibilityRange": "[2.2.0.RELEASE,2.4.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "1.4.0",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              },
-              {
-                "compatibilityRange": "[2.4.0-M1,2.4.1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "1.5.1",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              },
-              {
-                "compatibilityRange": "[2.4.1,2.5.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "2.0.1",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              },
-              {
-                "compatibilityRange": "[2.5.0-M1,3.0.0-M1)",
+                "compatibilityRange": "[2.6.0,3.0.0-M1)",
                 "groupId": null,
                 "artifactId": null,
                 "version": "2.1.6",
@@ -940,7 +850,7 @@
             ],
             "scope": "compile",
             "description": "Okta specific configuration for Spring Security/Spring Boot OAuth2 features. Enable your Spring Boot application to work with Okta via OAuth 2.0/OIDC.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "starter": true,
             "links": [
               {
@@ -991,7 +901,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.sql",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.sql",
                 "templated": true
               }
             ]
@@ -1018,7 +928,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.sql.jpa-and-spring-data",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.sql.jpa-and-spring-data",
                 "templated": true
               }
             ]
@@ -1039,7 +949,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.sql.jdbc",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.sql.jdbc",
                 "templated": true
               }
             ]
@@ -1063,7 +973,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.sql.r2dbc",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.sql.r2dbc",
                 "templated": true
               },
               {
@@ -1080,16 +990,7 @@
             "artifactId": "mybatis-spring-boot-starter",
             "mappings": [
               {
-                "compatibilityRange": "[2.1.0.RELEASE,2.5.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "2.1.4",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              },
-              {
-                "compatibilityRange": "[2.5.0-M1,2.7.0-M1)",
+                "compatibilityRange": "[2.6.0,2.7.0-M1)",
                 "groupId": null,
                 "artifactId": null,
                 "version": "2.2.2",
@@ -1118,7 +1019,7 @@
             ],
             "scope": "compile",
             "description": "Persistence framework with support for custom SQL, stored procedures and advanced mappings. MyBatis couples objects with stored procedures or SQL statements using a XML descriptor or annotations.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "starter": true,
             "links": [
               {
@@ -1143,7 +1044,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto.data-initialization.migration-tool.liquibase",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#howto.data-initialization.migration-tool.liquibase",
                 "templated": true
               }
             ]
@@ -1159,7 +1060,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto.data-initialization.migration-tool.flyway",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#howto.data-initialization.migration-tool.flyway",
                 "templated": true
               }
             ]
@@ -1175,7 +1076,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.sql.jooq",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.sql.jooq",
                 "templated": true
               }
             ]
@@ -1187,7 +1088,6 @@
             "artifactId": "jcc",
             "scope": "runtime",
             "description": "A JDBC driver that provides access to IBM DB2.",
-            "compatibilityRange": "2.2.0.M6",
             "starter": false
           },
           {
@@ -1293,7 +1193,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.redis",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.redis",
                 "templated": true
               }
             ]
@@ -1317,7 +1217,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.redis",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.redis",
                 "templated": true
               }
             ]
@@ -1338,7 +1238,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.mongodb",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.mongodb",
                 "templated": true
               }
             ]
@@ -1357,7 +1257,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.mongodb",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.mongodb",
                 "templated": true
               },
               {
@@ -1378,7 +1278,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.elasticsearch",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.elasticsearch",
                 "templated": true
               }
             ]
@@ -1394,7 +1294,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.cassandra",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.cassandra",
                 "templated": true
               },
               {
@@ -1417,7 +1317,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.cassandra",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.cassandra",
                 "templated": true
               },
               {
@@ -1437,7 +1337,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.couchbase",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.couchbase",
                 "templated": true
               }
             ]
@@ -1456,7 +1356,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.couchbase",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.couchbase",
                 "templated": true
               }
             ]
@@ -1477,7 +1377,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.neo4j",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.neo4j",
                 "templated": true
               }
             ]
@@ -1503,7 +1403,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#messaging.spring-integration",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#messaging.spring-integration",
                 "templated": true
               }
             ]
@@ -1524,7 +1424,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#messaging.amqp",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#messaging.amqp",
                 "templated": true
               }
             ]
@@ -1540,7 +1440,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#messaging.kafka",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#messaging.kafka",
                 "templated": true
               }
             ]
@@ -1566,7 +1466,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#_kafka_streams_binding_capabilities_of_spring_cloud_stream",
+                "href": "https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsinge/index.html#_kafka_streams_binding_capabilities_of_spring_cloud_stream",
                 "description": "Apache Kafka Streams Binding Capabilities of Spring Cloud Stream"
               }
             ]
@@ -1587,7 +1487,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#messaging.jms.activemq",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#messaging.jms.activemq",
                 "templated": true
               }
             ]
@@ -1608,7 +1508,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#messaging.jms.artemis",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#messaging.jms.artemis",
                 "templated": true
               }
             ]
@@ -1620,7 +1520,7 @@
             "artifactId": "spring-pulsar-spring-boot-starter",
             "mappings": [
               {
-                "compatibilityRange": "[3.0.0,3.1.0-M1)",
+                "compatibilityRange": "[3.0.0,3.2.0-M1)",
                 "groupId": null,
                 "artifactId": null,
                 "version": "0.2.0",
@@ -1631,7 +1531,7 @@
             ],
             "scope": "compile",
             "description": "Build messaging applications with Apache Pulsar",
-            "compatibilityRange": "[3.0.0,3.1.0-M1)",
+            "compatibilityRange": "[3.0.0,3.2.0-M1)",
             "starter": true,
             "links": [
               {
@@ -1650,7 +1550,7 @@
             "artifactId": "spring-pulsar-reactive-spring-boot-starter",
             "mappings": [
               {
-                "compatibilityRange": "[3.0.0,3.1.0-M1)",
+                "compatibilityRange": "[3.0.0,3.2.0-M1)",
                 "groupId": null,
                 "artifactId": null,
                 "version": "0.2.0",
@@ -1661,7 +1561,7 @@
             ],
             "scope": "compile",
             "description": "Build reactive messaging applications with Apache Pulsar",
-            "compatibilityRange": "[3.0.0,3.1.0-M1)",
+            "compatibilityRange": "[3.0.0,3.2.0-M1)",
             "starter": true,
             "links": [
               {
@@ -1686,7 +1586,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#messaging.websockets",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#messaging.websockets",
                 "templated": true
               }
             ]
@@ -1701,7 +1601,6 @@
             "artifactId": "spring-boot-starter-rsocket",
             "scope": "compile",
             "description": "RSocket.io applications with Spring Messaging and Netty.",
-            "compatibilityRange": "2.2.0.M2",
             "starter": true,
             "links": [
               {
@@ -1717,34 +1616,7 @@
             "artifactId": "camel-spring-boot-starter",
             "mappings": [
               {
-                "compatibilityRange": "[2.3.0.M1,2.4.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "3.5.0",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              },
-              {
-                "compatibilityRange": "[2.4.0.M1,2.5.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "3.10.0",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              },
-              {
-                "compatibilityRange": "[2.5.0.M1,2.6.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "3.13.0",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              },
-              {
-                "compatibilityRange": "[2.6.0.M1,2.7.0-M1)",
+                "compatibilityRange": "[2.6.0,2.7.0-M1)",
                 "groupId": null,
                 "artifactId": null,
                 "version": "3.17.0",
@@ -1765,7 +1637,7 @@
                 "compatibilityRange": "[3.0.0-M1,3.2.0-M1)",
                 "groupId": null,
                 "artifactId": null,
-                "version": "4.0.0-RC1",
+                "version": "4.0.0-RC2",
                 "starter": null,
                 "bom": null,
                 "repository": null
@@ -1773,7 +1645,7 @@
             ],
             "scope": "compile",
             "description": "Apache Camel is an open source integration framework that empowers you to quickly and easily integrate various systems consuming or producing data.",
-            "compatibilityRange": "[2.0.0.M1,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "starter": true,
             "links": [
               {
@@ -1790,7 +1662,7 @@
             "artifactId": "solace-spring-boot-starter",
             "scope": "compile",
             "description": "Connect to a Solace PubSub+ Advanced Event Broker to publish, subscribe, request/reply and store/replay messages",
-            "compatibilityRange": "[2.2.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "solace-spring-boot",
             "starter": true,
             "links": [
@@ -1827,7 +1699,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto.batch",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#howto.batch",
                 "templated": true
               }
             ]
@@ -1843,7 +1715,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#io.validation",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#io.validation",
                 "templated": true
               },
               {
@@ -1863,7 +1735,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#io.email",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#io.email",
                 "templated": true
               }
             ]
@@ -1879,7 +1751,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#io.quartz",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#io.quartz",
                 "templated": true
               }
             ]
@@ -1900,7 +1772,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#io.caching",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#io.caching",
                 "templated": true
               }
             ]
@@ -1912,10 +1784,10 @@
             "artifactId": "picocli-spring-boot-starter",
             "mappings": [
               {
-                "compatibilityRange": "[2.5.0.RELEASE,3.1.0-M1)",
+                "compatibilityRange": "[2.6.0,3.1.0-M1)",
                 "groupId": null,
                 "artifactId": null,
-                "version": "4.7.0",
+                "version": "4.7.4",
                 "starter": null,
                 "bom": null,
                 "repository": null
@@ -1923,7 +1795,7 @@
             ],
             "scope": "compile",
             "description": "Build command line applications with picocli.",
-            "compatibilityRange": "[2.5.0.RELEASE,3.1.0-M1)",
+            "compatibilityRange": "[2.6.0,3.1.0-M1)",
             "starter": true,
             "links": [
               {
@@ -1970,7 +1842,7 @@
               },
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#actuator",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#actuator",
                 "templated": true
               }
             ]
@@ -1982,7 +1854,7 @@
             "artifactId": "spring-boot-admin-starter-client",
             "scope": "compile",
             "description": "Required for your application to register with a Codecentric's Spring Boot Admin Server instance.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "codecentric-spring-boot-admin",
             "starter": true,
             "links": [
@@ -1999,13 +1871,46 @@
             "artifactId": "spring-boot-admin-starter-server",
             "scope": "compile",
             "description": "A community project to manage and monitor your Spring Boot applications. Provides a UI on top of the Spring Boot Actuator endpoints.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "codecentric-spring-boot-admin",
             "starter": true,
             "links": [
               {
                 "rel": "reference",
                 "href": "https://codecentric.github.io/spring-boot-admin/current/#getting-started"
+              }
+            ]
+          },
+          {
+            "name": "Sentry",
+            "id": "sentry",
+            "groupId": "io.sentry",
+            "artifactId": "sentry-spring-boot-starter-jakarta",
+            "mappings": [
+              {
+                "compatibilityRange": "[2.7.0,3.0.0-M1)",
+                "groupId": null,
+                "artifactId": "sentry-spring-boot-starter",
+                "version": null,
+                "starter": null,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "compile",
+            "description": "Application performance monitoring and error tracking that help software teams see clearer, solve quicker, and learn continuously.",
+            "compatibilityRange": "[2.7.0,3.2.0-M1)",
+            "bom": "sentry",
+            "starter": false,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.sentry.io/platforms/java/"
+              },
+              {
+                "rel": "guide",
+                "href": "https://docs.sentry.io/platforms/java/guides/spring-boot/",
+                "description": "Getting Started with Sentry"
               }
             ]
           }
@@ -2025,7 +1930,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#actuator.metrics.export.datadog",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#actuator.metrics.export.datadog",
                 "templated": true
               }
             ]
@@ -2041,7 +1946,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#actuator.metrics.export.dynatrace"
+                "href": "https://docs.spring.io/spring-boot/docs/current/reference/htmlsinge/index.html#actuator.metrics.export.dynatrace"
               }
             ]
           },
@@ -2056,7 +1961,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#actuator.metrics.export.influx",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#actuator.metrics.export.influx",
                 "templated": true
               }
             ]
@@ -2072,7 +1977,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#actuator.metrics.export.graphite",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#actuator.metrics.export.graphite",
                 "templated": true
               }
             ]
@@ -2088,7 +1993,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#actuator.metrics.export.newrelic",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#actuator.metrics.export.newrelic",
                 "templated": true
               }
             ]
@@ -2104,7 +2009,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#actuator.metrics.export.prometheus",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#actuator.metrics.export.prometheus",
                 "templated": true
               }
             ]
@@ -2116,7 +2021,7 @@
             "artifactId": "micrometer-tracing-bridge-brave",
             "mappings": [
               {
-                "compatibilityRange": "[2.3.0.M1,3.0.0-M1)",
+                "compatibilityRange": "[2.6.0,3.0.0-M1)",
                 "groupId": "org.springframework.cloud",
                 "artifactId": "spring-cloud-starter-sleuth",
                 "version": null,
@@ -2136,7 +2041,7 @@
             "artifactId": "micrometer-registry-wavefront",
             "mappings": [
               {
-                "compatibilityRange": "[2.3.0.M1,3.1.0-M1)",
+                "compatibilityRange": "[2.6.0,3.1.0-M1)",
                 "groupId": "com.wavefront",
                 "artifactId": "wavefront-spring-boot-starter",
                 "version": null,
@@ -2156,7 +2061,7 @@
             "artifactId": "zipkin-reporter-brave",
             "mappings": [
               {
-                "compatibilityRange": "[2.0.0.RELEASE,3.0.0-M1)",
+                "compatibilityRange": "[2.6.0,3.0.0-M1)",
                 "groupId": "org.springframework.cloud",
                 "artifactId": "spring-cloud-sleuth-zipkin",
                 "version": null,
@@ -2196,7 +2101,7 @@
             "artifactId": "junit-jupiter",
             "mappings": [
               {
-                "compatibilityRange": "[2.3.0.M1,3.1.0-M2)",
+                "compatibilityRange": "[2.6.0,3.1.0-M2)",
                 "groupId": null,
                 "artifactId": null,
                 "version": null,
@@ -2222,7 +2127,7 @@
             "artifactId": "spring-cloud-starter-contract-verifier",
             "scope": "test",
             "description": "Moves TDD to the level of software architecture by enabling Consumer Driven Contract (CDC) development.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2239,13 +2144,13 @@
             "artifactId": "spring-cloud-starter-contract-stub-runner",
             "scope": "test",
             "description": "Stub Runner for HTTP/Messaging based communication. Allows creating WireMock stubs from RestDocs tests.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
               {
                 "rel": "reference",
-                "href": "https://cloud.spring.io/spring-cloud-contract/reference/htmlsingle/#features-stub-runner"
+                "href": "https://cloud.spring.io/spring-cloud-contract/reference/htmlsinge/index.html#features-stub-runner"
               }
             ]
           },
@@ -2260,7 +2165,7 @@
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.ldap.embedded",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.ldap.embedded",
                 "templated": true
               }
             ]
@@ -2272,12 +2177,12 @@
             "artifactId": "de.flapdoodle.embed.mongo",
             "scope": "test",
             "description": "Provides a platform neutral way for running MongoDB in unit tests.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.0.0-M1)",
+            "compatibilityRange": "[2.6.0,3.0.0-M1)",
             "starter": false,
             "links": [
               {
                 "rel": "reference",
-                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#data.nosql.mongodb.embedded",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsinge/index.html#data.nosql.mongodb.embedded",
                 "templated": true
               }
             ]
@@ -2294,7 +2199,7 @@
             "artifactId": "spring-cloud-starter",
             "scope": "compile",
             "description": "Non-specific Spring Cloud features, unrelated to external libraries or integrations (e.g. Bootstrap context and @RefreshScope).",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2311,7 +2216,7 @@
             "artifactId": "spring-cloud-function-context",
             "scope": "compile",
             "description": "Promotes the implementation of business logic via functions and supports a uniform programming model across serverless providers, as well as the ability to run standalone (locally or in a PaaS).",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": false,
             "links": [
@@ -2333,77 +2238,13 @@
             "artifactId": "spring-cloud-starter-task",
             "scope": "compile",
             "description": "Allows a user to develop and run short lived microservices using Spring Cloud. Run them locally, in the cloud, and on Spring Cloud Data Flow.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
               {
                 "rel": "reference",
                 "href": "https://docs.spring.io/spring-cloud-task/docs/current/reference/html/"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "name": "Spring Cloud Tools",
-        "content": [
-          {
-            "name": "Open Service Broker",
-            "id": "open-service-broker",
-            "groupId": "org.springframework.cloud",
-            "artifactId": "spring-cloud-starter-open-service-broker",
-            "mappings": [
-              {
-                "compatibilityRange": "[2.3.0.M1,2.4.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "3.2.0",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              },
-              {
-                "compatibilityRange": "[2.4.0-M1,2.5.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "3.3.1",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              },
-              {
-                "compatibilityRange": "[2.5.0-M1,2.6.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "3.4.1",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              },
-              {
-                "compatibilityRange": "[2.6.0-M1,2.7.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": "3.5.0",
-                "starter": null,
-                "bom": null,
-                "repository": null
-              }
-            ],
-            "scope": "compile",
-            "description": "Framework for building Spring Boot apps that implement the Open Service Broker API, which can deliver services to applications running within cloud native platforms such as Cloud Foundry, Kubernetes and OpenShift.",
-            "compatibilityRange": "[2.0.0.RELEASE,2.7.0-M1)",
-            "starter": true,
-            "links": [
-              {
-                "rel": "reference",
-                "href": "https://docs.spring.io/spring-cloud-open-service-broker/docs/current/reference/"
-              },
-              {
-                "rel": "guide",
-                "href": "https://github.com/spring-cloud-samples/bookstore-service-broker",
-                "description": "Using Spring Cloud Open Service Broker"
               }
             ]
           }
@@ -2419,7 +2260,7 @@
             "artifactId": "spring-cloud-starter-config",
             "scope": "compile",
             "description": "Client that connects to a Spring Cloud Config Server to fetch the application's configuration.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2437,7 +2278,7 @@
             "artifactId": "spring-cloud-config-server",
             "scope": "compile",
             "description": "Central management for configuration via Git, SVN, or HashiCorp Vault.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2459,7 +2300,7 @@
             "artifactId": "spring-cloud-starter-vault-config",
             "scope": "compile",
             "description": "Provides client-side support for externalized configuration in a distributed system. Using HashiCorp's Vault you have a central place to manage external secret properties for applications across all environments.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2477,7 +2318,7 @@
             "artifactId": "spring-cloud-starter-zookeeper-config",
             "scope": "compile",
             "description": "Enable and configure common patterns inside your application and build large distributed systems with Apache Zookeeper based components. The provided patterns include Service Discovery and Configuration.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2495,7 +2336,7 @@
             "artifactId": "spring-cloud-starter-consul-config",
             "scope": "compile",
             "description": "Enable and configure the common patterns inside your application and build large distributed systems with Hashicorp’s Consul. The patterns provided include Service Discovery, Distributed Configuration and Control Bus.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2518,7 +2359,7 @@
             "artifactId": "spring-cloud-starter-netflix-eureka-client",
             "scope": "compile",
             "description": "A REST based service for locating services for the purpose of load balancing and failover of middle-tier servers.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2540,7 +2381,7 @@
             "artifactId": "spring-cloud-starter-netflix-eureka-server",
             "scope": "compile",
             "description": "spring-cloud-netflix Eureka Server.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2562,7 +2403,7 @@
             "artifactId": "spring-cloud-starter-zookeeper-discovery",
             "scope": "compile",
             "description": "Service discovery with Apache Zookeeper.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2579,7 +2420,7 @@
             "artifactId": "spring-cloud-cloudfoundry-discovery",
             "scope": "compile",
             "description": "Service discovery with Cloud Foundry.",
-            "compatibilityRange": "[2.3.0.M1,3.0.0-M1)",
+            "compatibilityRange": "[2.6.0,3.0.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2596,7 +2437,7 @@
             "artifactId": "spring-cloud-starter-consul-discovery",
             "scope": "compile",
             "description": "Service discovery with Hashicorp Consul.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2618,7 +2459,7 @@
             "artifactId": "spring-cloud-starter-gateway",
             "scope": "compile",
             "description": "Provides a simple, yet effective way to route to APIs and provide cross cutting concerns to them such as security, monitoring/metrics, and resiliency.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2640,7 +2481,7 @@
             "artifactId": "spring-cloud-starter-openfeign",
             "scope": "compile",
             "description": "Declarative REST Client. OpenFeign creates a dynamic implementation of an interface decorated with JAX-RS or Spring MVC annotations.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2662,7 +2503,7 @@
             "artifactId": "spring-cloud-starter-loadbalancer",
             "scope": "compile",
             "description": "Client-side load-balancing with Spring Cloud LoadBalancer.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2689,7 +2530,7 @@
             "artifactId": "spring-cloud-starter-circuitbreaker-resilience4j",
             "scope": "compile",
             "description": "Spring Cloud Circuit breaker with Resilience4j as the underlying implementation.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2711,7 +2552,7 @@
             "artifactId": "spring-cloud-bus",
             "scope": "compile",
             "description": "Links nodes of a distributed system with a lightweight message broker which can used to broadcast state changes or other management instructions (requires a binder, e.g. Apache Kafka or RabbitMQ).",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2728,7 +2569,7 @@
             "artifactId": "spring-cloud-stream",
             "scope": "compile",
             "description": "Framework for building highly scalable event-driven microservices connected with shared messaging systems (requires a binder, e.g. Apache Kafka, Apache Pulsar, RabbitMQ, or Solace PubSub+).",
-            "compatibilityRange": "[2.0.0.RELEASE,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud",
             "starter": true,
             "links": [
@@ -2748,20 +2589,9 @@
             "id": "scs-config-client",
             "groupId": "io.pivotal.spring.cloud",
             "artifactId": "spring-cloud-services-starter-config-client",
-            "mappings": [
-              {
-                "compatibilityRange": "[2.0.0.RELEASE,2.4.0-M1)",
-                "groupId": null,
-                "artifactId": null,
-                "version": null,
-                "starter": false,
-                "bom": null,
-                "repository": null
-              }
-            ],
             "scope": "compile",
             "description": "Config client on VMware Tanzu Application Service.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.0.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud-services",
             "starter": true,
             "links": [
@@ -2778,7 +2608,7 @@
             "artifactId": "spring-cloud-services-starter-service-registry",
             "scope": "compile",
             "description": "Eureka service discovery client on VMware Tanzu Application Service.",
-            "compatibilityRange": "[2.0.0.RELEASE,3.0.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud-services",
             "starter": true,
             "links": [
@@ -2800,7 +2630,7 @@
             "artifactId": "spring-cloud-azure-starter",
             "scope": "compile",
             "description": "Auto-configuration for Azure Services (Service Bus, Storage, Active Directory, Key Vault, and more).",
-            "compatibilityRange": "[2.5.0-M1,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud-azure",
             "starter": true,
             "links": [
@@ -2828,7 +2658,7 @@
             "artifactId": "spring-cloud-azure-starter-active-directory",
             "scope": "compile",
             "description": "Spring Security integration with Azure Active Directory for authentication.",
-            "compatibilityRange": "[2.5.0-M1,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud-azure",
             "starter": true,
             "links": [
@@ -2855,7 +2685,7 @@
             "artifactId": "spring-cloud-azure-starter-data-cosmos",
             "scope": "compile",
             "description": "Fully managed NoSQL database service for modern app development, including Spring Data support.",
-            "compatibilityRange": "[2.5.0-M1,3.0.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud-azure",
             "starter": true,
             "links": [
@@ -2882,7 +2712,7 @@
             "artifactId": "spring-cloud-azure-starter-keyvault",
             "scope": "compile",
             "description": "All key vault features are supported, e.g. manage application secrets and certificates.",
-            "compatibilityRange": "[2.5.0-M1,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud-azure",
             "starter": true,
             "links": [
@@ -2914,7 +2744,7 @@
             "artifactId": "spring-cloud-azure-starter-storage",
             "scope": "compile",
             "description": "All Storage features are supported, e.g. blob, fileshare and queue.",
-            "compatibilityRange": "[2.5.0-M1,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud-azure",
             "starter": true,
             "links": [
@@ -2946,7 +2776,7 @@
             "artifactId": "spring-cloud-gcp-starter",
             "scope": "compile",
             "description": "Contains auto-configuration support for every Spring Cloud GCP integration. Most of the auto-configuration code is only enabled if other dependencies are added to the classpath.",
-            "compatibilityRange": "[2.4.0-M1,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud-gcp",
             "starter": true,
             "links": [
@@ -2968,7 +2798,7 @@
             "artifactId": "spring-cloud-gcp-starter-pubsub",
             "scope": "compile",
             "description": "Adds the GCP Support entry and all the required dependencies so that the Google Cloud Pub/Sub integration work out of the box.",
-            "compatibilityRange": "[2.4.0-M1,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud-gcp",
             "starter": true,
             "links": [
@@ -2990,7 +2820,7 @@
             "artifactId": "spring-cloud-gcp-starter-storage",
             "scope": "compile",
             "description": "Adds the GCP Support entry and all the required dependencies so that the Google Cloud Storage integration work out of the box.",
-            "compatibilityRange": "[2.4.0-M1,3.2.0-M1)",
+            "compatibilityRange": "[2.6.0,3.2.0-M1)",
             "bom": "spring-cloud-gcp",
             "starter": true,
             "links": [

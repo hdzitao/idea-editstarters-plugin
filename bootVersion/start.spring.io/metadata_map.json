@@ -1,7 +1,12 @@
 {
   "metaDataList": [
     {
-      "versionRange": "2.3.0",
+      "versionRange": "2.6.0",
+      "metadataConfig": "/2_x/metadata_config_2_6_0.json",
+      "enable": true
+    },
+    {
+      "versionRange": "[2.3.0,2.5.x]",
       "metadataConfig": "/2_x/metadata_config_2_3_0.json",
       "enable": true
     },
