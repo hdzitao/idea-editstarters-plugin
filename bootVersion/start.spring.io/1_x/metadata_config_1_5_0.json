@@ -1,0 +1,2409 @@
+{
+  "configuration": {
+    "env": {
+      "artifactRepository": "https://repo.spring.io/release/",
+      "springBootMetadataUrl": "https://spring.io/project_metadata/spring-boot",
+      "googleAnalyticsTrackingCode": null,
+      "fallbackApplicationName": "Application",
+      "invalidApplicationNames": [
+        "SpringApplication",
+        "SpringBootApplication"
+      ],
+      "invalidPackageNames": [
+        "org.springframework"
+      ],
+      "forceSsl": false,
+      "boms": {
+        "azure": {
+          "groupId": "com.microsoft.azure",
+          "artifactId": "azure-spring-boot-bom",
+          "versionProperty": "azure.version",
+          "mappings": [
+            {
+              "compatibilityRange": "[1.5.4.RELEASE,2.0.0.RELEASE)",
+              "version": "0.2.4"
+            },
+            {
+              "compatibilityRange": "[2.0.0.RELEASE,2.1.0.RELEASE)",
+              "version": "2.0.10"
+            },
+            {
+              "compatibilityRange": "2.1.0.RELEASE",
+              "version": "2.1.6"
+            }
+          ]
+        },
+        "codecentric-spring-boot-admin": {
+          "groupId": "de.codecentric",
+          "artifactId": "spring-boot-admin-dependencies",
+          "versionProperty": "spring-boot-admin.version",
+          "mappings": [
+            {
+              "compatibilityRange": "[1.5.9.RELEASE,2.0.0.M1)",
+              "version": "1.5.7"
+            },
+            {
+              "compatibilityRange": "[2.0.0.M1,2.1.0.M1)",
+              "version": "2.0.6"
+            },
+            {
+              "compatibilityRange": "[2.1.0.M1,2.2.0.M1)",
+              "version": "2.1.5"
+            }
+          ]
+        },
+        "spring-cloud": {
+          "groupId": "org.springframework.cloud",
+          "artifactId": "spring-cloud-dependencies",
+          "versionProperty": "spring-cloud.version",
+          "order": 50,
+          "mappings": [
+            {
+              "compatibilityRange": "[1.5.0.RELEASE,1.5.x.RELEASE]",
+              "version": "Edgware.SR6"
+            },
+            {
+              "compatibilityRange": "[1.5.x.BUILD-SNAPSHOT,2.0.0.M1)",
+              "version": "Edgware.BUILD-SNAPSHOT",
+              "repositories": [
+                "spring-snapshots",
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.0.M3, 2.0.0.M5)",
+              "version": "Finchley.M2",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.0.M5, 2.0.0.M5]",
+              "version": "Finchley.M3",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.0.M6, 2.0.0.M6]",
+              "version": "Finchley.M4",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.0.M7, 2.0.0.M7]",
+              "version": "Finchley.M5",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.0.RC1, 2.0.0.RC1]",
+              "version": "Finchley.M6",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.0.RC2,2.0.0.RC2]",
+              "version": "Finchley.M7",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.0.RELEASE,2.0.0.RELEASE]",
+              "version": "Finchley.M9",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.1.RELEASE,2.0.2.RELEASE)",
+              "version": "Finchley.RC1",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.2.RELEASE,2.0.3.RELEASE)",
+              "version": "Finchley.RC2",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.3.RELEASE,2.0.x.BUILD-SNAPSHOT)",
+              "version": "Finchley.SR4"
+            },
+            {
+              "compatibilityRange": "[2.0.x.BUILD-SNAPSHOT,2.1.0.M3)",
+              "version": "Finchley.BUILD-SNAPSHOT",
+              "repositories": [
+                "spring-snapshots",
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.1.0.M3,2.1.0.RELEASE)",
+              "version": "Greenwich.M1",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.1.0.RELEASE,2.1.x.BUILD-SNAPSHOT)",
+              "version": "Greenwich.SR2"
+            },
+            {
+              "compatibilityRange": "[2.1.x.BUILD-SNAPSHOT,2.2.0.M4)",
+              "version": "Greenwich.BUILD-SNAPSHOT",
+              "repositories": [
+                "spring-snapshots",
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.2.0.M4,2.2.0.M4]",
+              "version": "Hoxton.M1",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "2.2.0.BUILD-SNAPSHOT",
+              "version": "Hoxton.BUILD-SNAPSHOT",
+              "repositories": [
+                "spring-snapshots",
+                "spring-milestones"
+              ]
+            }
+          ]
+        },
+        "spring-cloud-services": {
+          "groupId": "io.pivotal.spring.cloud",
+          "artifactId": "spring-cloud-services-dependencies",
+          "versionProperty": "spring-cloud-services.version",
+          "additionalBoms": [
+            "spring-cloud"
+          ],
+          "mappings": [
+            {
+              "compatibilityRange": "[1.5.0.RELEASE,1.5.x.BUILD-SNAPSHOT]",
+              "version": "1.6.6.RELEASE"
+            },
+            {
+              "compatibilityRange": "[2.0.0.RELEASE,2.0.x.BUILD-SNAPSHOT]",
+              "version": "2.0.3.RELEASE"
+            },
+            {
+              "compatibilityRange": "2.1.0.RELEASE",
+              "version": "2.1.4.RELEASE"
+            }
+          ]
+        },
+        "spring-statemachine": {
+          "groupId": "org.springframework.statemachine",
+          "artifactId": "spring-statemachine-bom",
+          "versionProperty": "spring-statemachine.version",
+          "mappings": [
+            {
+              "compatibilityRange": "[2.0.0.RC1,2.0.0.RC1]",
+              "version": "2.0.0.M4",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "[2.0.0.RC2,2.0.0.RC2]",
+              "version": "2.0.0.M5",
+              "repositories": [
+                "spring-milestones"
+              ]
+            },
+            {
+              "compatibilityRange": "2.0.0.RELEASE",
+              "version": "2.0.1.RELEASE"
+            }
+          ]
+        },
+        "vaadin": {
+          "groupId": "com.vaadin",
+          "artifactId": "vaadin-bom",
+          "versionProperty": "vaadin.version",
+          "mappings": [
+            {
+              "compatibilityRange": "[1.5.0.RELEASE,2.0.0.M1)",
+              "version": "8.8.5"
+            },
+            {
+              "compatibilityRange": "[2.0.0.M1,2.1.0.M1)",
+              "version": "10.0.16"
+            },
+            {
+              "compatibilityRange": "2.1.0.M1",
+              "version": "13.0.11"
+            }
+          ]
+        }
+      },
+      "repositories": {
+        "spring-snapshots": {
+          "name": "Spring Snapshots",
+          "url": "https://repo.spring.io/snapshot",
+          "snapshotsEnabled": true
+        },
+        "spring-milestones": {
+          "name": "Spring Milestones",
+          "url": "https://repo.spring.io/milestone",
+          "snapshotsEnabled": false
+        },
+        "sonatype-snapshots": {
+          "name": "Sonatype Snapshots",
+          "url": "https://oss.sonatype.org/content/repositories/snapshots/",
+          "snapshotsEnabled": true
+        }
+      },
+      "gradle": {
+        "dependencyManagementPluginVersion": "1.0.7.RELEASE"
+      },
+      "kotlin": {
+        "defaultVersion": null,
+        "mappings": [
+          {
+            "compatibilityRange": "[1.5.0.RELEASE,2.0.0.M1)",
+            "version": "1.2.51"
+          }
+        ]
+      },
+      "maven": {
+        "parent": {
+          "groupId": null,
+          "artifactId": null,
+          "version": null,
+          "includeSpringBootBom": false
+        }
+      },
+      "platform": {
+        "compatibilityRange": "1.5.0.RELEASE",
+        "v1FormatCompatibilityRange": "[2.0.0.RELEASE,2.4.0-M1)",
+        "v2FormatCompatibilityRange": "2.4.0-M1"
+      }
+    }
+  },
+  "dependencies": {
+    "id": "dependencies",
+    "type": "HIERARCHICAL_MULTI_SELECT",
+    "title": "Project dependencies",
+    "description": "dependency identifiers (comma-separated)",
+    "content": [
+      {
+        "name": "Developer Tools",
+        "content": [
+          {
+            "name": "Spring Boot DevTools",
+            "id": "devtools",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-devtools",
+            "scope": "runtime",
+            "description": "Provides fast application restarts, LiveReload, and configurations for enhanced development experience.",
+            "compatibilityRange": "1.3.0.RELEASE",
+            "starter": false,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#using-boot-devtools",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Lombok",
+            "id": "lombok",
+            "groupId": "org.projectlombok",
+            "artifactId": "lombok",
+            "scope": "annotationProcessor",
+            "description": "Java annotation library which helps to reduce boilerplate code.",
+            "starter": false
+          },
+          {
+            "name": "Spring Configuration Processor",
+            "id": "configuration-processor",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-configuration-processor",
+            "scope": "annotationProcessor",
+            "description": "Generate metadata for developers to offer contextual help and “code completion” when working with custom configuration keys (ex.application.properties/.yml files).",
+            "compatibilityRange": "1.2.0.RELEASE",
+            "starter": false,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#configuration-metadata-annotation-processor",
+                "templated": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Web",
+        "content": [
+          {
+            "name": "Spring Web Starter",
+            "id": "web",
+            "facets": [
+              "web",
+              "json"
+            ],
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-web",
+            "scope": "compile",
+            "description": "Build web, including RESTful, applications using Spring MVC. Uses Apache Tomcat as the default embedded container.",
+            "weight": 100,
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/rest-service/",
+                "description": "Building a RESTful Web Service"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-developing-web-applications",
+                "templated": true
+              },
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/serving-web-content/",
+                "description": "Serving Web Content with Spring MVC"
+              },
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/tutorials/bookmarks/",
+                "description": "Building REST services with Spring"
+              }
+            ]
+          },
+          {
+            "name": "Spring Reactive Web",
+            "id": "webflux",
+            "facets": [
+              "json"
+            ],
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-webflux",
+            "scope": "compile",
+            "description": "Build reactive web applications with Spring WebFlux and Netty.",
+            "compatibilityRange": "2.0.0.M1",
+            "weight": 90,
+            "starter": true
+          },
+          {
+            "name": "Rest Repositories",
+            "id": "data-rest",
+            "facets": [
+              "json"
+            ],
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-rest",
+            "scope": "compile",
+            "description": "Exposing Spring Data repositories over REST via Spring Data REST.",
+            "weight": 10,
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/accessing-data-rest/",
+                "description": "Accessing JPA Data with REST"
+              },
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/accessing-neo4j-data-rest/",
+                "description": "Accessing Neo4j Data with REST"
+              },
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/accessing-mongodb-data-rest/",
+                "description": "Accessing MongoDB Data with REST"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-use-exposing-spring-data-repositories-rest-endpoint",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Session",
+            "id": "session",
+            "groupId": "org.springframework.session",
+            "artifactId": "spring-session-core",
+            "mappings": [
+              {
+                "compatibilityRange": "[1.5.0.RELEASE,2.0.0.M2]",
+                "groupId": null,
+                "artifactId": "spring-session",
+                "version": null,
+                "starter": null,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "compile",
+            "description": "Provides an API and implementations for managing user session information.",
+            "starter": false
+          },
+          {
+            "name": "Rest Repositories HAL Browser",
+            "id": "data-rest-hal",
+            "groupId": "org.springframework.data",
+            "artifactId": "spring-data-rest-hal-browser",
+            "scope": "compile",
+            "description": "Browsing Spring Data REST repositories in your browser.",
+            "starter": false
+          },
+          {
+            "name": "Spring HATEOAS",
+            "id": "hateoas",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-hateoas",
+            "scope": "compile",
+            "description": "Eases the creation of RESTful APIs that follow the HATEOAS principle when working with Spring / Spring MVC.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/rest-hateoas/",
+                "description": "Building a Hypermedia-Driven RESTful Web Service"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-hateoas",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Web Services",
+            "id": "web-services",
+            "aliases": [
+              "ws"
+            ],
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-web-services",
+            "scope": "compile",
+            "description": "Facilitates contract-first SOAP development. Allows for the creation of flexible web services using one of the many ways to manipulate XML payloads.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/producing-web-service/",
+                "description": "Producing a SOAP web service"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-webservices",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Jersey",
+            "id": "jersey",
+            "facets": [
+              "json"
+            ],
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-jersey",
+            "scope": "compile",
+            "description": "Framework for developing RESTful Web Services in Java that provides support for JAX-RS APIs.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jersey",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring REST Docs",
+            "id": "restdocs",
+            "groupId": "org.springframework.restdocs",
+            "artifactId": "spring-restdocs-mockmvc",
+            "scope": "test",
+            "description": "Document RESTful services by combining hand-written with Asciidoctor and auto-generated snippets produced with Spring MVC Test.",
+            "starter": false
+          },
+          {
+            "name": "Vaadin",
+            "id": "vaadin",
+            "facets": [
+              "web"
+            ],
+            "groupId": "com.vaadin",
+            "artifactId": "vaadin-spring-boot-starter",
+            "scope": "compile",
+            "description": "Java framework for building rich client apps based on Web components.",
+            "bom": "vaadin",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/crud-with-vaadin/",
+                "description": "Creating CRUD UI with Vaadin"
+              },
+              {
+                "rel": "reference",
+                "href": "https://vaadin.com/spring"
+              }
+            ]
+          },
+          {
+            "name": "Apache CXF",
+            "id": "cxf-jaxrs",
+            "groupId": "org.apache.cxf",
+            "artifactId": "cxf-spring-boot-starter-jaxrs",
+            "version": "3.2.5",
+            "scope": "compile",
+            "description": "RESTful Web Services with JAX-RS. Making it trivial to declare endpoints which are backed by Spring and inject clients into your application.",
+            "compatibilityRange": "[1.5.0.RELEASE,2.1.0.M1)",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://cxf.apache.org/docs/springboot.html#SpringBoot-SpringBootCXFJAX-RSStarter"
+              }
+            ]
+          },
+          {
+            "name": "Ratpack",
+            "id": "ratpack",
+            "groupId": "io.ratpack",
+            "artifactId": "ratpack-spring-boot",
+            "version": "1.1.1",
+            "scope": "compile",
+            "description": "Ratpack is a set of Java libraries that facilitate fast, efficient, evolvable and well tested HTTP applications. Built on Netty the event-driven networking engine.",
+            "compatibilityRange": "[1.5.0.RELEASE,2.0.0.M1)",
+            "starter": false
+          },
+          {
+            "name": "Spring Mobile",
+            "id": "mobile",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-mobile",
+            "scope": "compile",
+            "description": "Framework that provides capabilities to detect the type of device making a request to your Spring web site and serve alternative views based on that device.",
+            "compatibilityRange": "[1.5.0.RELEASE,2.0.0.M1)",
+            "starter": true
+          }
+        ]
+      },
+      {
+        "name": "Template Engines",
+        "content": [
+          {
+            "name": "Thymeleaf",
+            "id": "thymeleaf",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-thymeleaf",
+            "scope": "compile",
+            "description": "A modern server-side Java template engine for both web and standalone environments. Allows HTML to be correctly displayed in browsers and as static prototypes.",
+            "weight": 90,
+            "starter": true,
+            "keywords": [
+              "template"
+            ],
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/handling-form-submission/",
+                "description": "Handling Form Submission"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-mvc-template-engines",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Apache Freemarker",
+            "id": "freemarker",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-freemarker",
+            "scope": "compile",
+            "description": "Java library to generate text output (HTML web pages, e-mails, configuration files, source code, etc.) based on templates and changing data.",
+            "starter": true,
+            "keywords": [
+              "template"
+            ],
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-mvc-template-engines",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Mustache",
+            "id": "mustache",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-mustache",
+            "scope": "compile",
+            "description": "Logic-less Templates. There are no if statements, else clauses, or for loops. Instead there are only tags.",
+            "starter": true,
+            "keywords": [
+              "template"
+            ],
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-mvc-template-engines",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Groovy Templates",
+            "id": "groovy-templates",
+            "facets": [
+              "web"
+            ],
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-groovy-templates",
+            "scope": "compile",
+            "description": "Groovy templating engine",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-spring-mvc-template-engines",
+                "templated": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Security",
+        "content": [
+          {
+            "name": "Spring Security",
+            "id": "security",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-security",
+            "scope": "compile",
+            "description": "Highly customizable authentication and access-control framework for Spring applications.",
+            "weight": 100,
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/securing-web/",
+                "description": "Securing a Web Application"
+              },
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/tutorials/spring-boot-oauth2/",
+                "description": "Spring Boot and OAuth2"
+              },
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/authenticating-ldap/",
+                "description": "Authenticating a User with LDAP"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-security",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "OAuth2 Client",
+            "id": "oauth2-client",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-oauth2-client",
+            "scope": "compile",
+            "description": "Spring Boot integration for Spring Security's OAuth2/OpenID Connect client features.",
+            "compatibilityRange": "2.0.0.M5",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-security-oauth2-client",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "OAuth2 Resource Server",
+            "id": "oauth2-resource-server",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-oauth2-resource-server",
+            "scope": "compile",
+            "description": "Spring Boot integration for Spring Security's OAuth2 resource server features.",
+            "compatibilityRange": "2.1.0.M2",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-security-oauth2-server",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring LDAP",
+            "id": "data-ldap",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-ldap",
+            "scope": "compile",
+            "description": "Makes it easier to build Spring based applications that use the Lightweight Directory Access Protocol.",
+            "compatibilityRange": "1.5.0.RELEASE",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-ldap",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Okta",
+            "id": "okta",
+            "groupId": "com.okta.spring",
+            "artifactId": "okta-spring-boot-starter",
+            "version": "1.2.1",
+            "scope": "compile",
+            "description": "Okta specific configuration for Spring Security/Spring Boot OAuth2 features. Enable your Spring Boot application to work with Okta via OAuth 2.0/OIDC.",
+            "compatibilityRange": "2.1.2.RELEASE",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://github.com/okta/samples-java-spring/tree/master/okta-hosted-login",
+                "description": "Okta-Hosted Login Page Example"
+              },
+              {
+                "rel": "guide",
+                "href": "https://github.com/okta/samples-java-spring/tree/master/custom-login",
+                "description": "Custom Login Page Example"
+              },
+              {
+                "rel": "guide",
+                "href": "https://github.com/okta/samples-java-spring/tree/master/resource-server",
+                "description": "Okta Spring Security Resource Server Example"
+              },
+              {
+                "rel": "reference",
+                "href": "https://github.com/okta/okta-spring-boot/blob/master/README.md"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "SQL",
+        "content": [
+          {
+            "name": "Spring Data JPA",
+            "id": "data-jpa",
+            "aliases": [
+              "jpa"
+            ],
+            "facets": [
+              "jpa"
+            ],
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-jpa",
+            "scope": "compile",
+            "description": "Persist data in SQL stores with Java Persistence API using Spring Data and Hibernate.",
+            "weight": 100,
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/accessing-data-jpa/",
+                "description": "Accessing Data with JPA"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jpa-and-spring-data",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "MySQL Driver",
+            "id": "mysql",
+            "groupId": "mysql",
+            "artifactId": "mysql-connector-java",
+            "scope": "runtime",
+            "description": "MySQL JDBC driver.",
+            "starter": false,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/accessing-data-mysql/",
+                "description": "Accessing data with MySQL"
+              }
+            ]
+          },
+          {
+            "name": "H2 Database",
+            "id": "h2",
+            "groupId": "com.h2database",
+            "artifactId": "h2",
+            "scope": "runtime",
+            "description": "Provides a fast in-memory database that supports JDBC API, with a small (2mb) footprint. Supports embedded and server modes as well as a browser based console application.",
+            "starter": false
+          },
+          {
+            "name": "JDBC API",
+            "id": "jdbc",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-jdbc",
+            "scope": "compile",
+            "description": "Database Connectivity API that defines how a client may connect and query a database.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/relational-data-access/",
+                "description": "Accessing Relational Data using JDBC with Spring"
+              },
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/managing-transactions/",
+                "description": "Managing Transactions"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-sql",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "MyBatis Framework",
+            "id": "mybatis",
+            "groupId": "org.mybatis.spring.boot",
+            "artifactId": "mybatis-spring-boot-starter",
+            "mappings": [
+              {
+                "compatibilityRange": "[1.5.0.RELEASE,2.0.0.RELEASE)",
+                "groupId": null,
+                "artifactId": null,
+                "version": "1.3.4",
+                "starter": null,
+                "bom": null,
+                "repository": null
+              },
+              {
+                "compatibilityRange": "[2.0.0.RELEASE,2.1.0.RELEASE)",
+                "groupId": null,
+                "artifactId": null,
+                "version": "2.0.1",
+                "starter": null,
+                "bom": null,
+                "repository": null
+              },
+              {
+                "compatibilityRange": "2.1.0.RELEASE",
+                "groupId": null,
+                "artifactId": null,
+                "version": "2.1.0",
+                "starter": null,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "compile",
+            "description": "Persistence framework with support for custom SQL, stored procedures and advanced mappings. MyBatis couples objects with stored procedures or SQL statements using a XML descriptor or annotations.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://github.com/mybatis/spring-boot-starter/wiki/Quick-Start",
+                "description": "MyBatis Quick Start"
+              },
+              {
+                "rel": "reference",
+                "href": "http://www.mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/"
+              }
+            ]
+          },
+          {
+            "name": "PostgreSQL Driver",
+            "id": "postgresql",
+            "groupId": "org.postgresql",
+            "artifactId": "postgresql",
+            "scope": "runtime",
+            "description": "An open source JDBC driver that allows Java programs to connect to a PostgreSQL database using standard, database independent Java code.",
+            "starter": false
+          },
+          {
+            "name": "MS SQL Server Driver",
+            "id": "sqlserver",
+            "groupId": "com.microsoft.sqlserver",
+            "artifactId": "mssql-jdbc",
+            "scope": "runtime",
+            "description": "A Type 4 JDBC driver that provides access to Microsoft SQL Server and Azure SQL Database from any Java application.",
+            "starter": false
+          },
+          {
+            "name": "HyperSQL Database",
+            "id": "hsql",
+            "groupId": "org.hsqldb",
+            "artifactId": "hsqldb",
+            "scope": "runtime",
+            "description": "Lightweight 100% Java SQL Database Engine.",
+            "starter": false
+          },
+          {
+            "name": "Apache Derby Database",
+            "id": "derby",
+            "groupId": "org.apache.derby",
+            "artifactId": "derby",
+            "scope": "runtime",
+            "description": "An open source relational database implemented entirely in Java.",
+            "starter": false
+          },
+          {
+            "name": "Liquibase Migration",
+            "id": "liquibase",
+            "groupId": "org.liquibase",
+            "artifactId": "liquibase-core",
+            "scope": "compile",
+            "description": "Liquibase database migration and source control library.",
+            "starter": false,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-execute-liquibase-database-migrations-on-startup",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Flyway Migration",
+            "id": "flyway",
+            "groupId": "org.flywaydb",
+            "artifactId": "flyway-core",
+            "scope": "compile",
+            "description": "Version control for your database so you can migrate from any version (incl. an empty database) to the latest version of the schema.",
+            "starter": false,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-execute-flyway-database-migrations-on-startup",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "JOOQ Access Layer",
+            "id": "jooq",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-jooq",
+            "scope": "compile",
+            "description": "Generate Java code from your database and build type safe SQL queries through a fluent API.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-jooq",
+                "templated": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "NoSQL",
+        "content": [
+          {
+            "name": "Spring Data Redis (Access+Driver)",
+            "id": "data-redis",
+            "aliases": [
+              "redis"
+            ],
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-redis",
+            "scope": "compile",
+            "description": "Advanced and thread-safe Java Redis client for synchronous, asynchronous, and reactive usage. Supports Cluster, Sentinel, Pipelining, Auto-Reconnect, Codecs and much more.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/messaging-redis/",
+                "description": "Messaging with Redis"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-redis",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Data Reactive Redis",
+            "id": "data-redis-reactive",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-redis-reactive",
+            "scope": "compile",
+            "description": "Access Redis key-value data stores in a reactive fashion with Spring Data Redis.",
+            "compatibilityRange": "2.0.0.M7",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/messaging-redis/",
+                "description": "Messaging with Redis"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-redis",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Data MongoDB",
+            "id": "data-mongodb",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-mongodb",
+            "scope": "compile",
+            "description": "Store data in flexible, JSON-like documents, meaning fields can vary from document to document and data structure can be changed over time.",
+            "weight": 50,
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/accessing-data-mongodb/",
+                "description": "Accessing Data with MongoDB"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-mongodb",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Data Reactive MongoDB",
+            "id": "data-mongodb-reactive",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-mongodb-reactive",
+            "scope": "compile",
+            "description": "Provides asynchronous stream processing with non-blocking back pressure for MongoDB. Implements the Reactive Streams API.",
+            "compatibilityRange": "2.0.0.M1",
+            "weight": 50,
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-mongodb",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Embedded MongoDB database",
+            "id": "flapdoodle-mongo",
+            "groupId": "de.flapdoodle.embed",
+            "artifactId": "de.flapdoodle.embed.mongo",
+            "scope": "test",
+            "description": "Provides a platform neutral way for running MongoDB in unit tests.",
+            "starter": false
+          },
+          {
+            "name": "Spring Data Elasticsearch (Access+Driver)",
+            "id": "data-elasticsearch",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-elasticsearch",
+            "scope": "compile",
+            "description": "A distributed, RESTful search and analytics engine with Spring Data Elasticsearch.",
+            "weight": 10,
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-elasticsearch",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Data for Apache Solr",
+            "id": "data-solr",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-solr",
+            "scope": "compile",
+            "description": "Apache Solr is an open source enterprise search platform built on Apache Lucene.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-solr",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Data for Apache Cassandra",
+            "id": "data-cassandra",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-cassandra",
+            "scope": "compile",
+            "description": "A free and open-source, distributed, NoSQL database management system that offers high-scalability and high-performance.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-cassandra",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Data Reactive for Apache Cassandra",
+            "id": "data-cassandra-reactive",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-cassandra-reactive",
+            "scope": "compile",
+            "description": "Access Cassandra NoSQL Database in a reactive fashion",
+            "compatibilityRange": "2.0.0.M1",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-cassandra",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Data Couchbase",
+            "id": "data-couchbase",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-couchbase",
+            "scope": "compile",
+            "description": "NoSQL document-oriented database that offers in memory-first architecture, geo-distributed deployments, and workload isolation.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-couchbase",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Data Reactive Couchbase",
+            "id": "data-couchbase-reactive",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-couchbase-reactive",
+            "scope": "compile",
+            "description": "Access Couchbase NoSQL database in a reactive fashion with Spring Data Couchbase.",
+            "compatibilityRange": "2.0.0.M7",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-couchbase",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Data Neo4j",
+            "id": "data-neo4j",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-neo4j",
+            "scope": "compile",
+            "description": "An open source NoSQL database that stores data structured as graphs consisting of nodes, connected by relationships.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/accessing-data-neo4j/",
+                "description": "Accessing Data with Neo4j"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-neo4j",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Data Gemfire",
+            "id": "data-gemfire",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-data-gemfire",
+            "scope": "compile",
+            "description": "Access GemFire distributed data store with Spring Data Gemfire.",
+            "compatibilityRange": "[1.5.0.RELEASE,2.0.0.M1)",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/accessing-data-gemfire/",
+                "description": "Accessing Data with GemFire"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-gemfire",
+                "templated": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Messaging",
+        "content": [
+          {
+            "name": "Spring Integration",
+            "id": "integration",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-integration",
+            "scope": "compile",
+            "description": "Adds support for Enterprise Integration Patterns. Enables lightweight messaging and supports integration with external systems via declarative adapters.",
+            "weight": 100,
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/integration/",
+                "description": "Integrating Data"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-integration",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring for RabbitMQ",
+            "id": "amqp",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-amqp",
+            "scope": "compile",
+            "description": "Gives your applications a common platform to send and receive messages, and your messages a safe place to live until received.",
+            "weight": 100,
+            "starter": true,
+            "keywords": [
+              "messaging"
+            ],
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/messaging-rabbitmq/",
+                "description": "Messaging with RabbitMQ"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-amqp",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring for Apache Kafka",
+            "id": "kafka",
+            "groupId": "org.springframework.kafka",
+            "artifactId": "spring-kafka",
+            "scope": "compile",
+            "description": "Publish, subscribe, store, and process streams of records.",
+            "compatibilityRange": "1.5.0.RELEASE",
+            "weight": 100,
+            "starter": false,
+            "keywords": [
+              "messaging"
+            ],
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-kafka",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring for Apache Kafka Streams",
+            "id": "kafka-streams",
+            "groupId": "org.apache.kafka",
+            "artifactId": "kafka-streams",
+            "scope": "compile",
+            "description": "Building stream processing applications with Apache Kafka Streams.",
+            "compatibilityRange": "2.0.0.RELEASE",
+            "weight": 90,
+            "starter": false,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://github.com/spring-cloud/spring-cloud-stream-samples/tree/master/kafka-streams-samples",
+                "description": "Samples for using Apache Kafka Streams with Spring Cloud stream"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-kafka/docs/current/reference/html/_reference.html#kafka-streams",
+                "description": "Apache Kafka Streams Support"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle/#_kafka_streams_binding_capabilities_of_spring_cloud_stream",
+                "description": "Apache Kafka Streams Binding Capabilities of Spring Cloud Stream"
+              }
+            ]
+          },
+          {
+            "name": "Spring for Apache ActiveMQ 5",
+            "id": "activemq",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-activemq",
+            "scope": "compile",
+            "description": "Spring JMS support with Apache ActiveMQ 'Classic'",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/messaging-jms/",
+                "description": "Java Message Service API via Apache ActiveMQ Classic."
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-activemq",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring for Apache ActiveMQ Artemis",
+            "id": "artemis",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-artemis",
+            "scope": "compile",
+            "description": "Spring JMS support with Apache ActiveMQ Artemis",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/messaging-jms/",
+                "description": "Messaging with JMS"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-artemis",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "WebSocket",
+            "id": "websocket",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-websocket",
+            "scope": "compile",
+            "description": "Build WebSocket applications with SockJS and STOMP.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/messaging-stomp-websocket/",
+                "description": "Using WebSocket to build an interactive web application"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-websockets",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "RSocket",
+            "id": "rsocket",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-rsocket",
+            "scope": "compile",
+            "description": "RSocket.io applications with Spring Messaging and Netty.",
+            "compatibilityRange": "2.2.0.M2",
+            "starter": true
+          },
+          {
+            "name": "Apache Camel",
+            "id": "camel",
+            "groupId": "org.apache.camel",
+            "artifactId": "camel-spring-boot-starter",
+            "mappings": [
+              {
+                "compatibilityRange": "[1.5.0.RELEASE,2.0.0.M1)",
+                "groupId": null,
+                "artifactId": null,
+                "version": "2.21.5",
+                "starter": null,
+                "bom": null,
+                "repository": null
+              },
+              {
+                "compatibilityRange": "[2.0.0.M1,2.1.0.M1)",
+                "groupId": null,
+                "artifactId": null,
+                "version": "2.22.4",
+                "starter": null,
+                "bom": null,
+                "repository": null
+              },
+              {
+                "compatibilityRange": "2.1.0.M1",
+                "groupId": null,
+                "artifactId": null,
+                "version": "2.24.0",
+                "starter": null,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "compile",
+            "description": "Apache Camel lets you create the Enterprise Integration Patterns to implement routing and mediation rules a Java based Domain Specific Language via Spring.",
+            "compatibilityRange": "1.5.0.RELEASE",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://camel.apache.org/spring-boot",
+                "description": "Using Apache Camel with Spring Boot"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "I/O",
+        "content": [
+          {
+            "name": "Spring Batch",
+            "id": "batch",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-batch",
+            "scope": "compile",
+            "description": "Batch applications with transactions, retry/skip and chunk based processing.",
+            "weight": 100,
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/batch-processing/",
+                "description": "Creating a Batch Service"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#howto-batch-applications",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Java Mail Sender",
+            "id": "mail",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-mail",
+            "scope": "compile",
+            "description": "Send email using Java Mail and Spring Framework's JavaMailSender.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-email",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Quartz Scheduler",
+            "id": "quartz",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-quartz",
+            "scope": "compile",
+            "description": "Schedule jobs using Quartz.",
+            "compatibilityRange": "2.0.0.M2",
+            "starter": true
+          },
+          {
+            "name": "Spring cache abstraction",
+            "id": "cache",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-cache",
+            "scope": "compile",
+            "description": "Provides cache-related operations, such as the ability to update the content of the cache, but does not provide the actual data store.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/caching/",
+                "description": "Caching Data with Spring"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#boot-features-caching",
+                "templated": true
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Ops",
+        "content": [
+          {
+            "name": "Spring Boot Actuator",
+            "id": "actuator",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-actuator",
+            "scope": "compile",
+            "description": "Supports built in (or custom) endpoints that let you monitor and manage your application - such as application health, metrics, sessions, etc.",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/actuator-service/",
+                "description": "Building a RESTful Web Service with Spring Boot Actuator"
+              },
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-boot/docs/{bootVersion}/reference/htmlsingle/#production-ready",
+                "templated": true
+              }
+            ]
+          },
+          {
+            "name": "Spring Boot Actuator Docs",
+            "id": "actuator-docs",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-actuator-docs",
+            "scope": "compile",
+            "description": "API documentation for the Actuator endpoints.",
+            "compatibilityRange": "[1.5.0.RELEASE,2.0.0.M1)",
+            "starter": false
+          },
+          {
+            "name": "Spring Boot Admin (Client)",
+            "id": "codecentric-spring-boot-admin-client",
+            "groupId": "de.codecentric",
+            "artifactId": "spring-boot-admin-starter-client",
+            "scope": "compile",
+            "description": "Required for your application to register with a Spring Boot Admin Server instance.",
+            "compatibilityRange": "[1.5.9.RELEASE,2.2.0.M1)",
+            "bom": "codecentric-spring-boot-admin",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://codecentric.github.io/spring-boot-admin/current/#getting-started"
+              }
+            ]
+          },
+          {
+            "name": "Spring Boot Admin (Server)",
+            "id": "codecentric-spring-boot-admin-server",
+            "groupId": "de.codecentric",
+            "artifactId": "spring-boot-admin-starter-server",
+            "scope": "compile",
+            "description": "A community project to manage and monitor your Spring Boot applications. Provides a UI on top of the Spring Boot Actuator endpoints.",
+            "compatibilityRange": "[1.5.9.RELEASE,2.2.0.M1)",
+            "bom": "codecentric-spring-boot-admin",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://codecentric.github.io/spring-boot-admin/current/#getting-started"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Spring Cloud",
+        "content": [
+          {
+            "name": "Cloud Bootstrap",
+            "id": "cloud-starter",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter",
+            "scope": "compile",
+            "description": "Non-specific Spring Cloud features, unrelated to external libraries or integrations (e.g. Bootstrap context and @RefreshScope)",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://spring.io/projects/spring-cloud-commons"
+              }
+            ]
+          },
+          {
+            "name": "Function",
+            "id": "cloud-function",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-function-context",
+            "scope": "compile",
+            "description": "Promotes the implementation of business logic via functions and supports a uniform programming model across serverless providers, as well as the ability to run standalone (locally or in a PaaS).",
+            "compatibilityRange": "2.0.2.RELEASE",
+            "bom": "spring-cloud",
+            "starter": false,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://cloud.spring.io/spring-cloud-function/"
+              },
+              {
+                "rel": "sample",
+                "href": "https://github.com/spring-cloud/spring-cloud-function/tree/master/spring-cloud-function-samples",
+                "description": "Various sample apps using Spring Cloud Function"
+              }
+            ]
+          },
+          {
+            "name": "Task",
+            "id": "cloud-task",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-task",
+            "mappings": [
+              {
+                "compatibilityRange": "[1.5.0.RELEASE,2.0.0.RELEASE)",
+                "groupId": null,
+                "artifactId": null,
+                "version": null,
+                "starter": false,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "compile",
+            "description": "Allows a user to develop and run short lived microservices using Spring Cloud. Run them locally, in the cloud, and on Spring Cloud Data Flow.",
+            "bom": "spring-cloud",
+            "starter": true
+          }
+        ]
+      },
+      {
+        "name": "Spring Cloud Security",
+        "content": [
+          {
+            "name": "Cloud Security",
+            "id": "cloud-security",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-security",
+            "scope": "compile",
+            "description": "A declarative model which can be heavily configured externally (or centrally) lends itself to the implementation of large systems of co-operating, remote components, usually with a central indentity management service.",
+            "bom": "spring-cloud",
+            "starter": true
+          },
+          {
+            "name": "Cloud OAuth2",
+            "id": "cloud-oauth2",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-oauth2",
+            "scope": "compile",
+            "description": "OAuth2 and distributed application patterns with spring-cloud-security.",
+            "bom": "spring-cloud",
+            "starter": true
+          }
+        ]
+      },
+      {
+        "name": "Spring Cloud Tools",
+        "content": [
+          {
+            "name": "Cloud Connectors",
+            "id": "cloud-connectors",
+            "groupId": "org.springframework.boot",
+            "artifactId": "spring-boot-starter-cloud-connectors",
+            "scope": "compile",
+            "description": "Simplifies the process of connecting to services and gaining operating environment awareness in cloud platforms such as Cloud Foundry and Heroku.",
+            "starter": true
+          },
+          {
+            "name": "Open Service Broker",
+            "id": "open-service-broker",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-open-service-broker",
+            "mappings": [
+              {
+                "compatibilityRange": "[2.0.0.RELEASE,2.1.0.M1)",
+                "groupId": null,
+                "artifactId": "spring-cloud-starter-open-service-broker-webmvc",
+                "version": "2.1.2.RELEASE",
+                "starter": null,
+                "bom": null,
+                "repository": null
+              },
+              {
+                "compatibilityRange": "2.1.0.M1",
+                "groupId": null,
+                "artifactId": null,
+                "version": "3.0.3.RELEASE",
+                "starter": null,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "compile",
+            "description": "Framework for building Spring Boot apps that implement the Open Service Broker API, which can deliver services to applications running within cloud native platforms such as Cloud Foundry, Kubernetes and OpenShift.",
+            "compatibilityRange": "2.0.0.RELEASE",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-cloud-open-service-broker/docs/current/reference/html5/"
+              },
+              {
+                "rel": "guide",
+                "href": "https://github.com/spring-cloud-samples/bookstore-service-broker",
+                "description": "Using Spring Cloud Open Service Broker"
+              }
+            ]
+          },
+          {
+            "name": "Contract Verifier",
+            "id": "cloud-contract-verifier",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-contract-verifier",
+            "mappings": [
+              {
+                "compatibilityRange": "[1.5.0.RELEASE,2.0.0.RELEASE)",
+                "groupId": null,
+                "artifactId": null,
+                "version": null,
+                "starter": false,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "test",
+            "description": "Moves TDD to the level of software architecture by enabling Consumer Driven Contract (CDC) development.",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://cloud.spring.io/spring-cloud-contract/spring-cloud-contract.html#_spring_cloud_contract_verifier_setup",
+                "description": "Spring Cloud Contract Verifier Setup"
+              }
+            ]
+          },
+          {
+            "name": "Contract Stub Runner",
+            "id": "cloud-contract-stub-runner",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-contract-stub-runner",
+            "scope": "test",
+            "description": "Stub Runner for HTTP/Messaging based communication. Allows creating WireMock stubs from RestDocs tests.",
+            "bom": "spring-cloud",
+            "starter": true
+          }
+        ]
+      },
+      {
+        "name": "Spring Cloud Config",
+        "content": [
+          {
+            "name": "Config Client",
+            "id": "cloud-config-client",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-config",
+            "scope": "compile",
+            "description": "Client that connects to a Spring Cloud Config Server to fetch the application's configuration.",
+            "bom": "spring-cloud",
+            "weight": 100,
+            "starter": true
+          },
+          {
+            "name": "Config Server",
+            "id": "cloud-config-server",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-config-server",
+            "scope": "compile",
+            "description": "Central management for configuration via Git, SVN, or HashiCorp Vault.",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/centralized-configuration/",
+                "description": "Centralized Configuration"
+              }
+            ]
+          },
+          {
+            "name": "Vault Configuration",
+            "id": "cloud-starter-vault-config",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-vault-config",
+            "scope": "compile",
+            "description": "Provides client-side support for externalized configuration in a distributed system. Using HashiCorp's Vault you have a central place to manage external secret properties for applications across all environments.",
+            "compatibilityRange": "1.5.3.RELEASE",
+            "bom": "spring-cloud",
+            "starter": true
+          },
+          {
+            "name": "Apache Zookeeper Configuration",
+            "id": "cloud-starter-zookeeper-config",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-zookeeper-config",
+            "scope": "compile",
+            "description": "Enable and configure common patterns inside your application and build large distributed systems with Apache Zookeeper based components. The provided patterns include Service Discovery and Configuration.",
+            "bom": "spring-cloud",
+            "starter": false
+          },
+          {
+            "name": "Consul Configuration",
+            "id": "cloud-starter-consul-config",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-consul-config",
+            "mappings": [
+              {
+                "compatibilityRange": "[1.5.0.RELEASE,2.0.0.RELEASE)",
+                "groupId": null,
+                "artifactId": null,
+                "version": null,
+                "starter": true,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "compile",
+            "description": "Enable and configure the common patterns inside your application and build large distributed systems with Hashicorp’s Consul. The patterns provided include Service Discovery, Distributed Configuration and Control Bus.",
+            "bom": "spring-cloud",
+            "starter": false
+          }
+        ]
+      },
+      {
+        "name": "Spring Cloud Discovery",
+        "content": [
+          {
+            "name": "Eureka Discovery Client",
+            "id": "cloud-eureka",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-netflix-eureka-client",
+            "scope": "compile",
+            "description": "a REST based service for locating services for the purpose of load balancing and failover of middle-tier servers.",
+            "bom": "spring-cloud",
+            "weight": 100,
+            "starter": true
+          },
+          {
+            "name": "Eureka Server",
+            "id": "cloud-eureka-server",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-netflix-eureka-server",
+            "scope": "compile",
+            "description": "spring-cloud-netflix Eureka Server",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/service-registration-and-discovery/",
+                "description": "Service Registration and Discovery"
+              }
+            ]
+          },
+          {
+            "name": "Apache Zookeeper Discovery",
+            "id": "cloud-starter-zookeeper-discovery",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-zookeeper-discovery",
+            "scope": "compile",
+            "description": "Service discovery with Apache Zookeeper",
+            "bom": "spring-cloud",
+            "starter": true
+          },
+          {
+            "name": "Cloud Foundry Discovery",
+            "id": "cloud-cloudfoundry-discovery",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-cloudfoundry-discovery",
+            "mappings": [
+              {
+                "compatibilityRange": "[1.5.0.RELEASE,2.0.0.RELEASE)",
+                "groupId": null,
+                "artifactId": null,
+                "version": null,
+                "starter": false,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "compile",
+            "description": "Service discovery with Cloud Foundry",
+            "bom": "spring-cloud",
+            "starter": true
+          },
+          {
+            "name": "Consul Discovery",
+            "id": "cloud-starter-consul-discovery",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-consul-discovery",
+            "scope": "compile",
+            "description": "Service discovery with Hashicorp Consul",
+            "bom": "spring-cloud",
+            "starter": true
+          }
+        ]
+      },
+      {
+        "name": "Spring Cloud Routing",
+        "content": [
+          {
+            "name": "Zuul",
+            "id": "cloud-zuul",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-netflix-zuul",
+            "scope": "compile",
+            "description": "Intelligent and programmable routing with Spring Cloud Netflix Zuul.",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/routing-and-filtering/",
+                "description": "Routing and Filtering"
+              }
+            ]
+          },
+          {
+            "name": "Gateway",
+            "id": "cloud-gateway",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-gateway",
+            "scope": "compile",
+            "description": "Provides a simple, yet effective way to route to APIs and provide cross cutting concerns to them such as security, monitoring/metrics, and resiliency.",
+            "compatibilityRange": "2.0.0.M5",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://github.com/spring-cloud-samples/spring-cloud-gateway-sample",
+                "description": "Using Spring Cloud Gateway"
+              }
+            ]
+          },
+          {
+            "name": "Ribbon",
+            "id": "cloud-ribbon",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-netflix-ribbon",
+            "scope": "compile",
+            "description": "Client side load balancing with Spring Cloud Netflix and Ribbon.",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/client-side-load-balancing/",
+                "description": "Client Side Load Balancing with Ribbon and Spring Cloud"
+              }
+            ]
+          },
+          {
+            "name": "OpenFeign",
+            "id": "cloud-feign",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-openfeign",
+            "scope": "compile",
+            "description": "Declarative REST Client. OpenFeign creates a dynamic implementation of an interface decorated with JAX-RS or Spring MVC annotations.",
+            "bom": "spring-cloud",
+            "starter": true
+          }
+        ]
+      },
+      {
+        "name": "Spring Cloud Circuit Breaker",
+        "content": [
+          {
+            "name": "Hystrix",
+            "id": "cloud-hystrix",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-netflix-hystrix",
+            "scope": "compile",
+            "description": "Circuit breaker with Spring Cloud Netflix Hystrix.",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://spring.io/guides/gs/circuit-breaker/",
+                "description": "Circuit Breaker"
+              }
+            ]
+          },
+          {
+            "name": "Hystrix Dashboard",
+            "id": "cloud-hystrix-dashboard",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-netflix-hystrix-dashboard",
+            "scope": "compile",
+            "description": "Circuit breaker dashboard with Spring Cloud Netflix Hystrix.",
+            "bom": "spring-cloud",
+            "starter": true
+          },
+          {
+            "name": "Turbine",
+            "id": "cloud-turbine",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-netflix-turbine",
+            "scope": "compile",
+            "description": "Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and server-sent events",
+            "bom": "spring-cloud",
+            "starter": true
+          },
+          {
+            "name": "Turbine Stream",
+            "id": "cloud-turbine-stream",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-netflix-turbine-stream",
+            "scope": "compile",
+            "description": "Circuit breaker metric aggregation using spring-cloud-netflix with Turbine and Spring Cloud Stream (requires a binder, e.g. Apache Kafka or RabbitMQ)",
+            "compatibilityRange": "1.3.0.RELEASE",
+            "bom": "spring-cloud",
+            "weight": -1,
+            "starter": true
+          }
+        ]
+      },
+      {
+        "name": "Spring Cloud Tracing",
+        "content": [
+          {
+            "name": "Sleuth",
+            "id": "cloud-starter-sleuth",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-sleuth",
+            "scope": "compile",
+            "description": "Distributed tracing via logs with Spring Cloud Sleuth.",
+            "bom": "spring-cloud",
+            "starter": true
+          },
+          {
+            "name": "Zipkin Client",
+            "id": "cloud-starter-zipkin",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-zipkin",
+            "scope": "compile",
+            "description": "Distributed tracing with an existing Zipkin installation and Spring Cloud Sleuth Zipkin.",
+            "bom": "spring-cloud",
+            "starter": true
+          }
+        ]
+      },
+      {
+        "name": "Spring Cloud Messaging",
+        "content": [
+          {
+            "name": "Cloud Bus",
+            "id": "cloud-bus",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-bus",
+            "scope": "compile",
+            "description": "Links nodes of a distributed system with a lightweight message broker which can used to broadcast state changes or other management instructions (requires a binder, e.g. Apache Kafka or RabbitMQ).",
+            "bom": "spring-cloud",
+            "starter": true
+          },
+          {
+            "name": "Cloud Stream",
+            "id": "cloud-stream",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-stream",
+            "scope": "compile",
+            "description": "Framework for building highly scalable event-driven microservices connected with shared messaging systems (requires a binder, e.g. Apache Kafka or RabbitMQ).",
+            "bom": "spring-cloud",
+            "weight": 90,
+            "starter": true
+          },
+          {
+            "name": "Reactive Cloud Stream",
+            "id": "reactive-cloud-stream",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-stream-reactive",
+            "scope": "compile",
+            "description": "Reactive messaging microservices with Spring Cloud Stream (requires a binder, e.g. Apache Kafka or RabbitMQ).",
+            "compatibilityRange": "2.0.0.RC2",
+            "bom": "spring-cloud",
+            "weight": 90,
+            "starter": true
+          }
+        ]
+      },
+      {
+        "name": "Pivotal Cloud Foundry",
+        "content": [
+          {
+            "name": "Config Client (PCF)",
+            "id": "scs-config-client",
+            "groupId": "io.pivotal.spring.cloud",
+            "artifactId": "spring-cloud-services-starter-config-client",
+            "mappings": [
+              {
+                "compatibilityRange": "[1.5.0.RELEASE,2.0.0.RELEASE)",
+                "groupId": null,
+                "artifactId": null,
+                "version": null,
+                "starter": true,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "compile",
+            "description": "Config client on Pivotal Cloud Foundry",
+            "bom": "spring-cloud-services",
+            "starter": false,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.pivotal.io/spring-cloud-services/"
+              }
+            ]
+          },
+          {
+            "name": "Service Registry (PCF)",
+            "id": "scs-service-registry",
+            "groupId": "io.pivotal.spring.cloud",
+            "artifactId": "spring-cloud-services-starter-service-registry",
+            "scope": "compile",
+            "description": "Eureka service discovery client on Pivotal Cloud Foundry",
+            "bom": "spring-cloud-services",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.pivotal.io/spring-cloud-services/"
+              }
+            ]
+          },
+          {
+            "name": "Circuit Breaker (PCF)",
+            "id": "scs-circuit-breaker",
+            "groupId": "io.pivotal.spring.cloud",
+            "artifactId": "spring-cloud-services-starter-circuit-breaker",
+            "scope": "compile",
+            "description": "Hystrix circuit breaker client on Pivotal Cloud Foundry",
+            "bom": "spring-cloud-services",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.pivotal.io/spring-cloud-services/"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Amazon Web Services",
+        "content": [
+          {
+            "name": "AWS Core",
+            "id": "cloud-aws",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-aws",
+            "scope": "compile",
+            "description": "AWS native services from Spring Cloud for AWS",
+            "bom": "spring-cloud",
+            "starter": false
+          },
+          {
+            "name": "AWS RDS",
+            "id": "cloud-aws-jdbc",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-aws-jdbc",
+            "scope": "compile",
+            "description": "Relational databases on AWS with RDS and Spring Cloud AWS JDBC",
+            "bom": "spring-cloud",
+            "starter": false
+          },
+          {
+            "name": "AWS Simple Queue Service",
+            "id": "cloud-aws-messaging",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-starter-aws-messaging",
+            "scope": "compile",
+            "description": "Messaging on AWS with SQS and Spring Cloud AWS Messaging",
+            "bom": "spring-cloud",
+            "starter": false
+          }
+        ]
+      },
+      {
+        "name": "Microsoft Azure",
+        "content": [
+          {
+            "name": "Azure Support",
+            "id": "azure-support",
+            "groupId": "com.microsoft.azure",
+            "artifactId": "azure-spring-boot-starter",
+            "scope": "compile",
+            "description": "Auto-configuration for Azure Services (Service Bus, Storage, Active Directory, Cosmos DB, Key Vault, and more).",
+            "compatibilityRange": "1.5.4.RELEASE",
+            "bom": "azure",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot"
+              }
+            ]
+          },
+          {
+            "name": "Azure Active Directory",
+            "id": "azure-active-directory",
+            "groupId": "com.microsoft.azure",
+            "artifactId": "azure-active-directory-spring-boot-starter",
+            "scope": "compile",
+            "description": "Spring Security integration with Azure Active Directory for authentication.",
+            "compatibilityRange": "1.5.4.RELEASE",
+            "bom": "azure",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-samples/azure-active-directory-spring-boot-sample",
+                "description": "Using Active Directory"
+              },
+              {
+                "rel": "reference",
+                "href": "https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-starters/azure-active-directory-spring-boot-starter"
+              }
+            ]
+          },
+          {
+            "name": "Azure Key Vault",
+            "id": "azure-keyvault-secrets",
+            "groupId": "com.microsoft.azure",
+            "artifactId": "azure-keyvault-secrets-spring-boot-starter",
+            "scope": "compile",
+            "description": "Manage application secrets and keys.",
+            "compatibilityRange": "1.5.4.RELEASE",
+            "bom": "azure",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-samples/azure-keyvault-secrets-spring-boot-sample",
+                "description": "Using Key Vault"
+              },
+              {
+                "rel": "reference",
+                "href": "https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-starters/azure-keyvault-secrets-spring-boot-starter"
+              }
+            ]
+          },
+          {
+            "name": "Azure Storage",
+            "id": "azure-storage",
+            "groupId": "com.microsoft.azure",
+            "artifactId": "azure-storage-spring-boot-starter",
+            "scope": "compile",
+            "description": "Azure Storage service integration.",
+            "compatibilityRange": "1.5.4.RELEASE",
+            "bom": "azure",
+            "starter": true,
+            "links": [
+              {
+                "rel": "guide",
+                "href": "https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-samples/azure-storage-spring-boot-sample",
+                "description": "Using Azure Storage"
+              },
+              {
+                "rel": "reference",
+                "href": "https://github.com/Microsoft/azure-spring-boot/tree/master/azure-spring-boot-starters/azure-storage-spring-boot-starter"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Google Cloud Platform",
+        "content": [
+          {
+            "name": "GCP Support",
+            "id": "cloud-gcp",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-gcp-starter",
+            "scope": "compile",
+            "description": "Contains auto-configuration support for every Spring Cloud GCP integration. Most of the auto-configuration code is only enabled if other dependencies are added to the classpath.",
+            "compatibilityRange": "2.0.0.RELEASE",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-cloud-gcp/docs/1.1.0.M3/reference/htmlsingle/"
+              },
+              {
+                "rel": "guide",
+                "href": "https://github.com/spring-cloud/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples",
+                "description": "GCP Samples"
+              }
+            ]
+          },
+          {
+            "name": "GCP Messaging",
+            "id": "cloud-gcp-pubsub",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-gcp-starter-pubsub",
+            "scope": "compile",
+            "description": "Adds the GCP Support entry and all the required dependencies so that the Google Cloud Pub/Sub integration work out of the box.",
+            "compatibilityRange": "2.0.0.RELEASE",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-cloud-gcp/docs/1.1.0.M3/reference/htmlsingle/#_spring_cloud_gcp_for_pub_sub"
+              },
+              {
+                "rel": "guide",
+                "href": "https://github.com/spring-cloud/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples/spring-cloud-gcp-pubsub-sample",
+                "description": "GCP Pub/Sub Sample"
+              }
+            ]
+          },
+          {
+            "name": "GCP Storage",
+            "id": "cloud-gcp-storage",
+            "groupId": "org.springframework.cloud",
+            "artifactId": "spring-cloud-gcp-starter-storage",
+            "scope": "compile",
+            "description": "Adds the GCP Support entry and all the required dependencies so that the Google Cloud Storage integration work out of the box.",
+            "compatibilityRange": "2.0.0.RELEASE",
+            "bom": "spring-cloud",
+            "starter": true,
+            "links": [
+              {
+                "rel": "reference",
+                "href": "https://docs.spring.io/spring-cloud-gcp/docs/1.1.0.M3/reference/htmlsingle/#_spring_resources"
+              },
+              {
+                "rel": "guide",
+                "href": "https://github.com/spring-cloud/spring-cloud-gcp/tree/master/spring-cloud-gcp-samples/spring-cloud-gcp-storage-resource-sample",
+                "description": "GCP Storage Sample"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
