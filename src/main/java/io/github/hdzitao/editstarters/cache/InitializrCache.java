@@ -1,4 +1,4 @@
-package io.github.hdzitao.editstarters.initializr;
+package io.github.hdzitao.editstarters.cache;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.RoamingType;
@@ -6,6 +6,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import io.github.hdzitao.editstarters.utils.JSONConverter;
 import lombok.Getter;
 import lombok.Setter;

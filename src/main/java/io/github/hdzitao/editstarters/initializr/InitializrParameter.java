@@ -2,6 +2,7 @@ package io.github.hdzitao.editstarters.initializr;
 
 import com.intellij.openapi.project.Project;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
+import io.github.hdzitao.editstarters.ohub.OHub;
 import io.github.hdzitao.editstarters.version.Version;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,4 +41,9 @@ public class InitializrParameter {
      * 启用缓存
      */
     private boolean enableCache = true;
+
+    /**
+     * 旧版本
+     */
+    private OHub oHub;
 }

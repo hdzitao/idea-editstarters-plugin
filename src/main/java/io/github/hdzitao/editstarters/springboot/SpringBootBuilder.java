@@ -1,4 +1,4 @@
-package io.github.hdzitao.editstarters.initializr;
+package io.github.hdzitao.editstarters.springboot;
 
 /**
  * SpringBoot构造类

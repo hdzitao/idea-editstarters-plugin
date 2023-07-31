@@ -1,9 +1,9 @@
 package io.github.hdzitao.editstarters.startspringio;
 
 import io.github.hdzitao.editstarters.dependency.Starter;
-import io.github.hdzitao.editstarters.initializr.Module;
-import io.github.hdzitao.editstarters.initializr.SpringBoot;
-import io.github.hdzitao.editstarters.initializr.SpringBootBuilder;
+import io.github.hdzitao.editstarters.springboot.Module;
+import io.github.hdzitao.editstarters.springboot.SpringBoot;
+import io.github.hdzitao.editstarters.springboot.SpringBootBuilder;
 import io.github.hdzitao.editstarters.startspringio.metadata.*;
 import io.github.hdzitao.editstarters.version.Version;
 import io.github.hdzitao.editstarters.version.Versions;

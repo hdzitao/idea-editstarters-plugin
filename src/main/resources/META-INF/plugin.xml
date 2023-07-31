@@ -23,7 +23,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <!-- Add your extensions here -->
-        <projectService serviceImplementation="io.github.hdzitao.editstarters.initializr.InitializrCache"/>
+        <projectService serviceImplementation="io.github.hdzitao.editstarters.cache.InitializrCache"/>
     </extensions>
 
     <actions>

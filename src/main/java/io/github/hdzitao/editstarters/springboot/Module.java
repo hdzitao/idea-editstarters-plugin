@@ -1,4 +1,4 @@
-package io.github.hdzitao.editstarters.initializr;
+package io.github.hdzitao.editstarters.springboot;
 
 import io.github.hdzitao.editstarters.dependency.Starter;
 import lombok.Getter;

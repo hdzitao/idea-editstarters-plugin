@@ -5,6 +5,7 @@
 - 升级依赖
 - 优化代码，优化UI
 - 修改到io.github.hdzitao包名下
+- OHub功能，支持spring boot旧版本
 
 ## 3.1.0
 

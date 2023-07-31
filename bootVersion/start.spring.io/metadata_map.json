@@ -1,27 +1,29 @@
-[
-  {
-    "versionRange": "2.3.0",
-    "metadataConfig": "2_x/metadata_config_2_3_0.json",
-    "enable": true
-  },
-  {
-    "versionRange": "[2.2.2,2.2.x]",
-    "metadataConfig": "2_x/metadata_config_2_2_2.json",
-    "enable": true
-  },
-  {
-    "versionRange": "[2.2.0,2.2.1]",
-    "metadataConfig": "2_x/metadata_config_2_2_0.json",
-    "enable": true
-  },
-  {
-    "versionRange": "[2.0.0,2.1.x]",
-    "metadataConfig": "2_x/metadata_config_2_0_0.json",
-    "enable": true
-  },
-  {
-    "versionRange": "[1.5.0,1.5.x]",
-    "metadataConfig": "1_x/metadata_config_1_5_0.json",
-    "enable": true
-  }
-]
+{
+  "metaDataChain": [
+    {
+      "versionRange": "2.3.0",
+      "metadataConfig": "/2_x/metadata_config_2_3_0.json",
+      "enable": true
+    },
+    {
+      "versionRange": "[2.2.2,2.2.x]",
+      "metadataConfig": "/2_x/metadata_config_2_2_2.json",
+      "enable": true
+    },
+    {
+      "versionRange": "[2.2.0,2.2.1]",
+      "metadataConfig": "/2_x/metadata_config_2_2_0.json",
+      "enable": true
+    },
+    {
+      "versionRange": "[2.0.0,2.1.x]",
+      "metadataConfig": "/2_x/metadata_config_2_0_0.json",
+      "enable": true
+    },
+    {
+      "versionRange": "[1.5.0,1.5.x]",
+      "metadataConfig": "/1_x/metadata_config_1_5_0.json",
+      "enable": true
+    }
+  ]
+}
