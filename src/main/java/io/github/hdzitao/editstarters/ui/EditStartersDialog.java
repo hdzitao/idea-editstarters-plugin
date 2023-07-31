@@ -17,7 +17,6 @@ import io.github.hdzitao.editstarters.ui.swing.EditStartersSelectionModel;
 import io.github.hdzitao.editstarters.ui.swing.StarterListRenderer;
 import io.github.hdzitao.editstarters.ui.swing.StarterListSelectionModel;
 import io.github.hdzitao.editstarters.version.Version;
-import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -44,11 +43,13 @@ public class EditStartersDialog {
     private JTextField searchField;
     private JCheckBox cachedBox;
     private JButton removeButton;
+    private JCheckBox oHubBox;
     private JTextPane descPane;
     private final JFrame frame;
     private final Set<Starter> addStarters = new HashSet<>(64);
     private final Set<Starter> removeStarters = new HashSet<>(64);
     private final WeakHashMap<Starter, String> toolTipTextCache = new WeakHashMap<>(); // 加个缓存
+    private final WeakHashMap<Starter, String> descPaneCache = new WeakHashMap<>(); // 加个缓存
     private final WeakHashMap<Starter, String> searchCache = new WeakHashMap<>(); // 搜索缓存
 
     public EditStartersDialog(InitializrParameter parameter, InitializrReturn ret) {
@@ -63,6 +64,17 @@ public class EditStartersDialog {
                 public void mouseMoved(MouseEvent e) {
                     cachedBox.setToolTipText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                             .format(new Date(ret.getCacheUpdateTime())));
+                }
+            });
+        }
+
+        // 是否启用Ohub
+        if (ret.isEnableOHub()) {
+            oHubBox.setSelected(true);
+            oHubBox.addMouseMotionListener(new MouseAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    oHubBox.setToolTipText(ret.getOHub().getName());
                 }
             });
         }
@@ -130,6 +142,14 @@ public class EditStartersDialog {
                     list.setToolTipText(getStarterToolTipText(starter));
                 }
             }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                @SuppressWarnings("unchecked")
+                JList<Starter> list = (JList<Starter>) e.getSource();
+                Starter starter = list.getSelectedValue();
+                descPane.setText(getStarterDesc(starter));
+            }
         };
 
         List<Dependency> existDependencies = buildSystem.getDependencies();
@@ -142,6 +162,7 @@ public class EditStartersDialog {
                 .filter(info -> Points.contains(existDependencies, info))
                 .collect(Collectors.toList())));
         selectList.addMouseMotionListener(showDescAdapter);
+        selectList.addMouseListener(showDescAdapter);
         // 删除按钮
         removeButton.addActionListener(e -> {
             for (Starter Starter : selectList.getSelectedValuesList()) {
@@ -192,6 +213,7 @@ public class EditStartersDialog {
                     selectListModel.remove(starter);
                 }));
         starterList.addMouseMotionListener(showDescAdapter);
+        starterList.addMouseListener(showDescAdapter);
 
         // 搜索框
         searchField.addKeyListener(new KeyAdapter() {
@@ -235,9 +257,12 @@ public class EditStartersDialog {
             if (info.getVersionRange() != null) {
                 buffer.append("Version Range: ").append(info.getVersionRange()).append("<br/>");
             }
-            buffer.append("<br/>").append(WordUtils.wrap(info.getDescription(), 50, "<br/>", false));
 
             return buffer.toString();
         });
+    }
+
+    private String getStarterDesc(Starter starter) {
+        return descPaneCache.computeIfAbsent(starter, info -> info.getName() + "\n\n" + info.getDescription());
     }
 }

@@ -1,5 +1,6 @@
 package io.github.hdzitao.editstarters.initializr;
 
+import io.github.hdzitao.editstarters.ohub.OHub;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +20,7 @@ public class InitializrReturn {
     private long cacheUpdateTime;
 
     private boolean enableOHub = false;
-    private String oHubName;
+    private OHub oHub;
 
     public InitializrReturn(InitializrParameter parameter) {
         this.parameter = parameter;

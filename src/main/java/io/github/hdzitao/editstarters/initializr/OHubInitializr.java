@@ -33,7 +33,7 @@ public class OHubInitializr implements Initializr {
         }
 
         ret.setEnableOHub(true);
-        ret.setOHubName(oHub.getName());
+        ret.setOHub(oHub);
 
         // 初始化旧版本配置
         String metadataMapUrl = oHub.getMetadataMapUrl();
