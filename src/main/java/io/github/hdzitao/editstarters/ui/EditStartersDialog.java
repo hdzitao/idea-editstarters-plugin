@@ -12,10 +12,7 @@ import io.github.hdzitao.editstarters.initializr.InitializrParameter;
 import io.github.hdzitao.editstarters.initializr.InitializrReturn;
 import io.github.hdzitao.editstarters.springboot.Module;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
-import io.github.hdzitao.editstarters.ui.swing.EditStartersRenderer;
-import io.github.hdzitao.editstarters.ui.swing.EditStartersSelectionModel;
-import io.github.hdzitao.editstarters.ui.swing.StarterListRenderer;
-import io.github.hdzitao.editstarters.ui.swing.StarterListSelectionModel;
+import io.github.hdzitao.editstarters.ui.swing.*;
 import io.github.hdzitao.editstarters.version.Version;
 import org.apache.commons.lang3.StringUtils;
 
@@ -48,7 +45,6 @@ public class EditStartersDialog {
     private final JFrame frame;
     private final Set<Starter> addStarters = new HashSet<>(64);
     private final Set<Starter> removeStarters = new HashSet<>(64);
-    private final WeakHashMap<Starter, String> toolTipTextCache = new WeakHashMap<>(); // 加个缓存
     private final WeakHashMap<Starter, String> descPaneCache = new WeakHashMap<>(); // 加个缓存
     private final WeakHashMap<Starter, String> searchCache = new WeakHashMap<>(); // 搜索缓存
 
@@ -131,6 +127,7 @@ public class EditStartersDialog {
         });
 
         // 显示详细信息
+        descPane.setEditorKit(new WarpEditorKit());
         MouseAdapter showDescAdapter = new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
@@ -139,17 +136,9 @@ public class EditStartersDialog {
                 int index = list.locationToIndex(e.getPoint());
                 if (index > -1) {
                     Starter starter = list.getModel().getElementAt(index);
-                    list.setToolTipText(getStarterToolTipText(starter));
+                    descPane.setText(getStarterDesc(starter));
+                    descPane.setCaretPosition(0);
                 }
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                @SuppressWarnings("unchecked")
-                JList<Starter> list = (JList<Starter>) e.getSource();
-                Starter starter = list.getSelectedValue();
-                descPane.setText(getStarterDesc(starter));
-                descPane.setCaretPosition(0);
             }
         };
 
@@ -226,9 +215,10 @@ public class EditStartersDialog {
                     starterList.setModel(new CollectionComboBoxModel<>());
                     return;
                 }
-                List<Starter> result = modules.values().stream().flatMap(starters -> starters.stream().filter(starter ->
-                                searchCache.computeIfAbsent(starter, key -> (key.getGroupId() + ":" + key.getArtifactId() + "\t" + key.getName()).toLowerCase())
-                                        .contains(searchKey)))
+                List<Starter> result = modules.values().stream()
+                        .flatMap(Collection::stream)
+                        .parallel()
+                        .filter(starter -> searchCache.computeIfAbsent(starter, k -> getSearchText(k)).contains(searchKey))
                         .collect(Collectors.toList());
                 starterList.setModel(new CollectionComboBoxModel<>(result));
             }
@@ -245,25 +235,11 @@ public class EditStartersDialog {
         frame.setVisible(true);
     }
 
-    private String getStarterToolTipText(Starter starter) {
-        return toolTipTextCache.computeIfAbsent(starter, info -> {
-            StringBuilder buffer = new StringBuilder();
-            buffer.append("Name: ").append(info.getName()).append("<br/>")
-                    .append("GroupId: ").append(info.getGroupId()).append("<br/>")
-                    .append("ArtifactId: ").append(info.getArtifactId()).append("<br/>")
-                    .append("Scope: ").append(info.getScope()).append("<br/>");
-            if (info.getVersion() != null) {
-                buffer.append("Version: ").append(info.getVersion()).append("<br/>");
-            }
-            if (info.getVersionRange() != null) {
-                buffer.append("Version Range: ").append(info.getVersionRange()).append("<br/>");
-            }
-
-            return buffer.toString();
-        });
-    }
-
     private String getStarterDesc(Starter starter) {
         return descPaneCache.computeIfAbsent(starter, info -> info.getName() + "\n\n" + info.getDescription());
+    }
+
+    private String getSearchText(Starter starter) {
+        return (starter.getGroupId() + ":" + starter.getArtifactId() + "\t" + starter.getName()).toLowerCase();
     }
 }
