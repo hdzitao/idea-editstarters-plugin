@@ -26,6 +26,7 @@ public abstract class EditStartersButtonAction extends AnAction {
     private final Initializr[] initializrs = {
             new CacheInitializr(),
             new StartSpringInitializr(),
+            new OHubInitializr(),
     };
 
     @Override
@@ -55,7 +56,8 @@ public abstract class EditStartersButtonAction extends AnAction {
                     .setBuildSystem(buildSystem)
                     .setVersion(version)
                     .setUrl(url)
-                    .setEnableCache(initializrDialog.isEnableCache());
+                    .setEnableCache(initializrDialog.isEnableCache())
+                    .setOHub(initializrDialog.getOHub());
             // 组装返回
             InitializrReturn ret = new InitializrReturn(parameter);
             // 执行
