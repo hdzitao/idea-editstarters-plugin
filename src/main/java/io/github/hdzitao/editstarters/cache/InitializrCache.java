@@ -7,7 +7,6 @@ import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
-import io.github.hdzitao.editstarters.utils.JSONConverter;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;

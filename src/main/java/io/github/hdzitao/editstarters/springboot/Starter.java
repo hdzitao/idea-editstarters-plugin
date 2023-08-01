@@ -1,6 +1,10 @@
-package io.github.hdzitao.editstarters.dependency;
+package io.github.hdzitao.editstarters.springboot;
 
 
+import io.github.hdzitao.editstarters.dependency.Bom;
+import io.github.hdzitao.editstarters.dependency.Dependency;
+import io.github.hdzitao.editstarters.dependency.Points;
+import io.github.hdzitao.editstarters.dependency.Repository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

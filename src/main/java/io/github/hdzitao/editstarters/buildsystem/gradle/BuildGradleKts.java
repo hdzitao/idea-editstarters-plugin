@@ -8,7 +8,7 @@ import io.github.hdzitao.editstarters.buildsystem.DependencyElement;
 import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Repository;
-import io.github.hdzitao.editstarters.dependency.Starter;
+import io.github.hdzitao.editstarters.springboot.Starter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.kotlin.psi.*;
 

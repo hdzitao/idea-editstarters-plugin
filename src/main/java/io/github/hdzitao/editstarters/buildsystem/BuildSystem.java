@@ -2,9 +2,9 @@ package io.github.hdzitao.editstarters.buildsystem;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import io.github.hdzitao.editstarters.dependency.Dependency;
-import io.github.hdzitao.editstarters.dependency.EditStarters;
 import io.github.hdzitao.editstarters.dependency.Points;
-import io.github.hdzitao.editstarters.dependency.Starter;
+import io.github.hdzitao.editstarters.springboot.EditStarters;
+import io.github.hdzitao.editstarters.springboot.Starter;
 import lombok.Getter;
 
 import java.util.Collection;

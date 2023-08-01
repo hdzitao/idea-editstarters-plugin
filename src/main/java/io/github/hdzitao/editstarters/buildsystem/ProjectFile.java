@@ -1,7 +1,12 @@
 package io.github.hdzitao.editstarters.buildsystem;
 
 import com.intellij.psi.PsiElement;
-import io.github.hdzitao.editstarters.dependency.*;
+import io.github.hdzitao.editstarters.dependency.Bom;
+import io.github.hdzitao.editstarters.dependency.Dependency;
+import io.github.hdzitao.editstarters.dependency.Points;
+import io.github.hdzitao.editstarters.dependency.Repository;
+import io.github.hdzitao.editstarters.springboot.EditStarters;
+import io.github.hdzitao.editstarters.springboot.Starter;
 import io.github.hdzitao.editstarters.ui.ShowErrorException;
 import org.apache.commons.collections.CollectionUtils;
 

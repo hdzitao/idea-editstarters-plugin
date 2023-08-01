@@ -1,4 +1,4 @@
-package io.github.hdzitao.editstarters.dependency;
+package io.github.hdzitao.editstarters.springboot;
 
 
 import java.util.Collection;

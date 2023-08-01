@@ -6,7 +6,7 @@ import io.github.hdzitao.editstarters.buildsystem.ProjectFile;
 import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Point;
 import io.github.hdzitao.editstarters.dependency.Repository;
-import io.github.hdzitao.editstarters.dependency.Starter;
+import io.github.hdzitao.editstarters.springboot.Starter;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.ArrayUtils;

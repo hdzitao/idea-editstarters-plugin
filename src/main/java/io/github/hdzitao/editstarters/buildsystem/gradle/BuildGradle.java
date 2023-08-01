@@ -8,7 +8,7 @@ import io.github.hdzitao.editstarters.buildsystem.DependencyElement;
 import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Repository;
-import io.github.hdzitao.editstarters.dependency.Starter;
+import io.github.hdzitao.editstarters.springboot.Starter;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrStatement;

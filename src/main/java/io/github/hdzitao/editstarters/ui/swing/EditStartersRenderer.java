@@ -1,7 +1,7 @@
 package io.github.hdzitao.editstarters.ui.swing;
 
 
-import io.github.hdzitao.editstarters.dependency.Starter;
+import io.github.hdzitao.editstarters.springboot.Starter;
 
 import javax.swing.*;
 import java.awt.*;

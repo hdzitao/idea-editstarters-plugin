@@ -1,4 +1,4 @@
-package io.github.hdzitao.editstarters.utils;
+package io.github.hdzitao.editstarters.cache;
 
 import com.google.gson.Gson;
 import com.intellij.util.xmlb.Converter;

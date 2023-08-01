@@ -4,6 +4,11 @@ package io.github.hdzitao.editstarters.initializr;
 import io.github.hdzitao.editstarters.cache.InitializrCache;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 
+/**
+ * 缓存初始化
+ *
+ * @version 3.2.0
+ */
 public class CacheInitializr implements Initializr {
     @Override
     public void initialize(InitializrParameter parameter, InitializrReturn ret, InitializrChain chain) {
