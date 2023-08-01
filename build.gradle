@@ -1,15 +1,14 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '1.15.0'
-    id 'org.jetbrains.changelog' version '1.3.1'
+    id 'org.jetbrains.intellij' version "$INTELLIJ_PLUGIN_VERSION"
+    id 'org.jetbrains.changelog' version "$CHANGELOG_VERSION"
 }
 
-group 'io.github.hdzitao'
-version '3.2.0'
+group PROJECT_GROUP
+version PROJECT_VERSION
 
-
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
+sourceCompatibility = PROJECT_COMPATIBILITY
+targetCompatibility = PROJECT_COMPATIBILITY
 
 repositories {
     maven { url = 'https://maven.aliyun.com/repository/public' }
@@ -18,9 +17,12 @@ repositories {
 }
 
 dependencies {
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: "${LOMBOK_VERSION}"
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${LOMBOK_VERSION}"
-    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+    // lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: LOMBOK_VERSION
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: LOMBOK_VERSION
+
+    // junit
+    testImplementation group: 'junit', name: 'junit', version: JUNIT_VERSION
 }
 
 // 兼容 Apple M1
@@ -30,22 +32,21 @@ if ('Mac OS X' == System.getProperty('os.name') && 'aarch64' == System.getProper
 }
 
 intellij {
-    version = '2020.1.1'
-    type = 'IC'
-    plugins = ['java', 'maven', 'gradle', 'Groovy', 'Kotlin']
+    version = INTELLIJ_IDEA_VERSION
+    type = INTELLIJ_IDEA_TYPE
+    plugins = INTELLIJ_IDEA_PLUGINS.split(",").toList()
 }
 
 changelog {
     headerParserRegex = ~/\d+\.\d+\.\d+/
-    groups = []
 }
 
 patchPluginXml {
-    sinceBuild = '201'
-    untilBuild = ''
+    sinceBuild = INTELLIJ_IDEA_SINCE_BUILD
+    untilBuild = INTELLIJ_IDEA_UNTIL_BUILD
 
     changeNotes = """
-${changelog.get(project.version as String).toHTML()}
+${changelog.get(PROJECT_VERSION as String).toHTML()}
 <a href="https://github.com/hdzitao/idea-editstarters-plugin">GitHub</a>
 """
 }
