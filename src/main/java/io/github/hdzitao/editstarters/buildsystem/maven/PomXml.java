@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  */
 @SuppressWarnings("ConstantConditions")
 public class PomXml extends ProjectFile<XmlTag> {
+    // TAG ==================================================================================
     private static final String TAG_DEPENDENCY_MANAGEMENT = "dependencyManagement";
     private static final String TAG_DEPENDENCIES = "dependencies";
     private static final String TAG_DEPENDENCY = "dependency";
@@ -31,6 +32,8 @@ public class PomXml extends ProjectFile<XmlTag> {
     private static final String TAG_SCOPE = "scope";
     private static final String TAG_REPOSITORIES = "repositories";
     private static final String TAG_REPOSITORY = "repository";
+    // TAG ==================================================================================
+
     /**
      * 根标签
      */

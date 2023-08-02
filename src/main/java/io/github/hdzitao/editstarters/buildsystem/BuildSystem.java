@@ -27,7 +27,8 @@ public abstract class BuildSystem implements EditStarters {
         this.context = context;
         this.projectFile = projectFile;
         this.dependencies = dependencies;
-        this.springbootDependency = Points.find(this.dependencies, new Dependency("org.springframework.boot", "spring-boot"));
+        this.springbootDependency = Points.find(this.dependencies,
+                new Dependency("org.springframework.boot", "spring-boot"));
         this.springBootProject = this.springbootDependency != null;
     }
 

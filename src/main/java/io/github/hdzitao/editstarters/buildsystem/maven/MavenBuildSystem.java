@@ -21,11 +21,16 @@ import java.util.stream.Collectors;
 //@SuppressWarnings("ConstantConditions")
 public class MavenBuildSystem extends BuildSystem {
 
-
     private MavenBuildSystem(DataContext context, PomXml pomXml, List<Dependency> dependencies) {
         super(context, pomXml, dependencies);
     }
 
+    /**
+     * 构建 maven build system
+     *
+     * @param context
+     * @return
+     */
     public static MavenBuildSystem from(DataContext context) {
         PsiFile psiFile = context.getData(CommonDataKeys.PSI_FILE);
         if (!(psiFile instanceof XmlFile)) {

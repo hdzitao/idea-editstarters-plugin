@@ -28,6 +28,9 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
         return project.getService(InitializrCache.class);
     }
 
+    /**
+     * 缓存bean
+     */
     @Getter
     @Setter
     public static class State {
@@ -41,9 +44,15 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
     public static class SpringBootConverter extends JSONConverter<SpringBoot> {
     }
 
-
     private State state;
 
+    /**
+     * 获取缓存
+     *
+     * @param url
+     * @param version
+     * @return
+     */
     public SpringBoot get(String url, String version) {
         // 检查缓存
         if (state != null
@@ -55,6 +64,13 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
         return null;
     }
 
+    /**
+     * 更新缓存
+     *
+     * @param url
+     * @param version
+     * @param project
+     */
     public void put(String url, String version, SpringBoot project) {
         if (state == null) {
             state = new State();
@@ -65,6 +81,11 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
         state.updateTime = System.currentTimeMillis();
     }
 
+    /**
+     * 获取url
+     *
+     * @return
+     */
     public String getUrl() {
         if (state != null && StringUtils.isNoneBlank(state.url)) {
             return state.url;
@@ -73,6 +94,11 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
         return "https://start.spring.io/";
     }
 
+    /**
+     * 获取更新时间
+     *
+     * @return
+     */
     public long getUpdateTime() {
         if (state != null) {
             return state.updateTime;

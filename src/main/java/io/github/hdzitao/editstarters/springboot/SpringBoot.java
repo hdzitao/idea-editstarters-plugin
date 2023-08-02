@@ -17,7 +17,6 @@ public class SpringBoot {
     private final Version version;
     private final List<Module> modules;
 
-
     public SpringBoot(Version version, List<Module> modules) {
         this.version = version;
         this.modules = modules;

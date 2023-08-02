@@ -15,6 +15,5 @@ import lombok.Setter;
 public class OHubMetaData {
     private String versionRange;
     private String metadataConfig;
-
     private boolean enable = true; // 默认启用
 }

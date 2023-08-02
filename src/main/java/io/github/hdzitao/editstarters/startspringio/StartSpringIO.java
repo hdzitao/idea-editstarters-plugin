@@ -15,15 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class StartSpringIO {
-
-    /**
-     * 版本
-     */
     private Version version;
-
-    /**
-     * 元数据
-     */
     private MetadataConfig metadataConfig;
 
     public StartSpringIO(Version version, MetadataConfig metadataConfig) {
@@ -31,6 +23,12 @@ public class StartSpringIO {
         this.metadataConfig = metadataConfig;
     }
 
+    /**
+     * url => metadata config路径
+     *
+     * @param url
+     * @return
+     */
     public static String checkMetadataConfigLink(String url) {
         if (url.endsWith("/")) {
             url = url.substring(0, url.length() - 1);

@@ -4,18 +4,16 @@ import com.intellij.psi.PsiElement;
 import io.github.hdzitao.editstarters.buildsystem.DependencyScope;
 import io.github.hdzitao.editstarters.buildsystem.ProjectFile;
 import io.github.hdzitao.editstarters.dependency.Bom;
-import io.github.hdzitao.editstarters.dependency.Point;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.Starter;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.function.BiFunction;
 
 /**
  * build.gradle抽象类
@@ -24,83 +22,90 @@ import java.util.regex.Pattern;
  */
 //@SuppressWarnings("ConstantConditions")
 public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectFile<T> {
+
+    /**
+     * gradle语法简单抽象
+     */
     @Getter
-    @Setter
+    @AllArgsConstructor
     public static class Instruction {
         private final String inst;
         private final String point;
 
-        public Instruction(String inst, String point) {
-            this.inst = inst;
-            this.point = point;
-        }
-
         public String toInstString(String format) {
-            return format.replace("$inst", inst).replace("$point", point);
+            return format.replace("${inst}", inst).replace("${point}", point);
         }
     }
 
-    @Getter
-    @Setter
-    protected static class GradlePoint implements Point {
-        private final String groupId;
-        private final String artifactId;
-
-        private GradlePoint(String groupId, String artifactId) {
-            this.groupId = groupId;
-            this.artifactId = artifactId;
-        }
-
-        public static GradlePoint of(String groupId, String artifactId) {
-            return new GradlePoint(groupId, artifactId);
-        }
-
-        public static GradlePoint empty() {
-            return new GradlePoint("", "");
-        }
-
-        @Override
-        public String point() {
-            return groupId + ":" + artifactId;
-        }
-    }
-
+    // TAG ==============================================================================
     public static final String TAG_DEPENDENCY_MANAGEMENT = "dependencies";
     public static final String TAG_BOM_MANAGEMENT = "dependencyManagement";
     public static final String TAG_BOM_IMPORT = "imports";
     public static final String TAG_BOM = "mavenBom";
     public static final String TAG_REPOSITORY_MANAGEMENT = "repositories";
     public static final String TAG_REPOSITORY = "maven";
+    // TAG ==============================================================================
 
+    protected final static String EMPTY = "";
 
+    /**
+     * dependency语法
+     *
+     * @param info
+     * @return
+     */
     protected List<Instruction> dependencyInstruction(Starter info) {
         List<Instruction> instructions = new ArrayList<>();
-        String point = info.getGroupId() + ":" + info.getArtifactId()
-                + (StringUtils.isNoneBlank(info.getVersion()) ? ":" + info.getVersion() : "");
+        String point = splicingDependency(info.getGroupId(), info.getArtifactId(), info.getVersion());
         for (String inst : resolveScope(DependencyScope.getByScope(info.getScope()))) {
             instructions.add(new Instruction(inst, point));
         }
         return instructions;
     }
 
+    /**
+     * bom语法
+     *
+     * @param bom
+     * @return
+     */
     protected Instruction bomInstruction(Bom bom) {
-        return new Instruction(TAG_BOM, String.join(":", bom.getGroupId(), bom.getArtifactId(), bom.getVersion()));
+        String point = splicingDependency(bom.getGroupId(), bom.getArtifactId(), bom.getVersion());
+        return new Instruction(TAG_BOM, point);
     }
 
+    /**
+     * repository语句
+     *
+     * @param repository
+     * @return
+     */
     protected Instruction repositoryInstruction(Repository repository) {
         return new Instruction(TAG_REPOSITORY, repository.getUrl());
     }
 
-    protected GradlePoint splitGroupArtifact(String point) {
+    /**
+     * 割出GroupID/ArtifactID构建Depend
+     *
+     * @param point
+     * @return
+     */
+    protected <Depend> Depend newByGroupArtifact(String point, BiFunction<String, String, Depend> buildFun) {
         if (StringUtils.isNoneBlank(point)) {
-            Matcher matcher = Pattern.compile("^([^:]+):([^:]+)").matcher(point);
-            if (matcher.find()) {
-                return GradlePoint.of(matcher.group(1), matcher.group(2));
+            String[] groupArtifact = point.split(":");
+            if (groupArtifact.length >= 2) {
+                return buildFun.apply(groupArtifact[0], groupArtifact[1]);
             }
         }
-        return GradlePoint.empty();
+        return buildFun.apply(EMPTY, EMPTY);
     }
 
+    /**
+     * 处理scope
+     *
+     * @param scope
+     * @return
+     */
     protected String[] resolveScope(DependencyScope scope) {
         switch (scope) {
             case ANNOTATION_PROCESSOR:
@@ -120,6 +125,13 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
         }
     }
 
+    /**
+     * " aaa " => "aaa"
+     *
+     * @param s
+     * @param chars
+     * @return
+     */
     protected String trimText(String s, char... chars) {
         if (s == null) {
             return "";
@@ -137,4 +149,26 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
         }
         return ((st > 0) || (len < s.length())) ? s.substring(st, len) : s;
     }
+
+    /**
+     * 拼接 groupId:artifactId:version
+     *
+     * @param groupId
+     * @param artifactId
+     * @param version
+     * @return
+     */
+    protected String splicingDependency(String groupId, String artifactId, String version) {
+        groupId = StringUtils.isNoneBlank(groupId) ? groupId : "";
+        artifactId = StringUtils.isNoneBlank(artifactId) ? artifactId : "";
+
+        String point = groupId + ":" + artifactId;
+
+        if (StringUtils.isNoneBlank(version)) {
+            point = point + ":" + version;
+        }
+
+        return point;
+    }
+
 }

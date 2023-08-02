@@ -32,6 +32,12 @@ public class GradleBuildSystem extends BuildSystem {
         super(context, buildGradle, dependencies);
     }
 
+    /**
+     * 根据文件名构建gradle build system
+     *
+     * @param context
+     * @return
+     */
     @SneakyThrows
     public static GradleBuildSystem from(DataContext context) {
         PsiFile psiFile = context.getData(CommonDataKeys.PSI_FILE);

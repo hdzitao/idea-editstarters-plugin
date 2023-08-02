@@ -29,14 +29,12 @@ import java.util.stream.Collectors;
 @SuppressWarnings("ConstantConditions")
 public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
     private final GroovyFile buildFile;
-
     private final GroovyPsiElementFactory factory;
 
     public BuildGradle(Project project, GroovyFile buildFile) {
         this.buildFile = buildFile;
         this.factory = GroovyPsiElementFactory.getInstance(project);
     }
-
 
     @Override
     public GrClosableBlock findOrCreateDependenciesTag() {
@@ -46,10 +44,8 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
     @Override
     public List<Dependency> findAllDependencies(GrClosableBlock dependenciesTag) {
         return PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall.class).stream()
-                .map(tag -> {
-                    GradlePoint gradlePoint = getDependencyGroupArtifact(tag);
-                    return new DependencyElement<>(gradlePoint.getGroupId(), gradlePoint.getArtifactId(), tag);
-                }).collect(Collectors.toList());
+                .map(this::getDependencyGroupArtifact)
+                .collect(Collectors.toList());
     }
 
 
@@ -57,7 +53,7 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
     public void createDependencyTag(GrClosableBlock dependenciesTag, Starter starter) {
         List<Instruction> instructions = dependencyInstruction(starter);
         for (Instruction instruction : instructions) {
-            GrStatement statement = factory.createStatementFromText(instruction.toInstString("$inst '$point'"));
+            GrStatement statement = factory.createStatementFromText(instruction.toInstString("${inst} '${point}'"));
             dependenciesTag.addStatementBefore(statement, null);
         }
     }
@@ -70,16 +66,14 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
     @Override
     public List<Bom> findAllBoms(GrClosableBlock bomsTag) {
         return findAllMethod(bomsTag, TAG_BOM).stream()
-                .map(tag -> {
-                    GradlePoint gradlePoint = splitGroupArtifact(getMethodFirstParam(tag));
-                    return new Bom(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
-                }).collect(Collectors.toList());
+                .map(tag -> newByGroupArtifact(getMethodFirstParam(tag), Bom::new))
+                .collect(Collectors.toList());
     }
 
     @Override
     public void createBomTag(GrClosableBlock bomsTag, Bom bom) {
         Instruction instruction = bomInstruction(bom);
-        GrStatement statement = factory.createStatementFromText(instruction.toInstString("$inst '$point'"));
+        GrStatement statement = factory.createStatementFromText(instruction.toInstString("${inst} '${point}'"));
         bomsTag.addStatementBefore(statement, null);
     }
 
@@ -101,10 +95,17 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
     @Override
     public void createRepositoryTag(GrClosableBlock repositoriesTag, Repository repository) {
         Instruction instruction = repositoryInstruction(repository);
-        GrStatement statement = factory.createStatementFromText(instruction.toInstString("$inst { url '$point' }"));
+        GrStatement statement = factory.createStatementFromText(instruction.toInstString("${inst} { url '${point}' }"));
         repositoriesTag.addStatementBefore(statement, null);
     }
 
+    /**
+     * 闭包的获取或创建
+     *
+     * @param psiElement
+     * @param name
+     * @return
+     */
     private GrClosableBlock getOrCreateClosure(PsiElement psiElement, String name) {
         GrMethodCall closure = findMethod(psiElement, name);
         if (closure == null) {
@@ -119,34 +120,67 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
         return closure.getClosureArguments()[0];
     }
 
+    /**
+     * 查找方法
+     *
+     * @param psiElement
+     * @param name
+     * @return
+     */
     private GrMethodCall findMethod(PsiElement psiElement, String name) {
         return ContainerUtil.find(PsiTreeUtil.getChildrenOfTypeAsList(psiElement, GrMethodCall.class), call ->
                 Objects.equals(name, call.getInvokedExpression().getText()));
     }
 
+    /**
+     * 查找方法/批量
+     *
+     * @param psiElement
+     * @param name
+     * @return
+     */
     private List<GrMethodCall> findAllMethod(PsiElement psiElement, String name) {
         List<GrMethodCall> closableBlocks = PsiTreeUtil.getChildrenOfTypeAsList(psiElement, GrMethodCall.class);
         return ContainerUtil.findAll(closableBlocks, call -> Objects.equals(name, call.getInvokedExpression().getText()));
     }
 
+    /**
+     * 获取方法第一个参数
+     *
+     * @param call
+     * @return
+     */
     private String getMethodFirstParam(GrMethodCall call) {
-        return trimText(call.getArgumentList().getAllArguments()[0].getText());
+        return trimQuotation(call.getArgumentList().getAllArguments()[0].getText());
     }
 
-    private GradlePoint getDependencyGroupArtifact(GrMethodCall call) {
+    /**
+     * 解析依赖语句
+     *
+     * @param call
+     * @return
+     */
+    private DependencyElement<GrMethodCall> getDependencyGroupArtifact(GrMethodCall call) {
         Map<String, String> namedArguments = Arrays.stream(call.getNamedArguments()).collect(Collectors.toMap(
-                argument -> trimText(argument.getLabel().getText()),
-                argument -> trimText(argument.getExpression().getText())
+                argument -> trimQuotation(argument.getLabel().getText()),
+                argument -> trimQuotation(argument.getExpression().getText())
         ));
 
         if (namedArguments.isEmpty()) {
-            return splitGroupArtifact(getMethodFirstParam(call));
+            return newByGroupArtifact(getMethodFirstParam(call), (groupId, artifactId) ->
+                    new DependencyElement<>(groupId, artifactId, call));
         } else {
-            return GradlePoint.of(namedArguments.get("group"), namedArguments.get("name"));
+            return new DependencyElement<>(namedArguments.get("group"), namedArguments.get("name"), call);
         }
     }
 
-    private String trimText(String s) {
+    /**
+     * 删除头尾的引号
+     *
+     * @param s
+     * @return
+     */
+    private String trimQuotation(String s) {
         return trimText(s, '\'', '"');
     }
 }

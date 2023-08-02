@@ -20,6 +20,12 @@ import java.util.List;
 public class OHubMetadataMap {
     private List<OHubMetaData> metaDataList;
 
+    /**
+     * 匹配版本
+     *
+     * @param version
+     * @return
+     */
     public OHubMetaData match(Version version) {
         for (OHubMetaData metaDataElement : metaDataList) {
             if (metaDataElement.isEnable() && Versions.parseRange(metaDataElement.getVersionRange()).match(version)) {

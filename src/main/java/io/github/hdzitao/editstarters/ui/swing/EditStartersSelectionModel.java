@@ -3,7 +3,7 @@ package io.github.hdzitao.editstarters.ui.swing;
 import javax.swing.*;
 
 /**
- * 顶层ListSelectionModel
+ * JList checkbox顶层ListSelectionModel
  *
  * @version 3.2.0
  */
@@ -24,9 +24,21 @@ public class EditStartersSelectionModel extends DefaultListSelectionModel {
         }
     }
 
+    /**
+     * 选中回调
+     *
+     * @param index0
+     * @param index1
+     */
     protected void selectedCallback(int index0, int index1) {
     }
 
+    /**
+     * 取消回调
+     *
+     * @param index0
+     * @param index1
+     */
     protected void cancelCallback(int index0, int index1) {
     }
 }

@@ -26,6 +26,12 @@ public class MetaDataBom extends Bom {
     // mapping 字段
     private String compatibilityRange;
 
+    /**
+     * 根据版本处理
+     *
+     * @param version
+     * @return
+     */
     public MetaDataBom resolve(Version version) {
         MetaDataBom bom = new MetaDataBom();
         bom.groupId = this.groupId;

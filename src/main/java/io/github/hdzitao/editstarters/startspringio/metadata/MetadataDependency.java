@@ -30,6 +30,12 @@ public class MetadataDependency extends Dependency {
     private String repository;
     private List<MetadataDependency> mappings;
 
+    /**
+     * 根据版本处理
+     *
+     * @param version
+     * @return
+     */
     public MetadataDependency resolve(Version version) {
         MetadataDependency dependency = new MetadataDependency();
 

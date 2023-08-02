@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @SuppressWarnings("ConstantConditions")
 class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
     private final KtFile buildFile;
-
     private final KtPsiFactory factory;
 
     public BuildGradleKts(Project project, KtFile buildFile) {
@@ -42,17 +41,15 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
     @Override
     public List<Dependency> findAllDependencies(KtBlockExpression dependenciesTag) {
         return PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, KtCallExpression.class).stream()
-                .map(tag -> {
-                    GradlePoint gradlePoint = getDependencyGroupArtifact(tag);
-                    return new DependencyElement<>(gradlePoint.getGroupId(), gradlePoint.getArtifactId(), tag);
-                }).collect(Collectors.toList());
+                .map(this::getDependencyGroupArtifact)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void createDependencyTag(KtBlockExpression dependenciesTag, Starter starter) {
         List<Instruction> instructions = dependencyInstruction(starter);
         for (Instruction instruction : instructions) {
-            addExpression(dependenciesTag, instruction.toInstString("$inst(\"$point\")"));
+            addExpression(dependenciesTag, instruction.toInstString("${inst}(\"${point}\")"));
         }
     }
 
@@ -64,16 +61,14 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
     @Override
     public List<Bom> findAllBoms(KtBlockExpression bomsTag) {
         return findAllCallExpression(bomsTag, TAG_BOM).stream()
-                .map(tag -> {
-                    GradlePoint gradlePoint = splitGroupArtifact(getCallFirstParam(tag));
-                    return new Bom(gradlePoint.getGroupId(), gradlePoint.getArtifactId());
-                }).collect(Collectors.toList());
+                .map(tag -> newByGroupArtifact(getCallFirstParam(tag), Bom::new))
+                .collect(Collectors.toList());
     }
 
     @Override
     public void createBomTag(KtBlockExpression bomsTag, Bom bom) {
         Instruction instruction = bomInstruction(bom);
-        addExpression(bomsTag, instruction.toInstString("$inst(\"$point\")"));
+        addExpression(bomsTag, instruction.toInstString("${inst}(\"${point}\")"));
     }
 
     @Override
@@ -86,28 +81,41 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
         return findAllCallExpression(repositoriesTag, TAG_REPOSITORY).stream()
                 .map(tag -> {
                     List<KtValueArgument> arguments = tag.getValueArguments();
-                    String url = "";
-                    KtValueArgument first;
-                    if ((first = ContainerUtil.getFirstItem(arguments)) != null) {
-                        if (first instanceof KtLambdaArgument) {
-                            List<KtExpression> statements = ((KtLambdaArgument) first).getLambdaExpression().getBodyExpression().getStatements();
-                            KtExpression urlStatement = ContainerUtil.find(statements, statement -> statement instanceof KtBinaryExpression
-                                    && "url".equals(((KtBinaryExpression) statement).getLeft().getText()));
-                            url = getCallFirstParam(((KtCallExpression) ((KtBinaryExpression) urlStatement).getRight()));
-                        } else {
-                            url = getCallFirstParam(tag);
-                        }
+                    KtValueArgument first = ContainerUtil.getFirstItem(arguments);
+                    if (first == null) {
+                        return EMPTY;
                     }
-                    return new Repository(url);
-                }).collect(Collectors.toList());
+
+                    if (first instanceof KtLambdaArgument) {
+                        List<KtExpression> statements = ((KtLambdaArgument) first).getLambdaExpression()
+                                .getBodyExpression().getStatements();
+                        KtExpression urlStatement = ContainerUtil.find(statements, statement ->
+                                statement instanceof KtBinaryExpression
+                                        && "url".equals(((KtBinaryExpression) statement).getLeft().getText()));
+                        if (urlStatement == null) {
+                            return EMPTY;
+                        }
+                        return getCallFirstParam(((KtCallExpression) ((KtBinaryExpression) urlStatement).getRight()));
+                    } else {
+                        return getCallFirstParam(tag);
+                    }
+                })
+                .map(Repository::new)
+                .collect(Collectors.toList());
     }
 
     @Override
     public void createRepositoryTag(KtBlockExpression repositoriesTag, Repository repository) {
         Instruction instruction = repositoryInstruction(repository);
-        addExpression(repositoriesTag, instruction.toInstString("$inst { url = uri(\"$point\") }"));
+        addExpression(repositoriesTag, instruction.toInstString("${inst} { url = uri(\"${point}\") }"));
     }
 
+    /**
+     * 获取或创建顶层闭包
+     *
+     * @param name
+     * @return
+     */
     private KtBlockExpression getOrCreateTopBlock(String name) {
         Pattern regex = callNameRegex(name);
         KtScriptInitializer initializer = ContainerUtil.find(PsiTreeUtil.findChildrenOfAnyType(buildFile, KtScriptInitializer.class),
@@ -123,6 +131,13 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
         return ((KtLambdaExpression) expression.getLambdaArguments().get(0).getArgumentExpression()).getBodyExpression();
     }
 
+    /**
+     * 获取或创建闭包
+     *
+     * @param psiElement
+     * @param name
+     * @return
+     */
     private KtBlockExpression getOrCreateBlock(PsiElement psiElement, String name) {
         KtCallExpression block = findCallExpression(psiElement, name);
         if (block == null) {
@@ -132,12 +147,26 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
         return ((KtLambdaExpression) block.getLambdaArguments().get(0).getArgumentExpression()).getBodyExpression();
     }
 
+    /**
+     * 查找语句
+     *
+     * @param psiElement
+     * @param name
+     * @return
+     */
     private KtCallExpression findCallExpression(PsiElement psiElement, String name) {
         Pattern pattern = callNameRegex(name);
         List<KtCallExpression> blocks = PsiTreeUtil.getChildrenOfTypeAsList(psiElement, KtCallExpression.class);
         return ContainerUtil.find(blocks, expression -> pattern.matcher(expression.getText()).find());
     }
 
+    /**
+     * 查找语句/批量
+     *
+     * @param psiElement
+     * @param name
+     * @return
+     */
     private List<KtCallExpression> findAllCallExpression(PsiElement psiElement, String name) {
         Pattern pattern = callNameRegex(name);
         List<KtCallExpression> blocks = PsiTreeUtil.getChildrenOfTypeAsList(psiElement, KtCallExpression.class);
@@ -148,29 +177,55 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
         return Pattern.compile("^" + s + "\\W");
     }
 
+    /**
+     * 第一参数
+     *
+     * @param ktCallExpression
+     * @return
+     */
     private String getCallFirstParam(KtCallExpression ktCallExpression) {
-        return trimText(ktCallExpression.getValueArguments().get(0).getText());
+        return trimQuotation(ktCallExpression.getValueArguments().get(0).getText());
     }
 
-    private GradlePoint getDependencyGroupArtifact(KtCallExpression ktCallExpression) {
+    /**
+     * 获取依赖
+     *
+     * @param ktCallExpression
+     * @return
+     */
+    private DependencyElement<KtCallExpression> getDependencyGroupArtifact(KtCallExpression ktCallExpression) {
         Map<String, String> namedArguments = ktCallExpression.getValueArguments().stream()
                 .filter(argument -> argument.getArgumentName() != null)
                 .collect(Collectors.toMap(
-                        argument -> trimText(argument.getArgumentName().getText()),
-                        argument -> trimText(argument.getArgumentExpression().getText())
+                        argument -> trimQuotation(argument.getArgumentName().getText()),
+                        argument -> trimQuotation(argument.getArgumentExpression().getText())
                 ));
 
         if (namedArguments.isEmpty()) {
-            return splitGroupArtifact(getCallFirstParam(ktCallExpression));
+            return newByGroupArtifact(getCallFirstParam(ktCallExpression), (groupId, artifactId) ->
+                    new DependencyElement<>(groupId, artifactId, ktCallExpression));
         } else {
-            return GradlePoint.of(namedArguments.get("group"), namedArguments.get("name"));
+            return new DependencyElement<>(namedArguments.get("group"), namedArguments.get("name"), ktCallExpression);
         }
     }
 
-    private String trimText(String s) {
+    /**
+     * 删除首尾引号
+     *
+     * @param s
+     * @return
+     */
+    private String trimQuotation(String s) {
         return trimText(s, '"');
     }
 
+    /**
+     * 添加语句
+     *
+     * @param psiElement
+     * @param text
+     * @return
+     */
     private PsiElement addExpression(PsiElement psiElement, String text) {
         PsiElement addEle = psiElement.add(factory.createExpression(text));
 

@@ -9,6 +9,7 @@ import lombok.Getter;
  *
  * @version 3.2.0
  */
+@Getter
 @AllArgsConstructor
 public enum DependencyScope {
     /**
@@ -42,7 +43,6 @@ public enum DependencyScope {
     TEST("test"),
     ;
 
-    @Getter
     private final String scope;
 
     public static DependencyScope getByScope(String scope) {

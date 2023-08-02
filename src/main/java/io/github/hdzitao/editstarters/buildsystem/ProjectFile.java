@@ -20,22 +20,72 @@ import java.util.List;
  * @version 3.2.0
  */
 public abstract class ProjectFile<Psi extends PsiElement> implements EditStarters {
+    /**
+     * 查找或创建 dependencies
+     *
+     * @return
+     */
     protected abstract Psi findOrCreateDependenciesTag();
 
+    /**
+     * 查找所有 dependency
+     *
+     * @param dependenciesTag
+     * @return
+     */
     protected abstract List<Dependency> findAllDependencies(Psi dependenciesTag);
 
+    /**
+     * 创建 dependency
+     *
+     * @return
+     */
     protected abstract void createDependencyTag(Psi dependenciesTag, Starter info);
 
+    /**
+     * 查找或创建 boms
+     *
+     * @return
+     */
     protected abstract Psi findOrCreateBomsTag();
 
+    /**
+     * 查找所有 bom
+     *
+     * @param bomsTag
+     * @return
+     */
     protected abstract List<Bom> findAllBoms(Psi bomsTag);
 
+    /**
+     * 创建 bom
+     *
+     * @param bomsTag
+     * @param bom
+     */
     protected abstract void createBomTag(Psi bomsTag, Bom bom);
 
+    /**
+     * 查找或创建 repositories
+     *
+     * @return
+     */
     protected abstract Psi findOrCreateRepositoriesTag();
 
+    /**
+     * 查找所有 repository
+     *
+     * @param repositoriesTag
+     * @return
+     */
     protected abstract List<Repository> findAllRepositories(Psi repositoriesTag);
 
+    /**
+     * 创建 repository
+     *
+     * @param repositoriesTag
+     * @param repository
+     */
     protected abstract void createRepositoryTag(Psi repositoriesTag, Repository repository);
 
     @Override
@@ -91,6 +141,11 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
 
     }
 
+    /**
+     * 添加 bom
+     *
+     * @param boms
+     */
     private void addBoms(List<Bom> boms) {
         if (CollectionUtils.isEmpty(boms)) {
             return;
@@ -107,7 +162,7 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
     }
 
     /**
-     * 添加仓库信息
+     * 添加 repositories
      */
     private void addRepositories(Collection<Repository> repositories) {
         if (CollectionUtils.isEmpty(repositories)) {
