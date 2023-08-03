@@ -58,6 +58,15 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
     }
 
     /**
+     * 初始化
+     */
+    public void initialize() {
+        if (!enable()) {
+            state = new State();
+        }
+    }
+
+    /**
      * 获取缓存
      *
      * @param url
@@ -68,7 +77,8 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
         // 检查缓存
         if (enable()
                 && Objects.equals(url, state.url)
-                && Objects.equals(version, state.version)) {
+                && Objects.equals(version, state.version)
+                && state.springBoot != null) {
             return state.springBoot;
         }
 
@@ -83,9 +93,6 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
      * @param project
      */
     public void putSpringBoot(String url, String version, SpringBoot project) {
-        if (state == null) {
-            state = new State();
-        }
         state.url = url;
         state.version = version;
         state.springBoot = project;
@@ -98,7 +105,7 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
      * @return
      */
     public String getUrl() {
-        if (enable()) {
+        if (enable() && StringUtils.isNotEmpty(state.url)) {
             return state.url;
         }
 
@@ -124,7 +131,7 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
      * @return
      */
     public String getOHubName() {
-        if (enable()) {
+        if (enable() && StringUtils.isNotEmpty(state.oHub)) {
             return state.oHub;
         }
 
@@ -137,9 +144,7 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
      * @param oHubName
      */
     public void putOHubName(String oHubName) {
-        if (enable()) {
-            state.oHub = oHubName;
-        }
+        state.oHub = oHubName;
     }
 
     @Nullable

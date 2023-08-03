@@ -48,6 +48,8 @@ public abstract class EditStartersButtonAction extends AnAction {
             }
             // 缓存
             InitializrCache initializrCache = InitializrCache.getInstance(e.getProject());
+            // 初始化
+            initializrCache.initialize();
             // spring boot version
             Version version = Versions.parse(buildSystem.getSpringbootDependency().getVersion());
             // 弹出spring initializr地址输入框
