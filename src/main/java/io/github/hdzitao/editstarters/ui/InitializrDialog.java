@@ -1,10 +1,12 @@
 package io.github.hdzitao.editstarters.ui;
 
 import com.intellij.ui.CollectionComboBoxModel;
+import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.cache.InitializrCache;
 import io.github.hdzitao.editstarters.ohub.OHub;
 import io.github.hdzitao.editstarters.version.Version;
 import lombok.Getter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
@@ -12,6 +14,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -48,9 +51,11 @@ public class InitializrDialog extends JDialog {
         buttonOK.addActionListener(e -> onOK());
 
         // OHub
-        oHubComboBox.setModel(new CollectionComboBoxModel<>(
-                Arrays.asList(oHubs),
-                oHubs[0]));
+        if (ArrayUtils.isNotEmpty(oHubs)) {
+            oHubComboBox.setModel(new CollectionComboBoxModel<>(
+                    Arrays.asList(oHubs), ContainerUtil.find(oHubs, oh ->
+                    Objects.equals(initializrCache.getOHubName(), oh.getName()))));
+        }
 
         // 点击 X 时调用 onCancel()
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);

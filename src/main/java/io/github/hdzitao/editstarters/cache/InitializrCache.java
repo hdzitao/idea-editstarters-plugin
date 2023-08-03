@@ -6,6 +6,7 @@ import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.annotations.OptionTag;
+import io.github.hdzitao.editstarters.ohub.GitHub;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +38,7 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
         @OptionTag(converter = SpringBootConverter.class)
         private SpringBoot springBoot;
         private String url;
+        private String oHub;
         private String version;
         private long updateTime;
     }
@@ -47,15 +49,24 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
     private State state;
 
     /**
+     * 缓存是否有效
+     *
+     * @return
+     */
+    public boolean enable() {
+        return state != null && StringUtils.isNoneBlank(state.url);
+    }
+
+    /**
      * 获取缓存
      *
      * @param url
      * @param version
      * @return
      */
-    public SpringBoot get(String url, String version) {
+    public SpringBoot getSpringBoot(String url, String version) {
         // 检查缓存
-        if (state != null
+        if (enable()
                 && Objects.equals(url, state.url)
                 && Objects.equals(version, state.version)) {
             return state.springBoot;
@@ -71,7 +82,7 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
      * @param version
      * @param project
      */
-    public void put(String url, String version, SpringBoot project) {
+    public void putSpringBoot(String url, String version, SpringBoot project) {
         if (state == null) {
             state = new State();
         }
@@ -87,7 +98,7 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
      * @return
      */
     public String getUrl() {
-        if (state != null && StringUtils.isNoneBlank(state.url)) {
+        if (enable()) {
             return state.url;
         }
 
@@ -100,11 +111,35 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
      * @return
      */
     public long getUpdateTime() {
-        if (state != null) {
+        if (enable()) {
             return state.updateTime;
         }
 
         return 0L;
+    }
+
+    /**
+     * 获取ohub
+     *
+     * @return
+     */
+    public String getOHubName() {
+        if (enable()) {
+            return state.oHub;
+        }
+
+        return GitHub.NAME;
+    }
+
+    /**
+     * 缓存oHub
+     *
+     * @param oHubName
+     */
+    public void putOHubName(String oHubName) {
+        if (enable()) {
+            state.oHub = oHubName;
+        }
     }
 
     @Nullable

@@ -18,7 +18,7 @@ public class CacheInitializr implements Initializr {
 
         if (parameter.isEnableCache()) {
             // 如果启用缓存,检查缓存
-            SpringBoot springBoot = initializrCache.get(url, version);
+            SpringBoot springBoot = initializrCache.getSpringBoot(url, version);
             if (springBoot != null) {
                 ret.setEnableCache(true);
                 ret.setCacheUpdateTime(initializrCache.getUpdateTime());
@@ -30,7 +30,7 @@ public class CacheInitializr implements Initializr {
         chain.initialize(parameter, ret);
         // 执行完后,缓存最新的结果
         if (ret.getSpringBoot() != null) {
-            initializrCache.put(url, version, ret.getSpringBoot());
+            initializrCache.putSpringBoot(url, version, ret.getSpringBoot());
         }
     }
 }

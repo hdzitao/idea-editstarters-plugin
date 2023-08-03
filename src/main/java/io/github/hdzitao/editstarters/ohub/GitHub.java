@@ -6,6 +6,7 @@ package io.github.hdzitao.editstarters.ohub;
  * @version 3.2.0
  */
 public class GitHub extends OHub {
+    public static final String NAME = "GitHub";
 
     @Override
     protected String basePath() {
@@ -14,6 +15,6 @@ public class GitHub extends OHub {
 
     @Override
     public String getName() {
-        return "GitHub";
+        return NAME;
     }
 }

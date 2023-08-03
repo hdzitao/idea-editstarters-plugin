@@ -2,6 +2,7 @@ package io.github.hdzitao.editstarters.initializr;
 
 import com.google.gson.Gson;
 import com.intellij.util.io.HttpRequests;
+import io.github.hdzitao.editstarters.cache.InitializrCache;
 import io.github.hdzitao.editstarters.ohub.OHub;
 import io.github.hdzitao.editstarters.ohub.metadata.OHubMetaData;
 import io.github.hdzitao.editstarters.ohub.metadata.OHubMetadataMap;
@@ -47,5 +48,9 @@ public class OHubInitializr implements Initializr {
         // 使用startspringio解析
         StartSpringIO startSpringIO = new StartSpringIO(version, metadata);
         ret.setSpringBoot(springIO2SpringBoot.buildSpringBoot(startSpringIO));
+
+        // 缓存
+        InitializrCache initializrCache = InitializrCache.getInstance(parameter.getProject());
+        initializrCache.putOHubName(oHub.getName());
     }
 }
