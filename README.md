@@ -5,7 +5,7 @@
 图标来自 [icon-icons.com](https://icon-icons.com/icon/feather-pen-graphic-design/52939), 作者: FreeVectors.
 
 Spring
-boot旧版本依赖于 [idea-editstarters-plugin-configure项目](https://github.com/hdzitao/idea-editstarters-plugin-configure).
+boot旧版本依赖于 [bootVersion](bootVersion).
 
 ==============================================================
 
@@ -13,8 +13,7 @@ Edit Spring Boot Starters just like sts and vscode spring boot plugin.
 
 Plugin icon from [icon-icons.com](https://icon-icons.com/icon/feather-pen-graphic-design/52939), by FreeVectors.
 
-Old spring boot versions depend
-on [idea-editstarters-plugin-configure](https://github.com/hdzitao/idea-editstarters-plugin-configure).
+Old spring boot versions depend on [bootVersion](bootVersion).
 
 ## Usage
 
