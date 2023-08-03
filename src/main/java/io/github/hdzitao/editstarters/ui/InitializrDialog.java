@@ -1,7 +1,7 @@
 package io.github.hdzitao.editstarters.ui;
 
 import com.intellij.ui.CollectionComboBoxModel;
-import io.github.hdzitao.editstarters.ohub.GitHub;
+import io.github.hdzitao.editstarters.cache.InitializrCache;
 import io.github.hdzitao.editstarters.ohub.OHub;
 import io.github.hdzitao.editstarters.version.Version;
 import lombok.Getter;
@@ -37,21 +37,17 @@ public class InitializrDialog extends JDialog {
 
     private final static Pattern urlCheck = Pattern.compile("^https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 
-    public InitializrDialog(String url, Version version) {
+    public InitializrDialog(InitializrCache initializrCache, Version version, OHub[] oHubs) {
         setTitle("Spring Initializr Url");
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         // url
-        urlInput.setText(url);
+        urlInput.setText(initializrCache.getUrl());
 
         buttonOK.addActionListener(e -> onOK());
 
         // OHub
-        String oHubSite = OHub.url2site(url);
-        OHub[] oHubs = {
-                new GitHub(oHubSite, version),
-        };
         oHubComboBox.setModel(new CollectionComboBoxModel<>(
                 Arrays.asList(oHubs),
                 oHubs[0]));

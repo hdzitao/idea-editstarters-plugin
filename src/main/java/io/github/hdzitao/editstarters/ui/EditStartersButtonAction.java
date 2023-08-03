@@ -11,6 +11,9 @@ import com.intellij.psi.PsiFile;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.cache.InitializrCache;
 import io.github.hdzitao.editstarters.initializr.*;
+import io.github.hdzitao.editstarters.ohub.GitHub;
+import io.github.hdzitao.editstarters.ohub.Gitee;
+import io.github.hdzitao.editstarters.ohub.OHub;
 import io.github.hdzitao.editstarters.version.Version;
 import io.github.hdzitao.editstarters.version.Versions;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +32,11 @@ public abstract class EditStartersButtonAction extends AnAction {
             new OHubInitializr(),
     };
 
+    private final OHub[] oHubs = {
+            new GitHub(),
+            new Gitee(),
+    };
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         try {
@@ -43,7 +51,7 @@ public abstract class EditStartersButtonAction extends AnAction {
             // spring boot version
             Version version = Versions.parse(buildSystem.getSpringbootDependency().getVersion());
             // 弹出spring initializr地址输入框
-            InitializrDialog initializrDialog = new InitializrDialog(initializrCache.getUrl(), version);
+            InitializrDialog initializrDialog = new InitializrDialog(initializrCache, version, oHubs);
             initializrDialog.showDialog();
             // 获取url
             String url = initializrDialog.getUrl();

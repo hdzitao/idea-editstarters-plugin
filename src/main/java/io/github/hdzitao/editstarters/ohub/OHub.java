@@ -1,6 +1,5 @@
 package io.github.hdzitao.editstarters.ohub;
 
-import io.github.hdzitao.editstarters.version.Version;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +13,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public abstract class OHub {
-    private final String site;
-    private final Version version;
-
     /**
      * 基础url
      *
@@ -37,7 +33,7 @@ public abstract class OHub {
      * @return
      */
     public String getMetadataMapUrl() {
-        return basePath() + site + "/metadata_map.json";
+        return basePath() + "/metadata_map.json";
     }
 
     /**
@@ -47,17 +43,7 @@ public abstract class OHub {
      * @return
      */
     public String getMetadataUrl(String suffix) {
-        return basePath() + site + suffix;
-    }
-
-    /**
-     * url => site
-     *
-     * @param url
-     * @return
-     */
-    public static String url2site(String url) {
-        return url.replaceFirst("^.*?//([^/]+).*$", "$1");
+        return basePath() + suffix;
     }
 
     public final String toString() {
