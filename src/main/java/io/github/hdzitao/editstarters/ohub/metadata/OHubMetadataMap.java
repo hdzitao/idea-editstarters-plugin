@@ -2,7 +2,6 @@ package io.github.hdzitao.editstarters.ohub.metadata;
 
 import io.github.hdzitao.editstarters.ui.ShowErrorException;
 import io.github.hdzitao.editstarters.version.Version;
-import io.github.hdzitao.editstarters.version.Versions;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,7 +24,7 @@ public class OHubMetadataMap {
      */
     public OHubMetaData match(Version version) {
         for (OHubMetaData metaDataElement : metaDataList) {
-            if (metaDataElement.isEnable() && Versions.parseRange(metaDataElement.getVersionRange()).match(version)) {
+            if (metaDataElement.isEnable() && metaDataElement.checkVersionRange(version)) {
                 return metaDataElement;
             }
         }
