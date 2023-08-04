@@ -69,9 +69,6 @@ public class VersionRange {
     /**
      * Specify if the {@link Version} matches this range. Returns {@code true} if the
      * version is contained within this range, {@code false} otherwise.
-     *
-     * @param version the version to check
-     * @return {@code true} if the version matches
      */
     public boolean match(Version version) {
         int lower = this.lowerVersion.compareTo(version);

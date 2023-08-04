@@ -26,18 +26,12 @@ public class EditStartersSelectionModel extends DefaultListSelectionModel {
 
     /**
      * 选中回调
-     *
-     * @param index0
-     * @param index1
      */
     protected void selectedCallback(int index0, int index1) {
     }
 
     /**
      * 取消回调
-     *
-     * @param index0
-     * @param index1
      */
     protected void cancelCallback(int index0, int index1) {
     }

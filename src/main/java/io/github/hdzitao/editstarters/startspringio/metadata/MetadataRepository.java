@@ -18,8 +18,6 @@ public class MetadataRepository extends Repository {
 
     /**
      * 根据版本处理
-     *
-     * @return
      */
     public MetadataRepository resolve() {
         MetadataRepository repository = new MetadataRepository();

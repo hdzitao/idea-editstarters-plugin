@@ -112,10 +112,6 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
 
     /**
      * 闭包的获取或创建
-     *
-     * @param psiElement
-     * @param name
-     * @return
      */
     private GrClosableBlock getOrCreateClosure(PsiElement psiElement, String name) {
         GrMethodCall closure = findMethod(psiElement, name);
@@ -139,10 +135,6 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
 
     /**
      * 查找方法
-     *
-     * @param psiElement
-     * @param name
-     * @return
      */
     private GrMethodCall findMethod(PsiElement psiElement, String name) {
         return ContainerUtil.find(PsiTreeUtil.getChildrenOfTypeAsList(psiElement, GrMethodCall.class), call ->
@@ -151,10 +143,6 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
 
     /**
      * 查找方法/批量
-     *
-     * @param psiElement
-     * @param name
-     * @return
      */
     private List<GrMethodCall> findAllMethod(PsiElement psiElement, String name) {
         List<GrMethodCall> closableBlocks = PsiTreeUtil.getChildrenOfTypeAsList(psiElement, GrMethodCall.class);
@@ -163,9 +151,6 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
 
     /**
      * 获取方法第一个参数
-     *
-     * @param call
-     * @return
      */
     private String getMethodFirstParam(GrMethodCall call) {
         GroovyPsiElement[] allArguments = call.getArgumentList().getAllArguments();
@@ -177,9 +162,6 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
 
     /**
      * 解析依赖语句
-     *
-     * @param call
-     * @return
      */
     private DependencyElement<GrMethodCall> getDependencyGroupArtifact(GrMethodCall call) {
         Map<String, String> namedArguments = Arrays.stream(call.getNamedArguments()).collect(Collectors.toMap(
@@ -199,9 +181,6 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
 
     /**
      * 删除头尾的引号
-     *
-     * @param psiElement
-     * @return
      */
     private String trimQuotation(GroovyPsiElement psiElement) {
         if (psiElement == null) {
@@ -213,9 +192,6 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
 
     /**
      * 删除头尾的引号
-     *
-     * @param s
-     * @return
      */
     private String trimQuotation(String s) {
         return trimText(s, '\'', '"');

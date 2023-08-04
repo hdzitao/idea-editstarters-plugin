@@ -47,9 +47,6 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
 
     /**
      * dependency语法
-     *
-     * @param info
-     * @return
      */
     protected List<Instruction> dependencyInstruction(Starter info) {
         List<Instruction> instructions = new ArrayList<>();
@@ -62,9 +59,6 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
 
     /**
      * bom语法
-     *
-     * @param bom
-     * @return
      */
     protected Instruction bomInstruction(Bom bom) {
         String point = splicingDependency(bom.getGroupId(), bom.getArtifactId(), bom.getVersion());
@@ -73,9 +67,6 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
 
     /**
      * repository语句
-     *
-     * @param repository
-     * @return
      */
     protected Instruction repositoryInstruction(Repository repository) {
         return new Instruction(TAG_REPOSITORY, repository.getUrl());
@@ -83,9 +74,6 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
 
     /**
      * 割出GroupID/ArtifactID构建Depend
-     *
-     * @param point
-     * @return
      */
     protected <Depend> Depend newByGroupArtifact(String point, BiFunction<String, String, Depend> buildFun) {
         if (StringUtils.isNoneBlank(point)) {
@@ -99,9 +87,6 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
 
     /**
      * 处理scope
-     *
-     * @param scope
-     * @return
      */
     protected String[] resolveScope(DependencyScope scope) {
         switch (scope) {
@@ -124,10 +109,6 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
 
     /**
      * " aaa " => "aaa"
-     *
-     * @param s
-     * @param chars
-     * @return
      */
     protected String trimText(String s, char... chars) {
         if (s == null) {
@@ -149,9 +130,6 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
 
     /**
      * 检查空
-     *
-     * @param s
-     * @return
      */
     protected String checkEmpty(String s) {
         return s != null ? s : EMPTY;
@@ -159,11 +137,6 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
 
     /**
      * 拼接 groupId:artifactId:version
-     *
-     * @param groupId
-     * @param artifactId
-     * @param version
-     * @return
      */
     protected String splicingDependency(String groupId, String artifactId, String version) {
         groupId = checkEmpty(groupId);

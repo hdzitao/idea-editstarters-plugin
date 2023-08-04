@@ -21,11 +21,6 @@ public final class CompatibilityUtils {
 
     /**
      * 兼容 ExternalSystemApiUtil.findProjectData
-     *
-     * @param project
-     * @param systemId
-     * @param projectPath
-     * @return
      */
     public static DataNode<ProjectData> findProjectData(Project project, ProjectSystemId systemId, String projectPath) {
         AbstractExternalSystemSettings<?, ?, ?> settings = ExternalSystemApiUtil.getSettings(project, systemId);

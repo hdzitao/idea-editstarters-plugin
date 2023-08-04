@@ -26,9 +26,6 @@ public class MavenBuildSystem extends BuildSystem {
 
     /**
      * 构建 maven build system
-     *
-     * @param context
-     * @return
      */
     public static MavenBuildSystem from(DataContext context) {
         PsiFile psiFile = context.getData(CommonDataKeys.PSI_FILE);

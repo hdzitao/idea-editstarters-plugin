@@ -25,9 +25,6 @@ public class StartSpringIO {
 
     /**
      * url => metadata config路径
-     *
-     * @param url
-     * @return
      */
     public static String checkMetadataConfigLink(String url) {
         if (url.endsWith("/")) {

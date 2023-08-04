@@ -14,11 +14,6 @@ public final class Points {
 
     /**
      * 查找
-     *
-     * @param points
-     * @param point
-     * @param <P>
-     * @return
      */
     public static <P extends Point> P find(Collection<P> points, Point point) {
         for (P p : points) {
@@ -32,10 +27,6 @@ public final class Points {
 
     /**
      * 包含
-     *
-     * @param points
-     * @param point
-     * @return
      */
     public static boolean contains(Collection<? extends Point> points, Point point) {
         return find(points, point) != null;
@@ -43,10 +34,6 @@ public final class Points {
 
     /**
      * 不重复添加
-     *
-     * @param points
-     * @param point
-     * @param <P>
      */
     public static <P extends Point> void addUniq(Collection<P> points, P point) {
         if (point != null && !contains(points, point)) {
@@ -56,10 +43,6 @@ public final class Points {
 
     /**
      * 不重复添加
-     *
-     * @param points
-     * @param others
-     * @param <P>
      */
     public static <P extends Point> void addAllUniq(Collection<P> points, Collection<P> others) {
         for (P o : others) {

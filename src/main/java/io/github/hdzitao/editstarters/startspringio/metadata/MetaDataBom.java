@@ -28,9 +28,6 @@ public class MetaDataBom extends Bom {
 
     /**
      * 根据版本处理
-     *
-     * @param version
-     * @return
      */
     public MetaDataBom resolve(Version version) {
         MetaDataBom bom = new MetaDataBom();

@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>hdzi.idea-editstarters-plugin</id>
     <name>EditStarters</name>
-    <vendor email="taojinhou@qq.com" url="http://github.com/hdzitao">HdziTao</vendor>
+    <vendor email="taojinhou@qq.com" url="https://github.com/hdzitao">HdziTao</vendor>
 
     <description><![CDATA[
     <p>添加修改spring boot starter.</p>

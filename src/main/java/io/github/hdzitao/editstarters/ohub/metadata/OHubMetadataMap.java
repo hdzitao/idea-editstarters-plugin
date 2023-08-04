@@ -22,9 +22,6 @@ public class OHubMetadataMap {
 
     /**
      * 匹配版本
-     *
-     * @param version
-     * @return
      */
     public OHubMetaData match(Version version) {
         for (OHubMetaData metaDataElement : metaDataList) {

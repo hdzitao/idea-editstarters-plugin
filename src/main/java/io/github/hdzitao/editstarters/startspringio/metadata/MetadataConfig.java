@@ -23,9 +23,6 @@ public class MetadataConfig {
 
     /**
      * 判断版本是否匹配
-     *
-     * @param version
-     * @return
      */
     public boolean match(Version version) {
         String compatibilityRange = Optional.ofNullable(configuration)

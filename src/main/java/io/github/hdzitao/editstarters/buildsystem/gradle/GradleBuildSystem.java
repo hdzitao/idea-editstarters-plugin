@@ -33,9 +33,6 @@ public class GradleBuildSystem extends BuildSystem {
 
     /**
      * 根据文件名构建gradle build system
-     *
-     * @param context
-     * @return
      */
     @SneakyThrows
     public static GradleBuildSystem from(DataContext context) {

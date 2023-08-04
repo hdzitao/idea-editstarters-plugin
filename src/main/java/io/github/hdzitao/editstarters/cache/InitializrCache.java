@@ -50,8 +50,6 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
 
     /**
      * 缓存是否有效
-     *
-     * @return
      */
     public boolean enable() {
         return state != null && StringUtils.isNoneBlank(state.url);
@@ -68,10 +66,6 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
 
     /**
      * 获取缓存
-     *
-     * @param url
-     * @param version
-     * @return
      */
     public SpringBoot getSpringBoot(String url, String version) {
         // 检查缓存
@@ -87,10 +81,6 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
 
     /**
      * 更新缓存
-     *
-     * @param url
-     * @param version
-     * @param project
      */
     public void putSpringBoot(String url, String version, SpringBoot project) {
         state.url = url;
@@ -101,8 +91,6 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
 
     /**
      * 获取url
-     *
-     * @return
      */
     public String getUrl() {
         if (enable() && StringUtils.isNotEmpty(state.url)) {
@@ -114,8 +102,6 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
 
     /**
      * 获取更新时间
-     *
-     * @return
      */
     public long getUpdateTime() {
         if (enable()) {
@@ -127,8 +113,6 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
 
     /**
      * 获取ohub
-     *
-     * @return
      */
     public String getOHubName() {
         if (enable() && StringUtils.isNotEmpty(state.oHub)) {
@@ -140,8 +124,6 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
 
     /**
      * 缓存oHub
-     *
-     * @param oHubName
      */
     public void putOHubName(String oHubName) {
         state.oHub = oHubName;

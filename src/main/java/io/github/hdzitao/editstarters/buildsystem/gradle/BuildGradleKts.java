@@ -109,9 +109,6 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
 
     /**
      * 获取或创建顶层闭包
-     *
-     * @param name
-     * @return
      */
     private KtBlockExpression getOrCreateTopBlock(String name) {
         Pattern regex = callNameRegex(name);
@@ -131,10 +128,6 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
 
     /**
      * 获取或创建闭包
-     *
-     * @param psiElement
-     * @param name
-     * @return
      */
     private KtBlockExpression getOrCreateBlock(PsiElement psiElement, String name) {
         KtCallExpression block = findCallExpression(psiElement, name);
@@ -147,9 +140,6 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
 
     /**
      * 获取lambda体
-     *
-     * @param block
-     * @return
      */
     private static KtBlockExpression getLambdaBodyExpression(KtCallExpression block) {
         // 创建不会为空
@@ -175,10 +165,6 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
 
     /**
      * 查找语句
-     *
-     * @param psiElement
-     * @param name
-     * @return
      */
     private KtCallExpression findCallExpression(PsiElement psiElement, String name) {
         Pattern pattern = callNameRegex(name);
@@ -188,10 +174,6 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
 
     /**
      * 查找语句/批量
-     *
-     * @param psiElement
-     * @param name
-     * @return
      */
     private List<KtCallExpression> findAllCallExpression(PsiElement psiElement, String name) {
         Pattern pattern = callNameRegex(name);
@@ -205,9 +187,6 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
 
     /**
      * 第一参数
-     *
-     * @param ktCallExpression
-     * @return
      */
     private String getCallFirstParam(KtCallExpression ktCallExpression) {
         List<KtValueArgument> valueArguments = ktCallExpression.getValueArguments();
@@ -220,9 +199,6 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
 
     /**
      * 获取依赖
-     *
-     * @param ktCallExpression
-     * @return
      */
     private DependencyElement<KtCallExpression> getDependencyGroupArtifact(KtCallExpression ktCallExpression) {
         Map<String, String> namedArguments = ktCallExpression.getValueArguments().stream()
@@ -244,9 +220,6 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
 
     /**
      * 删除首尾引号
-     *
-     * @param s
-     * @return
      */
     private String trimQuotation(String s) {
         return trimText(s, '"');
@@ -254,9 +227,6 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
 
     /**
      * 删除首尾引号
-     *
-     * @param psiElement
-     * @return
      */
     private String trimQuotation(PsiElement psiElement) {
         if (psiElement == null) {
@@ -268,10 +238,6 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
 
     /**
      * 添加语句
-     *
-     * @param psiElement
-     * @param text
-     * @return
      */
     private PsiElement addExpression(PsiElement psiElement, String text) {
         PsiElement addEle = psiElement.add(factory.createExpression(text));

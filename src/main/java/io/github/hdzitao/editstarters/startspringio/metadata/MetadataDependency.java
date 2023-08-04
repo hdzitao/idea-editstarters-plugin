@@ -32,9 +32,6 @@ public class MetadataDependency extends Dependency {
 
     /**
      * 根据版本处理
-     *
-     * @param version
-     * @return
      */
     public MetadataDependency resolve(Version version) {
         MetadataDependency dependency = new MetadataDependency();
