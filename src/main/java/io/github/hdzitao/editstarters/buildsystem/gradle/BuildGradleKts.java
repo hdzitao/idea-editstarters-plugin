@@ -92,7 +92,15 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
                         if (urlStatement == null || (right = urlStatement.getRight()) == null) {
                             return EMPTY;
                         }
-                        return right.getText();
+                        if (!(right instanceof KtCallExpression)) {
+                            return EMPTY;
+                        }
+                        List<KtValueArgument> valueArguments = ((KtCallExpression) right).getValueArguments();
+                        if (CollectionUtils.isEmpty(valueArguments)) {
+                            return EMPTY;
+                        }
+
+                        return trimQuotation(valueArguments.get(0).getText());
                     } else {
                         return getCallFirstParam(tag);
                     }
