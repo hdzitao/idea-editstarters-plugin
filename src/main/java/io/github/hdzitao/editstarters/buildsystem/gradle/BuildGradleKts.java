@@ -95,12 +95,8 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
                         if (!(right instanceof KtCallExpression)) {
                             return EMPTY;
                         }
-                        List<KtValueArgument> valueArguments = ((KtCallExpression) right).getValueArguments();
-                        if (CollectionUtils.isEmpty(valueArguments)) {
-                            return EMPTY;
-                        }
 
-                        return trimQuotation(valueArguments.get(0).getText());
+                        return getCallFirstParam((KtCallExpression) right);
                     } else {
                         return getCallFirstParam(tag);
                     }
