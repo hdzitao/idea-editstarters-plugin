@@ -2,33 +2,34 @@
   "metaDataList": [
     {
       "versionRange": "2.6.0",
-      "metadataConfig": "/metadata_config_2_6_0.json",
+      "metadataConfig": "metadata_config_2_6_0.json",
       "enable": true
     },
     {
       "versionRange": "[2.3.0,2.5.x]",
-      "metadataConfig": "/metadata_config_2_3_0.json",
+      "metadataConfig": "metadata_config_2_3_0.json",
       "enable": true
     },
     {
       "versionRange": "[2.2.2,2.2.x]",
-      "metadataConfig": "/metadata_config_2_2_2.json",
+      "metadataConfig": "metadata_config_2_2_2.json",
       "enable": true
     },
     {
       "versionRange": "[2.2.0,2.2.1]",
-      "metadataConfig": "/metadata_config_2_2_0.json",
+      "metadataConfig": "metadata_config_2_2_0.json",
       "enable": true
     },
     {
       "versionRange": "[2.0.0,2.1.x]",
-      "metadataConfig": "/metadata_config_2_0_0.json",
+      "metadataConfig": "metadata_config_2_0_0.json",
       "enable": true
     },
     {
       "versionRange": "[1.5.0,1.5.x]",
-      "metadataConfig": "/metadata_config_1_5_0.json",
+      "metadataConfig": "metadata_config_1_5_0.json",
       "enable": true
     }
-  ]
+  ],
+  "masterEnable": true
 }

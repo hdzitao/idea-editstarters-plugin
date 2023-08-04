@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.intellij.util.io.HttpRequests;
 import io.github.hdzitao.editstarters.cache.InitializrCache;
 import io.github.hdzitao.editstarters.ohub.OHub;
+import io.github.hdzitao.editstarters.ohub.metadata.OHubBootVersion;
 import io.github.hdzitao.editstarters.ohub.metadata.OHubMetaData;
-import io.github.hdzitao.editstarters.ohub.metadata.OHubMetadataMap;
 import io.github.hdzitao.editstarters.springboot.SpringBootBuilder;
 import io.github.hdzitao.editstarters.startspringio.StartSpringIO;
 import io.github.hdzitao.editstarters.startspringio.StartSpringIO2SpringBoot;
@@ -38,9 +38,13 @@ public class OHubInitializr implements Initializr {
 
         // 初始化旧版本配置
         String metadataMapUrl = oHub.getMetadataMapUrl();
-        OHubMetadataMap oHubMetadataMap = HttpRequests.request(metadataMapUrl).connect(request ->
-                gson.fromJson(request.readString(), OHubMetadataMap.class));
-        OHubMetaData oHubMetaData = oHubMetadataMap.match(version);
+        OHubBootVersion oHubBootVersion = HttpRequests.request(metadataMapUrl).connect(request ->
+                gson.fromJson(request.readString(), OHubBootVersion.class));
+        OHubMetaData oHubMetaData = oHubBootVersion.match(version);
+        if (oHubMetaData == null) {
+            chain.initialize(parameter, ret);
+            return;
+        }
         // 获取旧版本metadata
         String metadataUrl = oHub.getMetadataUrl(oHubMetaData.getMetadataConfig());
         MetadataConfig metadata = HttpRequests.request(metadataUrl).connect(request ->
