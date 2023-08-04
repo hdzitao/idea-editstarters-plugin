@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
  *
  * @version 3.2.0
  */
-@SuppressWarnings("ConstantConditions")
 public class GradleBuildSystem extends BuildSystem {
 
     private GradleBuildSystem(DataContext context, AbstractBuildGradle<?> buildGradle, List<Dependency> dependencies) {
@@ -42,6 +41,10 @@ public class GradleBuildSystem extends BuildSystem {
     public static GradleBuildSystem from(DataContext context) {
         PsiFile psiFile = context.getData(CommonDataKeys.PSI_FILE);
         Project project = context.getData(CommonDataKeys.PROJECT);
+        if (psiFile == null || project == null) {
+            throw ShowErrorException.internal();
+        }
+
         String name = psiFile.getName();
         AbstractBuildGradle<?> buildGradle;
         switch (name) {
@@ -56,6 +59,9 @@ public class GradleBuildSystem extends BuildSystem {
         }
 
         DataNode<ProjectData> projectData = CompatibilityUtils.findProjectData(project, GradleConstants.SYSTEM_ID, project.getBasePath());
+        if (projectData == null) {
+            throw ShowErrorException.internal();
+        }
         List<Dependency> dependencies = projectData.getChildren().stream()
                 .filter(node -> ProjectKeys.LIBRARY.equals(node.getKey()))
                 .map(node -> (LibraryData) node.getData())

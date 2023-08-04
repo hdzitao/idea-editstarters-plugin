@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiFile;
@@ -24,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
  *
  * @version 3.2.0
  */
-@SuppressWarnings("ConstantConditions")
 public abstract class EditStartersButtonAction extends AnAction {
     private final Initializr[] initializrs = {
             new CacheInitializr(),
@@ -47,7 +47,11 @@ public abstract class EditStartersButtonAction extends AnAction {
                 throw new ShowErrorException("Not a Spring Boot Project!");
             }
             // 缓存
-            InitializrCache initializrCache = InitializrCache.getInstance(e.getProject());
+            Project project = e.getProject();
+            if (project == null) {
+                throw ShowErrorException.internal();
+            }
+            InitializrCache initializrCache = InitializrCache.getInstance(project);
             // 初始化
             initializrCache.initialize();
             // spring boot version
@@ -62,7 +66,7 @@ public abstract class EditStartersButtonAction extends AnAction {
             }
             // 组装参数
             InitializrParameter parameter = new InitializrParameter()
-                    .setProject(e.getProject())
+                    .setProject(project)
                     .setBuildSystem(buildSystem)
                     .setVersion(version)
                     .setUrl(url)

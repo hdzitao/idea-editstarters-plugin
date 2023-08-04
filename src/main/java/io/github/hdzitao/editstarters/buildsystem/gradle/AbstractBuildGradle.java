@@ -20,7 +20,6 @@ import java.util.function.BiFunction;
  *
  * @version 3.2.0
  */
-//@SuppressWarnings("ConstantConditions")
 public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectFile<T> {
 
     /**
@@ -45,8 +44,6 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
     public static final String TAG_REPOSITORY_MANAGEMENT = "repositories";
     public static final String TAG_REPOSITORY = "maven";
     // TAG ==============================================================================
-
-    protected final static String EMPTY = "";
 
     /**
      * dependency语法
@@ -134,7 +131,7 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
      */
     protected String trimText(String s, char... chars) {
         if (s == null) {
-            return "";
+            return EMPTY;
         }
 
         int len = s.length();
@@ -151,6 +148,16 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
     }
 
     /**
+     * 检查空
+     *
+     * @param s
+     * @return
+     */
+    protected String checkEmpty(String s) {
+        return s != null ? s : EMPTY;
+    }
+
+    /**
      * 拼接 groupId:artifactId:version
      *
      * @param groupId
@@ -159,8 +166,8 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
      * @return
      */
     protected String splicingDependency(String groupId, String artifactId, String version) {
-        groupId = StringUtils.isNoneBlank(groupId) ? groupId : "";
-        artifactId = StringUtils.isNoneBlank(artifactId) ? artifactId : "";
+        groupId = checkEmpty(groupId);
+        artifactId = checkEmpty(artifactId);
 
         String point = groupId + ":" + artifactId;
 

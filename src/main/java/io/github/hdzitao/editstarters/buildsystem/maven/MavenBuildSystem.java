@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
  *
  * @version 3.2.0
  */
-//@SuppressWarnings("ConstantConditions")
 public class MavenBuildSystem extends BuildSystem {
 
     private MavenBuildSystem(DataContext context, PomXml pomXml, List<Dependency> dependencies) {

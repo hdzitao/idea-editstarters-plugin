@@ -9,11 +9,12 @@ import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.Starter;
+import io.github.hdzitao.editstarters.ui.ShowErrorException;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.kotlin.psi.*;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,6 @@ import java.util.stream.Collectors;
  *
  * @version 3.2.0
  */
-@SuppressWarnings("ConstantConditions")
 class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
     private final KtFile buildFile;
     private final KtPsiFactory factory;
@@ -87,15 +87,12 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
                     }
 
                     if (first instanceof KtLambdaArgument) {
-                        List<KtExpression> statements = ((KtLambdaArgument) first).getLambdaExpression()
-                                .getBodyExpression().getStatements();
-                        KtExpression urlStatement = ContainerUtil.find(statements, statement ->
-                                statement instanceof KtBinaryExpression
-                                        && "url".equals(((KtBinaryExpression) statement).getLeft().getText()));
-                        if (urlStatement == null) {
+                        KtBinaryExpression urlStatement = findCallLambdaStatement((KtLambdaArgument) first, "url");
+                        KtExpression right;
+                        if (urlStatement == null || (right = urlStatement.getRight()) == null) {
                             return EMPTY;
                         }
-                        return getCallFirstParam(((KtCallExpression) ((KtBinaryExpression) urlStatement).getRight()));
+                        return right.getText();
                     } else {
                         return getCallFirstParam(tag);
                     }
@@ -118,7 +115,8 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
      */
     private KtBlockExpression getOrCreateTopBlock(String name) {
         Pattern regex = callNameRegex(name);
-        KtScriptInitializer initializer = ContainerUtil.find(PsiTreeUtil.findChildrenOfAnyType(buildFile, KtScriptInitializer.class),
+        Collection<KtScriptInitializer> statements = PsiTreeUtil.findChildrenOfAnyType(buildFile, KtScriptInitializer.class);
+        KtScriptInitializer initializer = ContainerUtil.find(statements,
                 it -> regex.matcher(it.getText()).find());
 
         KtCallExpression expression;
@@ -128,7 +126,7 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
             expression = PsiTreeUtil.findChildOfType(initializer, KtCallExpression.class);
         }
 
-        return ((KtLambdaExpression) expression.getLambdaArguments().get(0).getArgumentExpression()).getBodyExpression();
+        return getLambdaBodyExpression(expression);
     }
 
     /**
@@ -144,7 +142,35 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
             block = (KtCallExpression) addExpression(psiElement, name + " {\n}");
         }
 
-        return ((KtLambdaExpression) block.getLambdaArguments().get(0).getArgumentExpression()).getBodyExpression();
+        return getLambdaBodyExpression(block);
+    }
+
+    /**
+     * 获取lambda体
+     *
+     * @param block
+     * @return
+     */
+    private static KtBlockExpression getLambdaBodyExpression(KtCallExpression block) {
+        // 创建不会为空
+        if (block == null) {
+            throw ShowErrorException.internal();
+        }
+
+        List<KtLambdaArgument> lambdaArguments = block.getLambdaArguments();
+        if (CollectionUtils.isEmpty(lambdaArguments)) {
+            throw ShowErrorException.internal();
+        }
+        KtLambdaArgument ktLambdaArgument = lambdaArguments.get(0);
+        KtExpression argumentExpression = ktLambdaArgument.getArgumentExpression();
+        if (!(argumentExpression instanceof KtLambdaExpression)) {
+            throw ShowErrorException.internal();
+        }
+        KtBlockExpression bodyExpression = ((KtLambdaExpression) argumentExpression).getBodyExpression();
+        if (bodyExpression == null) {
+            throw ShowErrorException.internal();
+        }
+        return bodyExpression;
     }
 
     /**
@@ -184,7 +210,12 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
      * @return
      */
     private String getCallFirstParam(KtCallExpression ktCallExpression) {
-        return trimQuotation(ktCallExpression.getValueArguments().get(0).getText());
+        List<KtValueArgument> valueArguments = ktCallExpression.getValueArguments();
+        if (CollectionUtils.isEmpty(valueArguments)) {
+            return EMPTY;
+        }
+
+        return trimQuotation(valueArguments.get(0));
     }
 
     /**
@@ -197,15 +228,17 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
         Map<String, String> namedArguments = ktCallExpression.getValueArguments().stream()
                 .filter(argument -> argument.getArgumentName() != null)
                 .collect(Collectors.toMap(
-                        argument -> trimQuotation(argument.getArgumentName().getText()),
-                        argument -> trimQuotation(argument.getArgumentExpression().getText())
+                        argument -> trimQuotation(argument.getArgumentName()),
+                        argument -> trimQuotation(argument.getArgumentExpression())
                 ));
 
         if (namedArguments.isEmpty()) {
             return newByGroupArtifact(getCallFirstParam(ktCallExpression), (groupId, artifactId) ->
                     new DependencyElement<>(groupId, artifactId, ktCallExpression));
         } else {
-            return new DependencyElement<>(namedArguments.get("group"), namedArguments.get("name"), ktCallExpression);
+            String group = checkEmpty(namedArguments.get("group"));
+            String name = checkEmpty(namedArguments.get("name"));
+            return new DependencyElement<>(group, name, ktCallExpression);
         }
     }
 
@@ -217,6 +250,20 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
      */
     private String trimQuotation(String s) {
         return trimText(s, '"');
+    }
+
+    /**
+     * 删除首尾引号
+     *
+     * @param psiElement
+     * @return
+     */
+    private String trimQuotation(PsiElement psiElement) {
+        if (psiElement == null) {
+            return EMPTY;
+        }
+
+        return trimQuotation(psiElement.getText());
     }
 
     /**
@@ -240,5 +287,27 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
         }
 
         return addEle;
+    }
+
+    private KtBinaryExpression findCallLambdaStatement(KtLambdaArgument first, String leftName) {
+        List<KtExpression> statements = Optional.of(first)
+                .map(KtLambdaArgument::getLambdaExpression)
+                .map(KtLambdaExpression::getBodyExpression)
+                .map(KtBlockExpression::getStatements)
+                .orElse(null);
+        if (CollectionUtils.isEmpty(statements)) {
+            return null;
+        }
+
+        return (KtBinaryExpression) ContainerUtil.find(statements, statement -> {
+            if (statement instanceof KtBinaryExpression) {
+                KtExpression left = ((KtBinaryExpression) statement).getLeft();
+                if (left != null) {
+                    return Objects.equals(leftName, left.getText());
+                }
+            }
+
+            return false;
+        });
     }
 }

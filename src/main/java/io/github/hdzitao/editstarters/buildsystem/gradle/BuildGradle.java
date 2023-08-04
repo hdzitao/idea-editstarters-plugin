@@ -9,7 +9,10 @@ import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.Starter;
+import io.github.hdzitao.editstarters.ui.ShowErrorException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
+import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElement;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrStatement;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.blocks.GrClosableBlock;
@@ -26,7 +29,6 @@ import java.util.stream.Collectors;
  *
  * @version 3.2.0
  */
-@SuppressWarnings("ConstantConditions")
 public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
     private final GroovyFile buildFile;
     private final GroovyPsiElementFactory factory;
@@ -87,9 +89,18 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
     public List<Repository> findAllRepositories(GrClosableBlock repositoriesTag) {
         return findAllMethod(repositoriesTag, TAG_REPOSITORY).stream()
                 .map(tag -> {
-                    GrMethodCall urlCall = findMethod(tag.getClosureArguments()[0], "url");
-                    return new Repository(urlCall != null ? getMethodFirstParam(urlCall) : "");
-                }).collect(Collectors.toList());
+                    GrClosableBlock[] closureArguments = tag.getClosureArguments();
+                    if (ArrayUtils.isEmpty(closureArguments)) {
+                        return EMPTY;
+                    }
+                    GrMethodCall urlCall = findMethod(closureArguments[0], "url");
+                    if (urlCall == null) {
+                        return EMPTY;
+                    }
+                    return getMethodFirstParam(urlCall);
+                })
+                .map(Repository::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -117,7 +128,13 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
             }
         }
 
-        return closure.getClosureArguments()[0];
+        GrClosableBlock[] closureArguments = closure.getClosureArguments();
+        // 新建不可能为空,为空即内部错误
+        if (ArrayUtils.isEmpty(closureArguments)) {
+            throw ShowErrorException.internal();
+        }
+
+        return closureArguments[0];
     }
 
     /**
@@ -151,7 +168,11 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
      * @return
      */
     private String getMethodFirstParam(GrMethodCall call) {
-        return trimQuotation(call.getArgumentList().getAllArguments()[0].getText());
+        GroovyPsiElement[] allArguments = call.getArgumentList().getAllArguments();
+        if (ArrayUtils.isEmpty(allArguments)) {
+            return EMPTY;
+        }
+        return trimQuotation(allArguments[0]);
     }
 
     /**
@@ -162,16 +183,32 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
      */
     private DependencyElement<GrMethodCall> getDependencyGroupArtifact(GrMethodCall call) {
         Map<String, String> namedArguments = Arrays.stream(call.getNamedArguments()).collect(Collectors.toMap(
-                argument -> trimQuotation(argument.getLabel().getText()),
-                argument -> trimQuotation(argument.getExpression().getText())
+                argument -> trimQuotation(argument.getLabel()),
+                argument -> trimQuotation(argument.getExpression())
         ));
 
         if (namedArguments.isEmpty()) {
             return newByGroupArtifact(getMethodFirstParam(call), (groupId, artifactId) ->
                     new DependencyElement<>(groupId, artifactId, call));
         } else {
-            return new DependencyElement<>(namedArguments.get("group"), namedArguments.get("name"), call);
+            String group = checkEmpty(namedArguments.get("group"));
+            String name = checkEmpty(namedArguments.get("name"));
+            return new DependencyElement<>(group, name, call);
         }
+    }
+
+    /**
+     * 删除头尾的引号
+     *
+     * @param psiElement
+     * @return
+     */
+    private String trimQuotation(GroovyPsiElement psiElement) {
+        if (psiElement == null) {
+            return EMPTY;
+        }
+
+        return trimQuotation(psiElement.getText());
     }
 
     /**

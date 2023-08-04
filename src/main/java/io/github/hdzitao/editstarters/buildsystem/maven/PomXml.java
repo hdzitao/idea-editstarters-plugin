@@ -1,5 +1,6 @@
 package io.github.hdzitao.editstarters.buildsystem.maven;
 
+import com.intellij.psi.xml.XmlDocument;
 import com.intellij.psi.xml.XmlFile;
 import com.intellij.psi.xml.XmlTag;
 import io.github.hdzitao.editstarters.buildsystem.DependencyElement;
@@ -9,6 +10,7 @@ import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.Starter;
+import io.github.hdzitao.editstarters.ui.ShowErrorException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -20,7 +22,6 @@ import java.util.stream.Collectors;
  *
  * @version 3.2.0
  */
-@SuppressWarnings("ConstantConditions")
 public class PomXml extends ProjectFile<XmlTag> {
     // TAG ==================================================================================
     private static final String TAG_DEPENDENCY_MANAGEMENT = "dependencyManagement";
@@ -40,7 +41,11 @@ public class PomXml extends ProjectFile<XmlTag> {
     private final XmlTag rootTag;
 
     public PomXml(XmlFile file) {
-        rootTag = file.getDocument().getRootTag();
+        XmlDocument document = file.getDocument();
+        if (document == null) {
+            throw ShowErrorException.internal();
+        }
+        rootTag = document.getRootTag();
     }
 
     @Override
@@ -121,7 +126,7 @@ public class PomXml extends ProjectFile<XmlTag> {
     private String getTagText(XmlTag xmlTag, String name) {
         XmlTag subTag = xmlTag.findFirstSubTag(name);
         if (subTag == null) {
-            return "";
+            return EMPTY;
         }
         return subTag.getValue().getText();
     }

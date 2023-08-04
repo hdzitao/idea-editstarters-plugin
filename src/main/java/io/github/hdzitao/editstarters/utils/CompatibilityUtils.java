@@ -30,10 +30,14 @@ public final class CompatibilityUtils {
     public static DataNode<ProjectData> findProjectData(Project project, ProjectSystemId systemId, String projectPath) {
         AbstractExternalSystemSettings<?, ?, ?> settings = ExternalSystemApiUtil.getSettings(project, systemId);
         ExternalProjectSettings linkedProjectSettings = settings.getLinkedProjectSettings(projectPath);
-        if (linkedProjectSettings == null) return null;
+        if (linkedProjectSettings == null) {
+            return null;
+        }
         String rootProjectPath = linkedProjectSettings.getExternalProjectPath();
         ExternalProjectInfo projectInfo = ProjectDataManager.getInstance().getExternalProjectData(project, systemId, rootProjectPath);
-        if (projectInfo == null) return null;
+        if (projectInfo == null) {
+            return null;
+        }
         return projectInfo.getExternalProjectStructure();
     }
 }

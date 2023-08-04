@@ -20,6 +20,8 @@ import java.util.List;
  * @version 3.2.0
  */
 public abstract class ProjectFile<Psi extends PsiElement> implements EditStarters {
+    protected final static String EMPTY = "";
+
     /**
      * 查找或创建 dependencies
      *
