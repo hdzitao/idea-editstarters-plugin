@@ -4,6 +4,8 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
+import com.intellij.ui.DocumentAdapter;
+import com.intellij.ui.SearchTextField;
 import com.intellij.util.ui.JBUI;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.dependency.Dependency;
@@ -16,8 +18,10 @@ import io.github.hdzitao.editstarters.springboot.Starter;
 import io.github.hdzitao.editstarters.ui.swing.*;
 import io.github.hdzitao.editstarters.version.Version;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -38,7 +42,7 @@ public class EditStartersDialog {
     private JList<String> moduleList;
     private JList<Starter> starterList;
     private JList<Starter> selectList;
-    private JTextField searchField;
+    private SearchTextField searchField;
     private JCheckBox cachedBox;
     private JButton removeButton;
     private JCheckBox oHubBox;
@@ -214,9 +218,9 @@ public class EditStartersDialog {
         starterList.addMouseListener(showDescAdapter);
 
         // 搜索框
-        searchField.addKeyListener(new KeyAdapter() {
+        searchField.addDocumentListener(new DocumentAdapter() {
             @Override
-            public void keyReleased(KeyEvent e) {
+            protected void textChanged(@NotNull DocumentEvent e) {
                 moduleList.clearSelection();
                 String searchKey = searchField.getText().toLowerCase();
                 if (StringUtils.isBlank(searchKey)) {
