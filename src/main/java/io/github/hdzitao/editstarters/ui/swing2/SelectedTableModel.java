@@ -6,6 +6,7 @@ import com.intellij.ui.InplaceButton;
 import com.intellij.ui.table.JBTable;
 import io.github.hdzitao.editstarters.springboot.Starter;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -14,7 +15,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.function.Consumer;
 
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
@@ -24,10 +24,13 @@ import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
  * @version 3.2.0
  */
 @Getter
+@Setter
 public class SelectedTableModel extends AbstractTableModel {
     private final List<Starter> selected;
 
-    public SelectedTableModel(JBTable selectedTable, List<Starter> selected, Consumer<Starter> doRemove) {
+    private SelectedRemoveListener removeListener;
+
+    public SelectedTableModel(JBTable selectedTable, List<Starter> selected) {
         this.selected = selected;
 
         // 去掉标题/边框等等
@@ -61,17 +64,57 @@ public class SelectedTableModel extends AbstractTableModel {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     Point point = e.getPoint();
                     int column = selectedTable.columnAtPoint(point);
-                    if (column == SelectedTableConstants.REMOVE_BUTTON_INDEX) {
-                        int row = selectedTable.rowAtPoint(point);
-                        if (row < selected.size()) {
-                            doRemove.accept(selected.get(row));
-                            selected.remove(row);
-                            fireTableDataChanged();
-                        }
+                    if (column != SelectedTableConstants.REMOVE_BUTTON_INDEX) {
+                        return;
+                    }
+                    int row = selectedTable.rowAtPoint(point);
+                    if (row < selected.size() && removeListener != null) {
+                        removeListener.do4remove(selected.get(row));
+                        removeStarter(row);
                     }
                 }
             }
         });
+    }
+
+    /**
+     * 添加
+     *
+     * @param starter
+     */
+    public void addStarter(Starter starter) {
+        selected.add(starter);
+        fireTableDataChanged();
+    }
+
+    /**
+     * 删除
+     *
+     * @param starter
+     */
+    public void removeStarter(Starter starter) {
+        selected.remove(starter);
+        fireTableDataChanged();
+    }
+
+    /**
+     * 删除
+     *
+     * @param row
+     */
+    public void removeStarter(int row) {
+        selected.remove(row);
+        fireTableDataChanged();
+    }
+
+    /**
+     * 包含
+     *
+     * @param starter
+     * @return
+     */
+    public boolean containsStarter(Starter starter) {
+        return selected.contains(starter);
     }
 
     @Override

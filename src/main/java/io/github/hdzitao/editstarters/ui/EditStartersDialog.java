@@ -164,18 +164,18 @@ public class EditStartersDialog {
         SelectedTableModel selectedTableModel = new SelectedTableModel(selectedList, modules.values().stream()
                 .flatMap(List::stream)
                 .filter(info -> Points.contains(existDependencies, info))
-                .collect(Collectors.toList()),
-                starter -> {
-                    if (Points.contains(existDependencies, starter)) {
-                        // 已存在, 需要删除
-                        removeStarters.add(starter);
-                    } else {
-                        // 不存在,不添加
-                        addStarters.remove(starter);
-                    }
-                    // 显示
-                    starterList.updateUI();
-                });
+                .collect(Collectors.toList()));
+        selectedTableModel.setRemoveListener(starter -> {
+            if (Points.contains(existDependencies, starter)) {
+                // 已存在, 需要删除
+                removeStarters.add(starter);
+            } else {
+                // 不存在,不添加
+                addStarters.remove(starter);
+            }
+            // 显示
+            starterList.updateUI();
+        });
 
         // Starter列表
         starterList.setCellRenderer(new StarterListRenderer(selectedTableModel));
@@ -190,11 +190,7 @@ public class EditStartersDialog {
                         addStarters.add(starter);
                     }
 
-                    List<Starter> selected = selectedTableModel.getSelected();
-                    if (!selected.contains(starter)) {
-                        selected.add(starter);
-                        selectedTableModel.fireTableDataChanged();
-                    }
+                    selectedTableModel.addStarter(starter);
                 },
                 // 取消回调
                 starter -> {
@@ -206,9 +202,7 @@ public class EditStartersDialog {
                         addStarters.remove(starter);
                     }
 
-                    List<Starter> selected = selectedTableModel.getSelected();
-                    selected.remove(starter);
-                    selectedTableModel.fireTableDataChanged();
+                    selectedTableModel.removeStarter(starter);
                 }));
         starterList.addMouseMotionListener(showDescAdapter);
         starterList.addMouseListener(showDescAdapter);
