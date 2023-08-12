@@ -23,11 +23,11 @@ import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
  *
  * @version 3.2.0
  */
-@Getter
-@Setter
 public class SelectedTableModel extends AbstractTableModel {
+    @Getter
     private final List<Starter> selected;
 
+    @Setter
     private SelectedRemoveListener removeListener;
 
     public SelectedTableModel(JBTable selectedTable, List<Starter> selected) {
@@ -58,6 +58,7 @@ public class SelectedTableModel extends AbstractTableModel {
         // 渲染按钮
         removeBtnColumn.setCellRenderer((table, value, isSelected, hasFocus, row, column) ->
                 new InplaceButton(new IconButton("Delete", AllIcons.Actions.Close, AllIcons.Actions.CloseHovered), null));
+        // 点击事件
         selectedTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

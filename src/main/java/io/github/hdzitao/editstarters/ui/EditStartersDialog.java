@@ -16,10 +16,9 @@ import io.github.hdzitao.editstarters.initializr.InitializrReturn;
 import io.github.hdzitao.editstarters.springboot.Module;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import io.github.hdzitao.editstarters.ui.swing.StarterListRenderer;
-import io.github.hdzitao.editstarters.ui.swing.StarterListSelectionModel;
 import io.github.hdzitao.editstarters.ui.swing.WarpEditorKit;
 import io.github.hdzitao.editstarters.ui.swing2.SelectedTableModel;
+import io.github.hdzitao.editstarters.ui.swing2.StarterTableModel;
 import io.github.hdzitao.editstarters.version.Version;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -44,10 +43,9 @@ public class EditStartersDialog {
     private JButton buttonCancel;
     private JComboBox<Version> versionComboBox;
     private JList<String> moduleList;
-    private JList<Starter> starterList;
+    private JBTable starterList;
     private SearchTextField searchField;
     private JCheckBox cachedBox;
-    private JButton removeButton;
     private JCheckBox oHubBox;
     private JTextPane descPane;
     private JTextField pointTextField;
@@ -123,20 +121,6 @@ public class EditStartersDialog {
             frame.dispose();
         });
 
-        Map<String, List<Starter>> modules = springBoot.getModules().stream()
-                .collect(Collectors.toMap(Module::getName, Module::getValues, (o, n) -> o, LinkedHashMap::new));
-        // Module列表
-        moduleList.setModel(new CollectionListModel<>(modules.keySet()));
-        moduleList.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                searchField.setText("");
-                String name = moduleList.getSelectedValue();
-                starterList.setModel(new CollectionListModel<>(modules.getOrDefault(name, Collections.emptyList())));
-//                starterList.updateUI();
-            }
-        });
-
         // 显示详细信息
         descPane.setEditorKit(new WarpEditorKit());
         pointTextField.setBorder(JBUI.Borders.empty());
@@ -159,6 +143,8 @@ public class EditStartersDialog {
         };
 
         List<Dependency> existDependencies = buildSystem.getDependencies();
+        Map<String, List<Starter>> modules = springBoot.getModules().stream()
+                .collect(Collectors.toMap(Module::getName, Module::getValues, (o, n) -> o, LinkedHashMap::new));
 
         // selected列表
         SelectedTableModel selectedTableModel = new SelectedTableModel(selectedList, modules.values().stream()
@@ -178,34 +164,41 @@ public class EditStartersDialog {
         });
 
         // Starter列表
-        starterList.setCellRenderer(new StarterListRenderer(selectedTableModel));
-        starterList.setSelectionModel(new StarterListSelectionModel(starterList,
-                // 选中回调
-                starter -> {
-                    if (Points.contains(existDependencies, starter)) {
-                        // 已经存在,不删除
-                        removeStarters.remove(starter);
-                    } else {
-                        // 不存在,需要添加
-                        addStarters.add(starter);
-                    }
+        StarterTableModel starterTableModel = new StarterTableModel(starterList, selectedTableModel);
+        starterTableModel.setAddListener(starter -> {
+            if (Points.contains(existDependencies, starter)) {
+                // 已经存在,不删除
+                removeStarters.remove(starter);
+            } else {
+                // 不存在,需要添加
+                addStarters.add(starter);
+            }
 
-                    selectedTableModel.addStarter(starter);
-                },
-                // 取消回调
-                starter -> {
-                    if (Points.contains(existDependencies, starter)) {
-                        // 如果已存在,需要删除
-                        removeStarters.add(starter);
-                    } else {
-                        // 不存在,不添加
-                        addStarters.remove(starter);
-                    }
+            selectedTableModel.addStarter(starter);
+        });
+        starterTableModel.setRemoveListener(starter -> {
+            if (Points.contains(existDependencies, starter)) {
+                // 如果已存在,需要删除
+                removeStarters.add(starter);
+            } else {
+                // 不存在,不添加
+                addStarters.remove(starter);
+            }
 
-                    selectedTableModel.removeStarter(starter);
-                }));
-        starterList.addMouseMotionListener(showDescAdapter);
-        starterList.addMouseListener(showDescAdapter);
+            selectedTableModel.removeStarter(starter);
+        });
+
+        // Module列表
+        moduleList.setModel(new CollectionListModel<>(modules.keySet()));
+        moduleList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                searchField.setText("");
+                String name = moduleList.getSelectedValue();
+                starterTableModel.refresh(modules.getOrDefault(name, Collections.emptyList()));
+//                starterList.updateUI();
+            }
+        });
 
         // 搜索框
         searchField.addDocumentListener(new DocumentAdapter() {
@@ -214,7 +207,7 @@ public class EditStartersDialog {
                 moduleList.clearSelection();
                 String searchKey = searchField.getText().toLowerCase();
                 if (StringUtils.isBlank(searchKey)) {
-                    starterList.setModel(new CollectionComboBoxModel<>());
+                    starterTableModel.refresh(Collections.emptyList());
                     return;
                 }
                 List<Starter> result = modules.values().stream()
@@ -222,7 +215,7 @@ public class EditStartersDialog {
                         .parallel()
                         .filter(starter -> getSearchText(starter).contains(searchKey))
                         .collect(Collectors.toList());
-                starterList.setModel(new CollectionComboBoxModel<>(result));
+                starterTableModel.refresh(result);
             }
         });
     }
