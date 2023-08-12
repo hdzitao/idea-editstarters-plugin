@@ -186,7 +186,7 @@
                     <properties/>
                     <border type="none"/>
                     <children>
-                      <component id="ceb00" class="javax.swing.JList" binding="selectList">
+                      <component id="e3edb" class="com.intellij.ui.table.JBTable" binding="selectedList">
                         <constraints/>
                         <properties/>
                       </component>
