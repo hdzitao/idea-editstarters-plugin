@@ -5,6 +5,7 @@ import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.table.JBTable;
 import io.github.hdzitao.editstarters.springboot.Starter;
+import lombok.Getter;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -22,12 +23,11 @@ import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
  *
  * @version 3.2.0
  */
+@Getter
 public class SelectedTableModel extends AbstractTableModel {
-    private final JBTable selectedTable;
     private final List<Starter> selected;
 
     public SelectedTableModel(JBTable selectedTable, List<Starter> selected, Consumer<Starter> doRemove) {
-        this.selectedTable = selectedTable;
         this.selected = selected;
 
         // 去掉标题/边框等等

@@ -16,6 +16,8 @@ import io.github.hdzitao.editstarters.initializr.InitializrReturn;
 import io.github.hdzitao.editstarters.springboot.Module;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import io.github.hdzitao.editstarters.springboot.Starter;
+import io.github.hdzitao.editstarters.ui.swing.StarterListRenderer;
+import io.github.hdzitao.editstarters.ui.swing.StarterListSelectionModel;
 import io.github.hdzitao.editstarters.ui.swing.WarpEditorKit;
 import io.github.hdzitao.editstarters.ui.swing2.SelectedTableModel;
 import io.github.hdzitao.editstarters.version.Version;
@@ -159,7 +161,7 @@ public class EditStartersDialog {
         List<Dependency> existDependencies = buildSystem.getDependencies();
 
         // selected列表
-        new SelectedTableModel(selectedList, modules.values().stream()
+        SelectedTableModel selectedTableModel = new SelectedTableModel(selectedList, modules.values().stream()
                 .flatMap(List::stream)
                 .filter(info -> Points.contains(existDependencies, info))
                 .collect(Collectors.toList()),
@@ -176,38 +178,40 @@ public class EditStartersDialog {
                 });
 
         // Starter列表
-//        starterList.setCellRenderer(new StarterListRenderer(selectList));
-//        starterList.setSelectionModel(new StarterListSelectionModel(starterList,
-//                // 选中回调
-//                starter -> {
-//                    if (Points.contains(existDependencies, starter)) {
-//                        // 已经存在,不删除
-//                        removeStarters.remove(starter);
-//                    } else {
-//                        // 不存在,需要添加
-//                        addStarters.add(starter);
-//                    }
-//
-//                    CollectionListModel<Starter> selectListModel = (CollectionListModel<Starter>) selectList.getModel();
-//                    if (!selectListModel.contains(starter)) {
-//                        selectListModel.add(starter);
-//                    }
-//                },
-//                // 取消回调
-//                starter -> {
-//                    if (Points.contains(existDependencies, starter)) {
-//                        // 如果已存在,需要删除
-//                        removeStarters.add(starter);
-//                    } else {
-//                        // 不存在,不添加
-//                        addStarters.remove(starter);
-//                    }
-//
-//                    CollectionListModel<Starter> selectListModel = (CollectionListModel<Starter>) selectList.getModel();
-//                    selectListModel.remove(starter);
-//                }));
-//        starterList.addMouseMotionListener(showDescAdapter);
-//        starterList.addMouseListener(showDescAdapter);
+        starterList.setCellRenderer(new StarterListRenderer(selectedTableModel));
+        starterList.setSelectionModel(new StarterListSelectionModel(starterList,
+                // 选中回调
+                starter -> {
+                    if (Points.contains(existDependencies, starter)) {
+                        // 已经存在,不删除
+                        removeStarters.remove(starter);
+                    } else {
+                        // 不存在,需要添加
+                        addStarters.add(starter);
+                    }
+
+                    List<Starter> selected = selectedTableModel.getSelected();
+                    if (!selected.contains(starter)) {
+                        selected.add(starter);
+                        selectedTableModel.fireTableDataChanged();
+                    }
+                },
+                // 取消回调
+                starter -> {
+                    if (Points.contains(existDependencies, starter)) {
+                        // 如果已存在,需要删除
+                        removeStarters.add(starter);
+                    } else {
+                        // 不存在,不添加
+                        addStarters.remove(starter);
+                    }
+
+                    List<Starter> selected = selectedTableModel.getSelected();
+                    selected.remove(starter);
+                    selectedTableModel.fireTableDataChanged();
+                }));
+        starterList.addMouseMotionListener(showDescAdapter);
+        starterList.addMouseListener(showDescAdapter);
 
         // 搜索框
         searchField.addDocumentListener(new DocumentAdapter() {
