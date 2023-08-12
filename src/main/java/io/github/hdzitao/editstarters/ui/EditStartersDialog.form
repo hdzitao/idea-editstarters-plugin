@@ -188,7 +188,9 @@
                     <children>
                       <component id="e3edb" class="com.intellij.ui.table.JBTable" binding="selectedList">
                         <constraints/>
-                        <properties/>
+                        <properties>
+                          <opaque value="false"/>
+                        </properties>
                       </component>
                     </children>
                   </scrollpane>

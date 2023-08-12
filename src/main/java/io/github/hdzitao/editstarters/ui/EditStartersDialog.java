@@ -17,7 +17,6 @@ import io.github.hdzitao.editstarters.springboot.Module;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import io.github.hdzitao.editstarters.springboot.Starter;
 import io.github.hdzitao.editstarters.ui.swing.WarpEditorKit;
-import io.github.hdzitao.editstarters.ui.swing2.SelectedTableColumnModel;
 import io.github.hdzitao.editstarters.ui.swing2.SelectedTableModel;
 import io.github.hdzitao.editstarters.version.Version;
 import org.apache.commons.lang3.StringUtils;
@@ -160,38 +159,21 @@ public class EditStartersDialog {
         List<Dependency> existDependencies = buildSystem.getDependencies();
 
         // selected列表
-        selectedList.setTableHeader(null);
-        selectedList.setBorder(JBUI.Borders.empty());
-        selectedList.setModel(new SelectedTableModel(modules.values().stream()
+        new SelectedTableModel(selectedList, modules.values().stream()
                 .flatMap(List::stream)
                 .filter(info -> Points.contains(existDependencies, info))
-                .collect(Collectors.toList())));
-        selectedList.setColumnModel(new SelectedTableColumnModel(selectedList.getColumnModel(), event -> {
-        }));
-
-
-//        selectList.setCellRenderer(new EditStartersRenderer());
-//        selectList.setSelectionModel(new EditStartersSelectionModel());
-//        selectList.setModel(new CollectionListModel<>());
-//        selectList.addMouseMotionListener(showDescAdapter);
-//        selectList.addMouseListener(showDescAdapter);
-//        // 删除按钮
-//        removeButton.addActionListener(e -> {
-//            for (Starter Starter : selectList.getSelectedValuesList()) {
-//                if (Points.contains(existDependencies, Starter)) {
-//                    // 已存在, 需要删除
-//                    removeStarters.add(Starter);
-//                } else {
-//                    // 不存在,不添加
-//                    addStarters.remove(Starter);
-//                }
-//                // 显示
-//                ((CollectionListModel<Starter>) selectList.getModel()).remove(Starter);
-//            }
-//            // 清空选择
-//            selectList.clearSelection();
-//            starterList.updateUI();
-//        });
+                .collect(Collectors.toList()),
+                starter -> {
+                    if (Points.contains(existDependencies, starter)) {
+                        // 已存在, 需要删除
+                        removeStarters.add(starter);
+                    } else {
+                        // 不存在,不添加
+                        addStarters.remove(starter);
+                    }
+                    // 显示
+                    starterList.updateUI();
+                });
 
         // Starter列表
 //        starterList.setCellRenderer(new StarterListRenderer(selectList));
