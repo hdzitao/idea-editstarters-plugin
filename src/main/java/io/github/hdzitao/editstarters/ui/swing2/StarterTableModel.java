@@ -4,8 +4,8 @@ import com.intellij.ui.BooleanTableCellEditor;
 import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.ui.table.JBTable;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -16,7 +16,7 @@ import java.util.List;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
 /**
- * starter table model
+ * starter列表 model
  *
  * @version 3.2.0
  */
@@ -24,16 +24,21 @@ public class StarterTableModel extends AbstractTableModel {
     private List<Starter> starters;
     private final SelectedTableModel selectedTableModel;
 
-    @Getter
     @Setter
+    @Accessors(chain = true)
     private StarterRemoveListener removeListener;
-    @Getter
     @Setter
+    @Accessors(chain = true)
     private StarterAddListener addListener;
+
+    private final TableMouseClicker mouseClicker;
 
     public StarterTableModel(JBTable starterList, SelectedTableModel selectedTableModel) {
         this.starters = Collections.emptyList();
         this.selectedTableModel = selectedTableModel;
+
+        // 点击事件
+        this.mouseClicker = new TableMouseClicker(starterList, StarterTableConstants.COLUMN_MAX);
 
         // 去掉标题/边框等等
 //        starterList.setTableHeader(null);
@@ -104,14 +109,27 @@ public class StarterTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        Boolean checked = (Boolean) aValue;
-        if (checked && addListener != null) {
-            addListener.do4add(starters.get(rowIndex));
-        } else if (removeListener != null) {
-            removeListener.do4remove(starters.get(rowIndex));
-        }
+        switch (columnIndex) {
+            case StarterTableConstants.CHECKBOX_INDEX:
+                Boolean checked = (Boolean) aValue;
+                if (rowIndex >= starters.size()) {
+                    break;
+                }
 
-        fireTableCellUpdated(rowIndex, columnIndex);
+                Starter starter = starters.get(rowIndex);
+                if (checked && addListener != null) {
+                    addListener.add(starter);
+                } else if (removeListener != null) {
+                    removeListener.remove(starter);
+                }
+
+                fireTableCellUpdated(rowIndex, columnIndex);
+
+                break;
+            case StarterTableConstants.STARTER_INDEX:
+            default:
+                break;
+        }
     }
 
     @Override

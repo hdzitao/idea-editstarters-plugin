@@ -1,5 +1,10 @@
 package io.github.hdzitao.editstarters.ui.swing2;
 
+/**
+ * starter列表常量
+ *
+ * @version 3.2.0
+ */
 public class StarterTableConstants {
     public static final int COLUMN_MAX = 2;
     public static final int CHECKBOX_INDEX = 0;

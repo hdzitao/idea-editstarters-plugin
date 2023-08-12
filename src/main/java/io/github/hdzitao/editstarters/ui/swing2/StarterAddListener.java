@@ -3,10 +3,10 @@ package io.github.hdzitao.editstarters.ui.swing2;
 import io.github.hdzitao.editstarters.springboot.Starter;
 
 /**
- * starter list add listener
+ * starter列表添加回调
  *
  * @version 3.2.0
  */
 public interface StarterAddListener {
-    void do4add(Starter starter);
+    void add(Starter starter);
 }
