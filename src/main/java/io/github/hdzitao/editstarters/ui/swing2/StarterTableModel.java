@@ -68,6 +68,22 @@ public class StarterTableModel extends AbstractTableModel {
     }
 
     /**
+     * 显示详情
+     */
+    public StarterTableModel setShowDescListener(ShowDescListener showDescListener) {
+        mouseClicker.put(StarterTableConstants.STARTER_INDEX, row -> {
+            if (row > starters.size()) {
+                return;
+            }
+
+            Starter starter = starters.get(row);
+            showDescListener.show(starter);
+        });
+
+        return this;
+    }
+
+    /**
      * 刷新
      *
      * @param starters

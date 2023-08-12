@@ -18,6 +18,7 @@ import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import io.github.hdzitao.editstarters.springboot.Starter;
 import io.github.hdzitao.editstarters.ui.swing.WarpEditorKit;
 import io.github.hdzitao.editstarters.ui.swing2.SelectedTableModel;
+import io.github.hdzitao.editstarters.ui.swing2.ShowDescListener;
 import io.github.hdzitao.editstarters.ui.swing2.StarterTableModel;
 import io.github.hdzitao.editstarters.version.Version;
 import org.apache.commons.lang3.StringUtils;
@@ -124,23 +125,15 @@ public class EditStartersDialog {
         // 显示详细信息
         descPane.setEditorKit(new WarpEditorKit());
         pointTextField.setBorder(JBUI.Borders.empty());
-        MouseAdapter showDescAdapter = new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                @SuppressWarnings("unchecked")
-                JList<Starter> list = (JList<Starter>) e.getSource();
-                int index = list.locationToIndex(e.getPoint());
-                if (index > -1) {
-                    Starter starter = list.getModel().getElementAt(index);
-                    // 详情
-                    descPane.setText(getStarterDesc(starter));
-                    descPane.setCaretPosition(0);
-                    // point
-                    pointTextField.setText(getPointText(starter));
-                    pointTextField.setCaretPosition(0);
-                }
-            }
+        ShowDescListener showDescListener = starter -> {
+            // 详情
+            descPane.setText(getStarterDesc(starter));
+            descPane.setCaretPosition(0);
+            // point
+            pointTextField.setText(getPointText(starter));
+            pointTextField.setCaretPosition(0);
         };
+
 
         List<Dependency> existDependencies = buildSystem.getDependencies();
         Map<String, List<Starter>> modules = springBoot.getModules().stream()
@@ -162,7 +155,8 @@ public class EditStartersDialog {
                     }
                     // 显示
                     starterList.updateUI();
-                });
+                })
+                .setShowDescListener(showDescListener);
 
         // Starter列表
         StarterTableModel starterTableModel = new StarterTableModel(starterList, selectedTableModel)
@@ -187,7 +181,8 @@ public class EditStartersDialog {
                     }
 
                     selectedTableModel.removeStarter(starter);
-                });
+                })
+                .setShowDescListener(showDescListener);
 
         // Module列表
         moduleList.setModel(new CollectionListModel<>(modules.keySet()));

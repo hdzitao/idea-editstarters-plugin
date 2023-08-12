@@ -70,6 +70,22 @@ public class SelectedTableModel extends AbstractTableModel {
     }
 
     /**
+     * 显示详情
+     */
+    public SelectedTableModel setShowDescListener(ShowDescListener showDescListener) {
+        mouseClicker.put(SelectedTableConstants.STARTER_INDEX, row -> {
+            if (row > selected.size()) {
+                return;
+            }
+
+            Starter starter = selected.get(row);
+            showDescListener.show(starter);
+        });
+
+        return this;
+    }
+
+    /**
      * 添加
      *
      * @param starter
