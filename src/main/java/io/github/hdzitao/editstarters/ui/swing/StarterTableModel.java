@@ -1,11 +1,11 @@
-package io.github.hdzitao.editstarters.ui.swing2;
+package io.github.hdzitao.editstarters.ui.swing;
 
 import com.intellij.ui.BooleanTableCellEditor;
 import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import io.github.hdzitao.editstarters.utils.Checks;
+import io.github.hdzitao.editstarters.utils.CheckUtils;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -73,12 +73,12 @@ public class StarterTableModel extends AbstractTableModel {
      * 显示详情
      */
     public StarterTableModel setShowDescListener(ShowDescListener showDescListener) {
-        mouseClicker.put(StarterTableConstants.STARTER_INDEX, row -> {
-            if (!Checks.inList(starters, row)) {
+        mouseClicker.put(StarterTableConstants.STARTER_INDEX, rowIndex -> {
+            if (!CheckUtils.inRange(starters, rowIndex)) {
                 return;
             }
 
-            Starter starter = starters.get(row);
+            Starter starter = starters.get(rowIndex);
             showDescListener.show(starter);
         });
 
@@ -109,7 +109,7 @@ public class StarterTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case StarterTableConstants.STARTER_INDEX:
-                if (Checks.inList(starters, rowIndex)) {
+                if (CheckUtils.inRange(starters, rowIndex)) {
                     return starters.get(rowIndex);
                 } else {
                     return "Unknown";
@@ -126,7 +126,7 @@ public class StarterTableModel extends AbstractTableModel {
         switch (columnIndex) {
             case StarterTableConstants.CHECKBOX_INDEX:
                 Boolean checked = (Boolean) aValue;
-                if (!Checks.inList(starters, rowIndex)) {
+                if (!CheckUtils.inRange(starters, rowIndex)) {
                     break;
                 }
 

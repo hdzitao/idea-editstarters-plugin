@@ -135,12 +135,9 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="1e7ae" class="javax.swing.JList" binding="moduleList">
+                  <component id="9ebfd" class="com.intellij.ui.components.JBList" binding="moduleList">
                     <constraints/>
-                    <properties>
-                      <requestFocusEnabled value="false"/>
-                      <selectedIndex value="-1"/>
-                    </properties>
+                    <properties/>
                   </component>
                 </children>
               </scrollpane>

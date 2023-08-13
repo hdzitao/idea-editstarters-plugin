@@ -6,9 +6,11 @@ import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
 import com.intellij.ui.DocumentAdapter;
 import com.intellij.ui.SearchTextField;
+import com.intellij.ui.components.JBList;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.ui.JBUI;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
+import io.github.hdzitao.editstarters.cache.MemoryCache;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Points;
 import io.github.hdzitao.editstarters.initializr.InitializrParameter;
@@ -16,10 +18,10 @@ import io.github.hdzitao.editstarters.initializr.InitializrReturn;
 import io.github.hdzitao.editstarters.springboot.Module;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import io.github.hdzitao.editstarters.springboot.Starter;
+import io.github.hdzitao.editstarters.ui.swing.SelectedTableModel;
+import io.github.hdzitao.editstarters.ui.swing.ShowDescListener;
+import io.github.hdzitao.editstarters.ui.swing.StarterTableModel;
 import io.github.hdzitao.editstarters.ui.swing.WarpEditorKit;
-import io.github.hdzitao.editstarters.ui.swing2.SelectedTableModel;
-import io.github.hdzitao.editstarters.ui.swing2.ShowDescListener;
-import io.github.hdzitao.editstarters.ui.swing2.StarterTableModel;
 import io.github.hdzitao.editstarters.version.Version;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +45,7 @@ public class EditStartersDialog {
     private JButton buttonOK;
     private JButton buttonCancel;
     private JComboBox<Version> versionComboBox;
-    private JList<String> moduleList;
+    private JBList<String> moduleList;
     private JBTable starterList;
     private SearchTextField searchField;
     private JCheckBox cachedBox;
@@ -54,9 +56,15 @@ public class EditStartersDialog {
     private final JFrame frame;
     private final Set<Starter> addStarters = new HashSet<>(64);
     private final Set<Starter> removeStarters = new HashSet<>(64);
-    private final WeakHashMap<Starter, String> pointPaneCache = new WeakHashMap<>(); // point缓存
-    private final WeakHashMap<Starter, String> descPaneCache = new WeakHashMap<>(); // 详情缓存
-    private final WeakHashMap<Starter, String> searchCache = new WeakHashMap<>(); // 搜索缓存
+    // point缓存
+    private final MemoryCache<Starter, String> pointPaneCache = new MemoryCache<>(starter ->
+            starter.getGroupId() + " > " + starter.getArtifactId());
+    // 详情缓存
+    private final MemoryCache<Starter, String> descPaneCache = new MemoryCache<>(starter ->
+            starter.getName() + "\n\n" + starter.getDescription());
+    // 搜索缓存
+    private final MemoryCache<Starter, String> searchCache = new MemoryCache<>(starter ->
+            (starter.getGroupId() + ":" + starter.getArtifactId() + "\t" + starter.getName()).toLowerCase());
 
     public EditStartersDialog(InitializrParameter parameter, InitializrReturn ret) {
         frame = new JFrame("Edit Starters");
@@ -127,10 +135,10 @@ public class EditStartersDialog {
         pointTextField.setBorder(JBUI.Borders.empty());
         ShowDescListener showDescListener = starter -> {
             // 详情
-            descPane.setText(getStarterDesc(starter));
+            descPane.setText(descPaneCache.get(starter));
             descPane.setCaretPosition(0);
             // point
-            pointTextField.setText(getPointText(starter));
+            pointTextField.setText(pointPaneCache.get(starter));
             pointTextField.setCaretPosition(0);
         };
 
@@ -208,7 +216,7 @@ public class EditStartersDialog {
                 List<Starter> result = modules.values().stream()
                         .flatMap(Collection::stream)
                         .parallel()
-                        .filter(starter -> getSearchText(starter).contains(searchKey))
+                        .filter(starter -> searchCache.get(starter).contains(searchKey))
                         .collect(Collectors.toList());
                 starterTableModel.refresh(result);
             }
@@ -223,20 +231,5 @@ public class EditStartersDialog {
         frame.pack();
         frame.setLocationRelativeTo(null); // 中间显示
         frame.setVisible(true);
-    }
-
-    private String getStarterDesc(Starter starter) {
-        return descPaneCache.computeIfAbsent(starter, info ->
-                info.getName() + "\n\n" + info.getDescription());
-    }
-
-    private String getSearchText(Starter starter) {
-        return searchCache.computeIfAbsent(starter, info ->
-                (info.getGroupId() + ":" + info.getArtifactId() + "\t" + info.getName()).toLowerCase());
-    }
-
-    private String getPointText(Starter starter) {
-        return pointPaneCache.computeIfAbsent(starter, info ->
-                info.getGroupId() + " > " + info.getArtifactId());
     }
 }

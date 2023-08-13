@@ -1,11 +1,11 @@
-package io.github.hdzitao.editstarters.ui.swing2;
+package io.github.hdzitao.editstarters.ui.swing;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.table.JBTable;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import io.github.hdzitao.editstarters.utils.Checks;
+import io.github.hdzitao.editstarters.utils.CheckUtils;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -62,10 +62,10 @@ public class SelectedTableModel extends AbstractTableModel {
         removeBtnColumn.setCellRenderer((table, value, isSelected, hasFocus, row, column) ->
                 new InplaceButton(new IconButton("Delete", AllIcons.Actions.Close, AllIcons.Actions.CloseHovered), null));
         // 点击事件
-        mouseClicker.put(SelectedTableConstants.REMOVE_BUTTON_INDEX, row -> {
-            if (Checks.inList(selected, row) && removeListener != null) {
-                removeListener.remove(selected.get(row));
-                removeStarter(row);
+        mouseClicker.put(SelectedTableConstants.REMOVE_BUTTON_INDEX, rowIndex -> {
+            if (CheckUtils.inRange(selected, rowIndex) && removeListener != null) {
+                removeListener.remove(selected.get(rowIndex));
+                removeStarter(rowIndex);
             }
         });
     }
@@ -74,12 +74,12 @@ public class SelectedTableModel extends AbstractTableModel {
      * 显示详情
      */
     public SelectedTableModel setShowDescListener(ShowDescListener showDescListener) {
-        mouseClicker.put(SelectedTableConstants.STARTER_INDEX, row -> {
-            if (!Checks.inList(selected, row)) {
+        mouseClicker.put(SelectedTableConstants.STARTER_INDEX, rowIndex -> {
+            if (!CheckUtils.inRange(selected, rowIndex)) {
                 return;
             }
 
-            Starter starter = selected.get(row);
+            Starter starter = selected.get(rowIndex);
             showDescListener.show(starter);
         });
 
@@ -140,7 +140,7 @@ public class SelectedTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case SelectedTableConstants.STARTER_INDEX:
-                if (Checks.inList(selected, rowIndex)) {
+                if (CheckUtils.inRange(selected, rowIndex)) {
                     return selected.get(rowIndex);
                 } else {
                     return "Unknown";

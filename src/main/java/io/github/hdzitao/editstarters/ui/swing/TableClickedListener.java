@@ -1,4 +1,4 @@
-package io.github.hdzitao.editstarters.ui.swing2;
+package io.github.hdzitao.editstarters.ui.swing;
 
 /**
  * 点击事件封装

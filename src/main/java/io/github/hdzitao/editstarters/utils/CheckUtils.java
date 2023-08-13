@@ -7,8 +7,8 @@ import java.util.List;
  *
  * @version 3.2.0
  */
-public final class Checks {
-    private Checks() {
+public final class CheckUtils {
+    private CheckUtils() {
     }
 
     /**
@@ -18,7 +18,7 @@ public final class Checks {
      * @param index
      * @return
      */
-    public static boolean inList(List<?> list, int index) {
+    public static boolean inRange(List<?> list, int index) {
         return index >= 0 && list != null && index < list.size();
     }
 }

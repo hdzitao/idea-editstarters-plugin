@@ -1,4 +1,4 @@
-package io.github.hdzitao.editstarters.ui.swing2;
+package io.github.hdzitao.editstarters.ui.swing;
 
 /**
  * 已选择列表常量
