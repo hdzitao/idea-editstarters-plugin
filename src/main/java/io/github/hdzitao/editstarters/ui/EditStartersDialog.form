@@ -41,6 +41,7 @@
                 </constraints>
                 <properties>
                   <enabled value="false"/>
+                  <horizontalTextPosition value="10"/>
                   <text value="Cached"/>
                 </properties>
               </component>
@@ -50,6 +51,7 @@
                 </constraints>
                 <properties>
                   <enabled value="false"/>
+                  <horizontalTextPosition value="10"/>
                   <text value="OHub"/>
                 </properties>
               </component>

@@ -58,7 +58,7 @@
                 </constraints>
                 <properties>
                   <horizontalAlignment value="2"/>
-                  <horizontalTextPosition value="11"/>
+                  <horizontalTextPosition value="10"/>
                   <selected value="true"/>
                   <text value="Cached"/>
                 </properties>
