@@ -192,7 +192,6 @@ public class EditStartersDialog {
                 searchField.setText("");
                 String name = moduleList.getSelectedValue();
                 starterTableModel.refresh(modules.getOrDefault(name, Collections.emptyList()));
-//                starterList.updateUI();
             }
         });
 

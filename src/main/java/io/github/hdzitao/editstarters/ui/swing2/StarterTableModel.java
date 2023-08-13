@@ -3,7 +3,9 @@ package io.github.hdzitao.editstarters.ui.swing2;
 import com.intellij.ui.BooleanTableCellEditor;
 import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.ui.table.JBTable;
+import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.springboot.Starter;
+import io.github.hdzitao.editstarters.utils.Checks;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -72,7 +74,7 @@ public class StarterTableModel extends AbstractTableModel {
      */
     public StarterTableModel setShowDescListener(ShowDescListener showDescListener) {
         mouseClicker.put(StarterTableConstants.STARTER_INDEX, row -> {
-            if (row > starters.size()) {
+            if (!Checks.inList(starters, row)) {
                 return;
             }
 
@@ -89,11 +91,7 @@ public class StarterTableModel extends AbstractTableModel {
      * @param starters
      */
     public void refresh(List<Starter> starters) {
-        if (starters == null) {
-            return;
-        }
-
-        this.starters = starters;
+        this.starters = ContainerUtil.notNullize(starters);
         fireTableDataChanged();
     }
 
@@ -111,7 +109,7 @@ public class StarterTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case StarterTableConstants.STARTER_INDEX:
-                if (rowIndex < starters.size()) {
+                if (Checks.inList(starters, rowIndex)) {
                     return starters.get(rowIndex);
                 } else {
                     return "Unknown";
@@ -128,7 +126,7 @@ public class StarterTableModel extends AbstractTableModel {
         switch (columnIndex) {
             case StarterTableConstants.CHECKBOX_INDEX:
                 Boolean checked = (Boolean) aValue;
-                if (rowIndex >= starters.size()) {
+                if (!Checks.inList(starters, rowIndex)) {
                     break;
                 }
 

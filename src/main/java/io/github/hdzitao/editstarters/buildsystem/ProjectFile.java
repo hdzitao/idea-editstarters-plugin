@@ -1,6 +1,7 @@
 package io.github.hdzitao.editstarters.buildsystem;
 
 import com.intellij.psi.PsiElement;
+import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Points;
@@ -8,7 +9,6 @@ import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.EditStarters;
 import io.github.hdzitao.editstarters.springboot.Starter;
 import io.github.hdzitao.editstarters.ui.ShowErrorException;
-import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,7 +70,7 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
     @Override
     public void addStarters(Collection<Starter> dependencies) {
         try {
-            if (CollectionUtils.isEmpty(dependencies)) {
+            if (ContainerUtil.isEmpty(dependencies)) {
                 return;
             }
 
@@ -95,7 +95,7 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
     @Override
     public void removeStarters(Collection<Starter> dependencies) {
         try {
-            if (CollectionUtils.isEmpty(dependencies)) {
+            if (ContainerUtil.isEmpty(dependencies)) {
                 return;
             }
 
@@ -124,7 +124,7 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
      * 添加 bom
      */
     private void addBoms(List<Bom> boms) {
-        if (CollectionUtils.isEmpty(boms)) {
+        if (ContainerUtil.isEmpty(boms)) {
             return;
         }
 
@@ -142,7 +142,7 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
      * 添加 repositories
      */
     private void addRepositories(Collection<Repository> repositories) {
-        if (CollectionUtils.isEmpty(repositories)) {
+        if (ContainerUtil.isEmpty(repositories)) {
             return;
         }
 

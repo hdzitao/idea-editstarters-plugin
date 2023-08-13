@@ -1,5 +1,6 @@
 package io.github.hdzitao.editstarters.startspringio;
 
+import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.springboot.Module;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import io.github.hdzitao.editstarters.springboot.SpringBootBuilder;
@@ -7,7 +8,6 @@ import io.github.hdzitao.editstarters.springboot.Starter;
 import io.github.hdzitao.editstarters.startspringio.metadata.*;
 import io.github.hdzitao.editstarters.version.Version;
 import io.github.hdzitao.editstarters.version.Versions;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class StartSpringIO2SpringBoot implements SpringBootBuilder<StartSpringIO
                     starter.setBom(bom);
 
                     List<String> repositories = bom.getRepositories();
-                    if (CollectionUtils.isNotEmpty(repositories)) {
+                    if (!ContainerUtil.isEmpty(repositories)) {
                         for (String rid : repositories) {
                             MetadataRepository repository = env.getRepositories().get(rid);
 

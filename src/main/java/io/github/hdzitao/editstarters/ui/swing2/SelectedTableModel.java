@@ -5,6 +5,7 @@ import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.table.JBTable;
 import io.github.hdzitao.editstarters.springboot.Starter;
+import io.github.hdzitao.editstarters.utils.Checks;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -62,7 +63,7 @@ public class SelectedTableModel extends AbstractTableModel {
                 new InplaceButton(new IconButton("Delete", AllIcons.Actions.Close, AllIcons.Actions.CloseHovered), null));
         // 点击事件
         mouseClicker.put(SelectedTableConstants.REMOVE_BUTTON_INDEX, row -> {
-            if (row < selected.size() && removeListener != null) {
+            if (Checks.inList(selected, row) && removeListener != null) {
                 removeListener.remove(selected.get(row));
                 removeStarter(row);
             }
@@ -74,7 +75,7 @@ public class SelectedTableModel extends AbstractTableModel {
      */
     public SelectedTableModel setShowDescListener(ShowDescListener showDescListener) {
         mouseClicker.put(SelectedTableConstants.STARTER_INDEX, row -> {
-            if (row > selected.size()) {
+            if (!Checks.inList(selected, row)) {
                 return;
             }
 
@@ -139,7 +140,7 @@ public class SelectedTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case SelectedTableConstants.STARTER_INDEX:
-                if (rowIndex < selected.size()) {
+                if (Checks.inList(selected, rowIndex)) {
                     return selected.get(rowIndex);
                 } else {
                     return "Unknown";

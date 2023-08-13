@@ -1,12 +1,12 @@
 package io.github.hdzitao.editstarters.startspringio.metadata;
 
+import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.version.Version;
 import io.github.hdzitao.editstarters.version.Versions;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public class MetaDataBom extends Bom {
         bom.version = this.version;
         bom.repositories = this.repositories;
 
-        if (CollectionUtils.isEmpty(this.mappings)) {
+        if (ContainerUtil.isEmpty(this.mappings)) {
             return bom;
         }
 
@@ -57,7 +57,7 @@ public class MetaDataBom extends Bom {
         if (StringUtils.isNoneBlank(mapping.version)) {
             bom.version = mapping.version;
         }
-        if (CollectionUtils.isNotEmpty(mapping.repositories)) {
+        if (!ContainerUtil.isEmpty(mapping.repositories)) {
             bom.repositories = mapping.repositories;
         }
 

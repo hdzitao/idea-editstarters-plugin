@@ -10,7 +10,6 @@ import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.Starter;
 import io.github.hdzitao.editstarters.ui.ShowErrorException;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.kotlin.psi.*;
 
@@ -152,7 +151,7 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
         }
 
         List<KtLambdaArgument> lambdaArguments = block.getLambdaArguments();
-        if (CollectionUtils.isEmpty(lambdaArguments)) {
+        if (ContainerUtil.isEmpty(lambdaArguments)) {
             throw ShowErrorException.internal();
         }
         KtLambdaArgument ktLambdaArgument = lambdaArguments.get(0);
@@ -194,7 +193,7 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
      */
     private String getCallFirstParam(KtCallExpression ktCallExpression) {
         List<KtValueArgument> valueArguments = ktCallExpression.getValueArguments();
-        if (CollectionUtils.isEmpty(valueArguments)) {
+        if (ContainerUtil.isEmpty(valueArguments)) {
             return EMPTY;
         }
 
@@ -265,7 +264,7 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
                 .map(KtLambdaExpression::getBodyExpression)
                 .map(KtBlockExpression::getStatements)
                 .orElse(null);
-        if (CollectionUtils.isEmpty(statements)) {
+        if (ContainerUtil.isEmpty(statements)) {
             return null;
         }
 

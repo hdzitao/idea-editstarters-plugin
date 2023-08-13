@@ -1,12 +1,12 @@
 package io.github.hdzitao.editstarters.startspringio.metadata;
 
+import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.version.Version;
 import io.github.hdzitao.editstarters.version.Versions;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class MetadataDependency extends Dependency {
         dependency.bom = this.bom;
         dependency.repository = this.repository;
 
-        if (CollectionUtils.isEmpty(this.mappings)) {
+        if (ContainerUtil.isEmpty(this.mappings)) {
             return dependency;
         }
 
