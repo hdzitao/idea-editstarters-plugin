@@ -62,7 +62,7 @@ public class SelectedTableModel extends AbstractTableModel {
         removeBtnColumn.setCellRenderer((table, value, isSelected, hasFocus, row, column) ->
                 new InplaceButton(new IconButton("Delete", AllIcons.Actions.Close, AllIcons.Actions.CloseHovered), null));
         // 点击事件
-        mouseClicker.put(SelectedTableConstants.REMOVE_BUTTON_INDEX, rowIndex -> {
+        mouseClicker.putListener(SelectedTableConstants.REMOVE_BUTTON_INDEX, rowIndex -> {
             if (CheckUtils.inRange(selected, rowIndex) && removeListener != null) {
                 removeListener.remove(selected.get(rowIndex));
                 removeStarter(rowIndex);
@@ -74,7 +74,7 @@ public class SelectedTableModel extends AbstractTableModel {
      * 显示详情
      */
     public SelectedTableModel setShowDescListener(ShowDescListener showDescListener) {
-        mouseClicker.put(SelectedTableConstants.STARTER_INDEX, rowIndex -> {
+        mouseClicker.putListener(SelectedTableConstants.STARTER_INDEX, rowIndex -> {
             if (!CheckUtils.inRange(selected, rowIndex)) {
                 return;
             }

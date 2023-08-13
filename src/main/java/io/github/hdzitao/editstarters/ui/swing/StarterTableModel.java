@@ -73,7 +73,7 @@ public class StarterTableModel extends AbstractTableModel {
      * 显示详情
      */
     public StarterTableModel setShowDescListener(ShowDescListener showDescListener) {
-        mouseClicker.put(StarterTableConstants.STARTER_INDEX, rowIndex -> {
+        mouseClicker.putListener(StarterTableConstants.STARTER_INDEX, rowIndex -> {
             if (!CheckUtils.inRange(starters, rowIndex)) {
                 return;
             }

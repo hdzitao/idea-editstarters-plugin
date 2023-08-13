@@ -15,16 +15,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TableMouseClicker extends MouseAdapter {
     private final JTable table;
     private final Map<Integer, TableClickedListener> clickedListenerMap;
+    private final int columnMax;
 
     public TableMouseClicker(JTable table, int columnMax) {
         this.table = table;
+        this.columnMax = columnMax;
         this.clickedListenerMap = new ConcurrentHashMap<>(columnMax);
 
         table.addMouseListener(this);
     }
 
-    public void put(Integer column, TableClickedListener clickedListener) {
-        clickedListenerMap.put(column, clickedListener);
+    public void putListener(int column, TableClickedListener clickedListener) {
+        if (column >= 0 && column < columnMax) {
+            clickedListenerMap.put(column, clickedListener);
+        }
     }
 
 
