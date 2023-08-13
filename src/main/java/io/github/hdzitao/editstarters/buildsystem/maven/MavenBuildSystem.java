@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
  */
 public class MavenBuildSystem extends BuildSystem {
 
-    private MavenBuildSystem(DataContext context, PomXml pomXml, List<Dependency> dependencies) {
-        super(context, pomXml, dependencies);
+    private MavenBuildSystem(PomXml pomXml, List<Dependency> dependencies) {
+        super(pomXml, dependencies);
     }
 
     /**
@@ -40,6 +40,6 @@ public class MavenBuildSystem extends BuildSystem {
         List<Dependency> dependencies = mavenProject.getDependencies().stream()
                 .map(d -> new Dependency(d.getGroupId(), d.getArtifactId(), d.getBaseVersion()))
                 .collect(Collectors.toList());
-        return new MavenBuildSystem(context, pomXml, dependencies);
+        return new MavenBuildSystem(pomXml, dependencies);
     }
 }

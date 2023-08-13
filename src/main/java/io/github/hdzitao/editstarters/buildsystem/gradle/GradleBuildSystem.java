@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
  */
 public class GradleBuildSystem extends BuildSystem {
 
-    private GradleBuildSystem(DataContext context, AbstractBuildGradle<?> buildGradle, List<Dependency> dependencies) {
-        super(context, buildGradle, dependencies);
+    private GradleBuildSystem(AbstractBuildGradle<?> buildGradle, List<Dependency> dependencies) {
+        super(buildGradle, dependencies);
     }
 
     /**
@@ -65,6 +65,6 @@ public class GradleBuildSystem extends BuildSystem {
                 .map(lib -> new Dependency(lib.getGroupId(), lib.getArtifactId(), lib.getVersion()))
                 .collect(Collectors.toList());
 
-        return new GradleBuildSystem(context, buildGradle, dependencies);
+        return new GradleBuildSystem(buildGradle, dependencies);
     }
 }

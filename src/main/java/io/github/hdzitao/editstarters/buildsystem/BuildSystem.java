@@ -1,6 +1,5 @@
 package io.github.hdzitao.editstarters.buildsystem;
 
-import com.intellij.openapi.actionSystem.DataContext;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Points;
 import io.github.hdzitao.editstarters.springboot.EditStarters;
@@ -17,14 +16,12 @@ import java.util.List;
  */
 @Getter
 public abstract class BuildSystem implements EditStarters {
-    private final DataContext context;
     private final ProjectFile<?> projectFile;
     private final List<Dependency> dependencies;
     private final Dependency springbootDependency;
     private final boolean springBootProject;
 
-    public BuildSystem(DataContext context, ProjectFile<?> projectFile, List<Dependency> dependencies) {
-        this.context = context;
+    public BuildSystem(ProjectFile<?> projectFile, List<Dependency> dependencies) {
         this.projectFile = projectFile;
         this.dependencies = dependencies;
         this.springbootDependency = Points.find(this.dependencies,

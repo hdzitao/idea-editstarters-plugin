@@ -1,6 +1,5 @@
 package io.github.hdzitao.editstarters.ui;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.ui.CollectionListModel;
@@ -123,7 +122,7 @@ public class EditStartersDialog {
         // ok按钮
         frame.getRootPane().setDefaultButton(buttonOK);
         buttonOK.addActionListener(e -> {
-            WriteCommandAction.runWriteCommandAction(buildSystem.getContext().getData(CommonDataKeys.PROJECT), () -> {
+            WriteCommandAction.runWriteCommandAction(parameter.getProject(), () -> {
                 buildSystem.addStarters(addStarters);
                 buildSystem.removeStarters(removeStarters);
             });
