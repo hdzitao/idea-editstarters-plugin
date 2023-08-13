@@ -188,7 +188,7 @@
                       <component id="e3edb" class="com.intellij.ui.table.JBTable" binding="selectedList">
                         <constraints/>
                         <properties>
-                          <opaque value="false"/>
+                          <opaque value="true"/>
                         </properties>
                       </component>
                     </children>

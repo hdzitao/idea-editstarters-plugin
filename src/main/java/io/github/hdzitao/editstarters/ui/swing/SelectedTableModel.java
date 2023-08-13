@@ -43,7 +43,7 @@ public class SelectedTableModel extends AbstractTableModel {
         selectedTable.setShowGrid(false);
         selectedTable.setShowVerticalLines(false);
         selectedTable.setCellSelectionEnabled(false);
-        selectedTable.setRowSelectionAllowed(false);
+        selectedTable.setRowSelectionAllowed(true);
         selectedTable.setSelectionMode(SINGLE_SELECTION);
 
         // model
@@ -60,7 +60,7 @@ public class SelectedTableModel extends AbstractTableModel {
         removeBtnColumn.setMinWidth(SelectedTableConstants.REMOVE_BUTTON_WIDTH);
         // 渲染按钮(这个按钮无法接收点击事件)
         removeBtnColumn.setCellRenderer((table, value, isSelected, hasFocus, row, column) ->
-                new InplaceButton(new IconButton("Delete", AllIcons.Actions.Close, AllIcons.Actions.CloseHovered), null));
+                new InplaceButton(new IconButton("Delete", AllIcons.Actions.CloseHovered), null));
         // 点击事件
         mouseClicker.putListener(SelectedTableConstants.REMOVE_BUTTON_INDEX, rowIndex -> {
             if (CheckUtils.inRange(selected, rowIndex) && removeListener != null) {
