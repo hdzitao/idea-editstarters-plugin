@@ -15,6 +15,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 /**
@@ -49,6 +50,12 @@ public class InitializrDialog extends JDialog {
         urlInput.setText(initializrCache.getUrl());
 
         buttonOK.addActionListener(e -> onOK());
+
+        // cache 超15天默认不启动
+        long updateTime = initializrCache.getUpdateTime();
+        if (updateTime != 0 && System.currentTimeMillis() - updateTime > TimeUnit.DAYS.toMillis(15)) {
+            enableCacheCheckBox.setSelected(false);
+        }
 
         // OHub
         if (ArrayUtils.isNotEmpty(oHubs)) {
