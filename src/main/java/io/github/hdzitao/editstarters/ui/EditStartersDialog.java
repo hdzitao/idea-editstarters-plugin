@@ -206,12 +206,11 @@ public class EditStartersDialog {
         searchField.addDocumentListener(new DocumentAdapter() {
             @Override
             protected void textChanged(@NotNull DocumentEvent e) {
-                moduleList.clearSelection();
                 String searchKey = searchField.getText().toLowerCase();
                 if (StringUtils.isBlank(searchKey)) {
-                    starterTableModel.refresh(Collections.emptyList());
                     return;
                 }
+                moduleList.clearSelection();
                 List<Starter> result = modules.values().stream()
                         .flatMap(Collection::stream)
                         .parallel()
