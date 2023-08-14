@@ -20,18 +20,18 @@ public class StartSpringInitializr implements Initializr {
 
     @Override
     @SneakyThrows
-    public void initialize(InitializrParameter parameter, InitializrReturn ret, InitializrChain chain) {
-        Version version = parameter.getVersion();
-        String url = StartSpringIO.checkMetadataConfigLink(parameter.getUrl());
+    public void initialize(InitializrRequest request, InitializrResponse response, InitializrChain chain) {
+        Version version = request.getVersion();
+        String url = StartSpringIO.checkMetadataConfigLink(request.getUrl());
 
-        MetadataConfig metadata = HttpRequests.request(url).accept("application/json").connect(request ->
-                gson.fromJson(request.readString(), MetadataConfig.class));
+        MetadataConfig metadata = HttpRequests.request(url).accept("application/json").connect(req ->
+                gson.fromJson(req.readString(), MetadataConfig.class));
         if (metadata == null || !metadata.match(version)) {
-            chain.initialize(parameter, ret);
+            chain.initialize(request, response);
             return;
         }
 
         StartSpringIO startSpringIO = new StartSpringIO(version, metadata);
-        ret.setSpringBoot(builder.buildSpringBoot(startSpringIO));
+        response.setSpringBoot(builder.buildSpringBoot(startSpringIO));
     }
 }

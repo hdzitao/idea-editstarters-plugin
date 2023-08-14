@@ -24,37 +24,37 @@ public class OHubInitializr implements Initializr {
 
     @Override
     @SneakyThrows
-    public void initialize(InitializrParameter parameter, InitializrReturn ret, InitializrChain chain) {
-        Version version = parameter.getVersion();
-        OHub oHub = parameter.getOHub();
+    public void initialize(InitializrRequest request, InitializrResponse response, InitializrChain chain) {
+        Version version = request.getVersion();
+        OHub oHub = request.getOHub();
 
         if (oHub == null) {
-            chain.initialize(parameter, ret);
+            chain.initialize(request, response);
             return;
         }
 
-        ret.setEnableOHub(true);
-        ret.setOHub(oHub);
+        response.setEnableOHub(true);
+        response.setOHub(oHub);
 
         // 初始化旧版本配置
         String metadataMapUrl = oHub.getMetadataMapUrl();
-        OHubBootVersion oHubBootVersion = HttpRequests.request(metadataMapUrl).connect(request ->
-                gson.fromJson(request.readString(), OHubBootVersion.class));
+        OHubBootVersion oHubBootVersion = HttpRequests.request(metadataMapUrl).connect(req ->
+                gson.fromJson(req.readString(), OHubBootVersion.class));
         OHubMetaData oHubMetaData = oHubBootVersion.match(version);
         if (oHubMetaData == null) {
-            chain.initialize(parameter, ret);
+            chain.initialize(request, response);
             return;
         }
         // 获取旧版本metadata
         String metadataUrl = oHub.getMetadataUrl(oHubMetaData.getMetadataConfig());
-        MetadataConfig metadata = HttpRequests.request(metadataUrl).connect(request ->
-                gson.fromJson(request.readString(), MetadataConfig.class));
+        MetadataConfig metadata = HttpRequests.request(metadataUrl).connect(req ->
+                gson.fromJson(req.readString(), MetadataConfig.class));
         // 使用startspringio解析
         StartSpringIO startSpringIO = new StartSpringIO(version, metadata);
-        ret.setSpringBoot(springIO2SpringBoot.buildSpringBoot(startSpringIO));
+        response.setSpringBoot(springIO2SpringBoot.buildSpringBoot(startSpringIO));
 
         // 缓存
-        InitializrCache initializrCache = InitializrCache.getInstance(parameter.getProject());
+        InitializrCache initializrCache = InitializrCache.getInstance(request.getProject());
         initializrCache.putOHubName(oHub.getName());
     }
 }

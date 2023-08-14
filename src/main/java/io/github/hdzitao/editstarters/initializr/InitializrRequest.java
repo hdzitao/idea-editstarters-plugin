@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(chain = true)
-public class InitializrParameter {
+public class InitializrRequest {
     /**
      * 项目
      */

@@ -16,11 +16,11 @@ public class InitializrChain {
         this.chain = chain;
     }
 
-    public void initialize(InitializrParameter parameter, InitializrReturn ret) {
+    public void initialize(InitializrRequest request, InitializrResponse response) {
         if (i >= chain.length) {
             throw new ShowErrorException("Initialization Failed!");
         }
 
-        chain[i++].initialize(parameter, ret, this);
+        chain[i++].initialize(request, response, this);
     }
 }

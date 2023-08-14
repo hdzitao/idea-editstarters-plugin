@@ -12,8 +12,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class InitializrReturn {
-    private final InitializrParameter parameter;
+public class InitializrResponse {
     private SpringBoot springBoot;
 
     private boolean enableCache = false;
@@ -21,8 +20,4 @@ public class InitializrReturn {
 
     private boolean enableOHub = false;
     private OHub oHub;
-
-    public InitializrReturn(InitializrParameter parameter) {
-        this.parameter = parameter;
-    }
 }

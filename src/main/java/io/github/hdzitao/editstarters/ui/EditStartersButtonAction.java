@@ -65,7 +65,7 @@ public abstract class EditStartersButtonAction extends AnAction {
                 return;
             }
             // 组装参数
-            InitializrParameter parameter = new InitializrParameter()
+            InitializrRequest request = new InitializrRequest()
                     .setProject(project)
                     .setBuildSystem(buildSystem)
                     .setVersion(version)
@@ -73,16 +73,16 @@ public abstract class EditStartersButtonAction extends AnAction {
                     .setEnableCache(initializrDialog.isEnableCache())
                     .setOHub(initializrDialog.getOHub());
             // 组装返回
-            InitializrReturn ret = new InitializrReturn(parameter);
+            InitializrResponse response = new InitializrResponse();
             // 执行
             ProgressManager progressManager = ProgressManager.getInstance();
             progressManager.runProcessWithProgressSynchronously((ThrowableComputable<Void, Exception>) () -> {
                 progressManager.getProgressIndicator().setIndeterminate(true);
-                new InitializrChain(initializrs).initialize(parameter, ret);
+                new InitializrChain(initializrs).initialize(request, response);
                 return null;
-            }, "Loading " + url, true, e.getData(CommonDataKeys.PROJECT));
+            }, "Loading " + url, true, project);
             // 模块弹窗
-            new EditStartersDialog(parameter, ret).show();
+            new EditStartersDialog(request, response).show();
         } catch (Throwable throwable) { // 所有异常弹错误框
             String message;
 

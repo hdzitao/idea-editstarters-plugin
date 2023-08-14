@@ -12,8 +12,8 @@ import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.cache.MemoryCache;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Points;
-import io.github.hdzitao.editstarters.initializr.InitializrParameter;
-import io.github.hdzitao.editstarters.initializr.InitializrReturn;
+import io.github.hdzitao.editstarters.initializr.InitializrRequest;
+import io.github.hdzitao.editstarters.initializr.InitializrResponse;
 import io.github.hdzitao.editstarters.springboot.Module;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import io.github.hdzitao.editstarters.springboot.Starter;
@@ -65,35 +65,35 @@ public class EditStartersDialog {
     private final MemoryCache<Starter, String> searchCache = new MemoryCache<>(starter ->
             (starter.getGroupId() + ":" + starter.getArtifactId() + "\t" + starter.getName()).toLowerCase());
 
-    public EditStartersDialog(InitializrParameter parameter, InitializrReturn ret) {
+    public EditStartersDialog(InitializrRequest request, InitializrResponse response) {
         frame = new JFrame("Edit Starters");
         frame.setContentPane(root);
 
         // 是否使用缓存
-        if (ret.isEnableCache()) {
+        if (response.isEnableCache()) {
             cachedBox.setSelected(true);
             cachedBox.addMouseMotionListener(new MouseAdapter() {
                 @Override
                 public void mouseMoved(MouseEvent e) {
                     cachedBox.setToolTipText(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                            .format(new Date(ret.getCacheUpdateTime())));
+                            .format(new Date(response.getCacheUpdateTime())));
                 }
             });
         }
 
         // 是否启用Ohub
-        if (ret.isEnableOHub()) {
+        if (response.isEnableOHub()) {
             oHubBox.setSelected(true);
             oHubBox.addMouseMotionListener(new MouseAdapter() {
                 @Override
                 public void mouseMoved(MouseEvent e) {
-                    oHubBox.setToolTipText(ret.getOHub().getName());
+                    oHubBox.setToolTipText(response.getOHub().getName());
                 }
             });
         }
 
         // spring boot
-        SpringBoot springBoot = ret.getSpringBoot();
+        SpringBoot springBoot = response.getSpringBoot();
 
         // boot版本选框
         versionComboBox.setModel(new CollectionComboBoxModel<>(
@@ -117,12 +117,12 @@ public class EditStartersDialog {
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         // build system
-        BuildSystem buildSystem = parameter.getBuildSystem();
+        BuildSystem buildSystem = request.getBuildSystem();
 
         // ok按钮
         frame.getRootPane().setDefaultButton(buttonOK);
         buttonOK.addActionListener(e -> {
-            WriteCommandAction.runWriteCommandAction(parameter.getProject(), () -> {
+            WriteCommandAction.runWriteCommandAction(request.getProject(), () -> {
                 buildSystem.addStarters(addStarters);
                 buildSystem.removeStarters(removeStarters);
             });
