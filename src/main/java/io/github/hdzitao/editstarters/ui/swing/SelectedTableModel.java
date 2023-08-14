@@ -88,8 +88,6 @@ public class SelectedTableModel extends AbstractTableModel {
 
     /**
      * 添加
-     *
-     * @param starter
      */
     public void addStarter(Starter starter) {
         selected.add(starter);
@@ -98,8 +96,6 @@ public class SelectedTableModel extends AbstractTableModel {
 
     /**
      * 删除
-     *
-     * @param starter
      */
     public void removeStarter(Starter starter) {
         selected.remove(starter);
@@ -108,8 +104,6 @@ public class SelectedTableModel extends AbstractTableModel {
 
     /**
      * 删除
-     *
-     * @param row
      */
     public void removeStarter(int row) {
         selected.remove(row);
@@ -118,9 +112,6 @@ public class SelectedTableModel extends AbstractTableModel {
 
     /**
      * 包含
-     *
-     * @param starter
-     * @return
      */
     public boolean containsStarter(Starter starter) {
         return selected.contains(starter);

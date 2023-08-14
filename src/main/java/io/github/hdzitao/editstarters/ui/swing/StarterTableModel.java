@@ -87,8 +87,6 @@ public class StarterTableModel extends AbstractTableModel {
 
     /**
      * 刷新
-     *
-     * @param starters
      */
     public void refresh(List<Starter> starters) {
         this.starters = ContainerUtil.notNullize(starters);

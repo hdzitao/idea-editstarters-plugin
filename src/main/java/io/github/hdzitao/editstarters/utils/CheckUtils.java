@@ -13,10 +13,6 @@ public final class CheckUtils {
 
     /**
      * 检查index是否在list的范围内
-     *
-     * @param list
-     * @param index
-     * @return
      */
     public static boolean inRange(List<?> list, int index) {
         return index >= 0 && list != null && index < list.size();

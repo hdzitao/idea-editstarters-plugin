@@ -22,9 +22,6 @@ public class OHubMetaData {
 
     /**
      * 检查版本
-     *
-     * @param version
-     * @return
      */
     public boolean checkVersionRange(Version version) {
         if (StringUtils.isEmpty(versionRange)) {

@@ -141,7 +141,7 @@ public class EditStartersDialog {
             pointTextField.setCaretPosition(0);
         };
 
-
+        // 依赖信息
         List<Dependency> existDependencies = buildSystem.getDependencies();
         Map<String, List<Starter>> modules = springBoot.getModules().stream()
                 .collect(Collectors.toMap(Module::getName, Module::getValues, (o, n) -> o, LinkedHashMap::new));
