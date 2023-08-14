@@ -151,45 +151,45 @@ public class EditStartersDialog {
                 .flatMap(List::stream)
                 .filter(info -> Points.contains(existDependencies, info))
                 .collect(Collectors.toList());
-        SelectedTableModel selectedTableModel = new SelectedTableModel(selectedList, selected)
-                .setRemoveListener(starter -> {
-                    if (Points.contains(existDependencies, starter)) {
-                        // 已存在, 需要删除
-                        removeStarters.add(starter);
-                    } else {
-                        // 不存在,不添加
-                        addStarters.remove(starter);
-                    }
-                    // 显示
-                    starterList.updateUI();
-                })
-                .setShowDescListener(showDescListener);
+        SelectedTableModel selectedTableModel = new SelectedTableModel(selectedList, selected);
+        selectedTableModel.setRemoveListener(starter -> {
+            if (Points.contains(existDependencies, starter)) {
+                // 已存在, 需要删除
+                removeStarters.add(starter);
+            } else {
+                // 不存在,不添加
+                addStarters.remove(starter);
+            }
+            // 显示
+            starterList.updateUI();
+        });
+        selectedTableModel.setShowDescListener(showDescListener);
 
         // Starter列表
-        StarterTableModel starterTableModel = new StarterTableModel(starterList, selectedTableModel)
-                .setAddListener(starter -> {
-                    if (Points.contains(existDependencies, starter)) {
-                        // 已经存在,不删除
-                        removeStarters.remove(starter);
-                    } else {
-                        // 不存在,需要添加
-                        addStarters.add(starter);
-                    }
+        StarterTableModel starterTableModel = new StarterTableModel(starterList, selectedTableModel);
+        starterTableModel.setAddListener(starter -> {
+            if (Points.contains(existDependencies, starter)) {
+                // 已经存在,不删除
+                removeStarters.remove(starter);
+            } else {
+                // 不存在,需要添加
+                addStarters.add(starter);
+            }
 
-                    selectedTableModel.addStarter(starter);
-                })
-                .setRemoveListener(starter -> {
-                    if (Points.contains(existDependencies, starter)) {
-                        // 如果已存在,需要删除
-                        removeStarters.add(starter);
-                    } else {
-                        // 不存在,不添加
-                        addStarters.remove(starter);
-                    }
+            selectedTableModel.addStarter(starter);
+        });
+        starterTableModel.setRemoveListener(starter -> {
+            if (Points.contains(existDependencies, starter)) {
+                // 如果已存在,需要删除
+                removeStarters.add(starter);
+            } else {
+                // 不存在,不添加
+                addStarters.remove(starter);
+            }
 
-                    selectedTableModel.removeStarter(starter);
-                })
-                .setShowDescListener(showDescListener);
+            selectedTableModel.removeStarter(starter);
+        });
+        starterTableModel.setShowDescListener(showDescListener);
 
         // Module列表
         moduleList.setModel(new CollectionListModel<>(modules.keySet()));

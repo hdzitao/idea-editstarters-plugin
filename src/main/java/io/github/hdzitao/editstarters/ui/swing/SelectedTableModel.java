@@ -5,12 +5,8 @@ import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.table.JBTable;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import io.github.hdzitao.editstarters.utils.CheckUtils;
-import io.github.hdzitao.editstarters.utils.UIUtils;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.util.List;
@@ -20,65 +16,50 @@ import java.util.List;
  *
  * @version 3.2.0
  */
-public class SelectedTableModel extends AbstractTableModel {
+public class SelectedTableModel extends AbstractStarterTableModel {
     private static final int COLUMN_MAX = 2;
     private static final int REMOVE_BUTTON_INDEX = 0;
     private static final int STARTER_INDEX = 1;
 
     private static final int REMOVE_BUTTON_WIDTH = 20;
 
-    private final List<Starter> selected;
-
     @Setter
-    @Accessors(chain = true)
-    private SelectedRemoveListener removeListener;
-
-    private final TableMouseClicker mouseClicker;
+    private StarterRemoveListener removeListener;
 
     public SelectedTableModel(JBTable selectedTable, List<Starter> selected) {
-        this.selected = selected;
+        super(selected, selectedTable, COLUMN_MAX);
+    }
 
-        // 点击事件
-        this.mouseClicker = new TableMouseClicker(selectedTable, COLUMN_MAX);
-
-        // 去掉标题/边框等等
-        UIUtils.startersTableStyle(selectedTable);
-
-        // model
-        selectedTable.setModel(this);
-
+    @Override
+    protected void render() {
         // 渲染列
-        TableColumnModel columnModel = selectedTable.getColumnModel();
+        TableColumnModel columnModel = table.getColumnModel();
         // 删除按钮列
         TableColumn removeBtnColumn = columnModel.getColumn(REMOVE_BUTTON_INDEX);
         // 大小
-        UIUtils.setFixWidth(removeBtnColumn, REMOVE_BUTTON_WIDTH);
+        setFixWidth(removeBtnColumn, REMOVE_BUTTON_WIDTH);
         // 渲染按钮(这个按钮无法接收点击事件)
         removeBtnColumn.setCellRenderer((table, value, isSelected, hasFocus, row, column) ->
                 new InplaceButton(new IconButton("Delete", AllIcons.Actions.CloseHovered), null));
         // 点击事件
         mouseClicker.putListener(REMOVE_BUTTON_INDEX, rowIndex -> {
-            if (CheckUtils.inRange(selected, rowIndex) && removeListener != null) {
-                removeListener.remove(selected.get(rowIndex));
+            if (inStarters(rowIndex) && removeListener != null) {
+                removeListener.remove(starters.get(rowIndex));
                 removeStarter(rowIndex);
             }
         });
     }
 
-    /**
-     * 显示详情
-     */
-    public SelectedTableModel setShowDescListener(ShowDescListener showDescListener) {
-        mouseClicker.putListener(STARTER_INDEX, UIUtils.wrap(selected, showDescListener));
-
-        return this;
+    @Override
+    protected int getShowDescColumn() {
+        return STARTER_INDEX;
     }
 
     /**
      * 添加
      */
     public void addStarter(Starter starter) {
-        selected.add(starter);
+        starters.add(starter);
         fireTableDataChanged();
     }
 
@@ -86,7 +67,7 @@ public class SelectedTableModel extends AbstractTableModel {
      * 删除
      */
     public void removeStarter(Starter starter) {
-        selected.remove(starter);
+        starters.remove(starter);
         fireTableDataChanged();
     }
 
@@ -94,7 +75,7 @@ public class SelectedTableModel extends AbstractTableModel {
      * 删除
      */
     public void removeStarter(int row) {
-        selected.remove(row);
+        starters.remove(row);
         fireTableDataChanged();
     }
 
@@ -102,25 +83,15 @@ public class SelectedTableModel extends AbstractTableModel {
      * 包含
      */
     public boolean containsStarter(Starter starter) {
-        return selected.contains(starter);
-    }
-
-    @Override
-    public int getRowCount() {
-        return selected.size();
-    }
-
-    @Override
-    public int getColumnCount() {
-        return COLUMN_MAX;
+        return starters.contains(starter);
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case STARTER_INDEX:
-                if (CheckUtils.inRange(selected, rowIndex)) {
-                    return selected.get(rowIndex);
+                if (inStarters(rowIndex)) {
+                    return starters.get(rowIndex);
                 } else {
                     return "Unknown";
                 }
