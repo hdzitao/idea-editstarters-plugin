@@ -6,6 +6,7 @@ import com.intellij.ui.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.springboot.Starter;
 import io.github.hdzitao.editstarters.utils.CheckUtils;
+import io.github.hdzitao.editstarters.utils.UIUtils;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -15,7 +16,6 @@ import javax.swing.table.TableColumnModel;
 import java.util.Collections;
 import java.util.List;
 
-import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
 /**
  * starter列表 model
@@ -23,6 +23,12 @@ import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
  * @version 3.2.0
  */
 public class StarterTableModel extends AbstractTableModel {
+    private static final int COLUMN_MAX = 2;
+    private static final int CHECKBOX_INDEX = 0;
+    private static final int STARTER_INDEX = 1;
+
+    private static final int CHECKBOX_WIDTH = 20;
+
     private List<Starter> starters;
     private final SelectedTableModel selectedTableModel;
 
@@ -40,17 +46,10 @@ public class StarterTableModel extends AbstractTableModel {
         this.selectedTableModel = selectedTableModel;
 
         // 点击事件
-        this.mouseClicker = new TableMouseClicker(starterList, StarterTableConstants.COLUMN_MAX);
+        this.mouseClicker = new TableMouseClicker(starterList, COLUMN_MAX);
 
         // 去掉标题/边框等等
-//        starterList.setTableHeader(null);
-        starterList.setRowMargin(0);
-        starterList.setShowColumns(false);
-        starterList.setShowGrid(false);
-        starterList.setShowVerticalLines(false);
-        starterList.setCellSelectionEnabled(false);
-        starterList.setRowSelectionAllowed(true);
-        starterList.setSelectionMode(SINGLE_SELECTION);
+        UIUtils.startersTableStyle(starterList);
 
         // model
         starterList.setModel(this);
@@ -58,12 +57,9 @@ public class StarterTableModel extends AbstractTableModel {
         // 渲染列
         TableColumnModel columnModel = starterList.getColumnModel();
         // 选择框
-        TableColumn checkboxColumn = columnModel.getColumn(StarterTableConstants.CHECKBOX_INDEX);
+        TableColumn checkboxColumn = columnModel.getColumn(CHECKBOX_INDEX);
         // 设置大小
-        checkboxColumn.setResizable(false);
-        checkboxColumn.setPreferredWidth(StarterTableConstants.CHECKBOX_WIDTH);
-        checkboxColumn.setMaxWidth(StarterTableConstants.CHECKBOX_WIDTH);
-        checkboxColumn.setMinWidth(StarterTableConstants.CHECKBOX_WIDTH);
+        UIUtils.setFixWidth(checkboxColumn, CHECKBOX_WIDTH);
         // 渲染
         checkboxColumn.setCellRenderer(new BooleanTableCellRenderer());
         checkboxColumn.setCellEditor(new BooleanTableCellEditor());
@@ -73,14 +69,7 @@ public class StarterTableModel extends AbstractTableModel {
      * 显示详情
      */
     public StarterTableModel setShowDescListener(ShowDescListener showDescListener) {
-        mouseClicker.putListener(StarterTableConstants.STARTER_INDEX, rowIndex -> {
-            if (!CheckUtils.inRange(starters, rowIndex)) {
-                return;
-            }
-
-            Starter starter = starters.get(rowIndex);
-            showDescListener.show(starter);
-        });
+        mouseClicker.putListener(STARTER_INDEX, UIUtils.wrap(starters, showDescListener));
 
         return this;
     }
@@ -100,19 +89,19 @@ public class StarterTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return StarterTableConstants.COLUMN_MAX;
+        return COLUMN_MAX;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
-            case StarterTableConstants.STARTER_INDEX:
+            case STARTER_INDEX:
                 if (CheckUtils.inRange(starters, rowIndex)) {
                     return starters.get(rowIndex);
                 } else {
                     return "Unknown";
                 }
-            case StarterTableConstants.CHECKBOX_INDEX:
+            case CHECKBOX_INDEX:
                 return selectedTableModel.containsStarter(starters.get(rowIndex));
             default:
                 return null;
@@ -122,7 +111,7 @@ public class StarterTableModel extends AbstractTableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         switch (columnIndex) {
-            case StarterTableConstants.CHECKBOX_INDEX:
+            case CHECKBOX_INDEX:
                 Boolean checked = (Boolean) aValue;
                 if (!CheckUtils.inRange(starters, rowIndex)) {
                     break;
@@ -138,7 +127,7 @@ public class StarterTableModel extends AbstractTableModel {
                 fireTableCellUpdated(rowIndex, columnIndex);
 
                 break;
-            case StarterTableConstants.STARTER_INDEX:
+            case STARTER_INDEX:
             default:
                 break;
         }
@@ -146,6 +135,6 @@ public class StarterTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == StarterTableConstants.CHECKBOX_INDEX;
+        return columnIndex == CHECKBOX_INDEX;
     }
 }
