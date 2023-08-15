@@ -18,7 +18,7 @@ import io.github.hdzitao.editstarters.springboot.Module;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import io.github.hdzitao.editstarters.springboot.Starter;
 import io.github.hdzitao.editstarters.ui.swing.SelectedTableModel;
-import io.github.hdzitao.editstarters.ui.swing.ShowDescListener;
+import io.github.hdzitao.editstarters.ui.swing.StarterProcessor;
 import io.github.hdzitao.editstarters.ui.swing.StarterTableModel;
 import io.github.hdzitao.editstarters.ui.swing.WarpEditorKit;
 import io.github.hdzitao.editstarters.version.Version;
@@ -53,6 +53,9 @@ public class EditStartersDialog {
     private JTextField pointTextField;
     private JBTable selectedList;
     private final JFrame frame;
+
+    // 添加/删除的starters
+    private final List<Dependency> existDependencies;
     private final Set<Starter> addStarters = new HashSet<>(64);
     private final Set<Starter> removeStarters = new HashSet<>(64);
     // point缓存
@@ -119,6 +122,9 @@ public class EditStartersDialog {
         // build system
         BuildSystem buildSystem = request.getBuildSystem();
 
+        // 已经存在的依赖
+        existDependencies = buildSystem.getDependencies();
+
         // ok按钮
         frame.getRootPane().setDefaultButton(buttonOK);
         buttonOK.addActionListener(e -> {
@@ -132,63 +138,51 @@ public class EditStartersDialog {
         // 显示详细信息
         descPane.setEditorKit(new WarpEditorKit());
         pointTextField.setBorder(JBUI.Borders.empty());
-        ShowDescListener showDescListener = starter -> {
+        StarterProcessor<Void> showDescListener = starter -> {
             // 详情
             descPane.setText(descPaneCache.get(starter));
             descPane.setCaretPosition(0);
             // point
             pointTextField.setText(pointPaneCache.get(starter));
             pointTextField.setCaretPosition(0);
+            return null;
         };
 
         // 依赖信息
-        List<Dependency> existDependencies = buildSystem.getDependencies();
         Map<String, List<Starter>> modules = springBoot.getModules().stream()
                 .collect(Collectors.toMap(Module::getName, Module::getValues, (o, n) -> o, LinkedHashMap::new));
 
-        // selected列表
-        List<Starter> selected = modules.values().stream()
+        // selected/starter列表
+        SelectedTableModel selectedTableModel = new SelectedTableModel(selectedList, modules.values().stream()
                 .flatMap(List::stream)
                 .filter(info -> Points.contains(existDependencies, info))
-                .collect(Collectors.toList());
-        SelectedTableModel selectedTableModel = new SelectedTableModel(selectedList, selected);
-        selectedTableModel.setRemoveListener(starter -> {
-            if (Points.contains(existDependencies, starter)) {
-                // 已存在, 需要删除
-                removeStarters.add(starter);
-            } else {
-                // 不存在,不添加
-                addStarters.remove(starter);
-            }
-            // 显示
-            starterList.updateUI();
-        });
-        selectedTableModel.setShowDescListener(showDescListener);
-
-        // Starter列表
-        StarterTableModel starterTableModel = new StarterTableModel(starterList, selectedTableModel);
-        starterTableModel.setAddListener(starter -> {
-            if (Points.contains(existDependencies, starter)) {
-                // 已经存在,不删除
-                removeStarters.remove(starter);
-            } else {
-                // 不存在,需要添加
-                addStarters.add(starter);
-            }
-
-            selectedTableModel.addStarter(starter);
-        });
-        starterTableModel.setRemoveListener(starter -> {
-            if (Points.contains(existDependencies, starter)) {
-                // 如果已存在,需要删除
-                removeStarters.add(starter);
-            } else {
-                // 不存在,不添加
-                addStarters.remove(starter);
-            }
-
+                .collect(Collectors.toList()));
+        StarterTableModel starterTableModel = new StarterTableModel(starterList);
+        // 添加/删除监听器
+        // selected列表删除
+        selectedTableModel.setRemoveProcessor(starter -> {
+            removeStarter(starter);
             selectedTableModel.removeStarter(starter);
+            // 刷新starter列表
+            starterTableModel.fireTableDataChanged();
+            return null;
         });
+        // starter列表checkbox是否勾选
+        starterTableModel.setCheckBoxValueProcessor(selectedTableModel::containsStarter);
+        // starter列表添加
+        starterTableModel.setAddProcessor(starter -> {
+            addStarter(starter);
+            selectedTableModel.addStarter(starter);
+            return null;
+        });
+        // starter列表删除
+        starterTableModel.setRemoveProcessor(starter -> {
+            removeStarter(starter);
+            selectedTableModel.removeStarter(starter);
+            return null;
+        });
+        // 详情
+        selectedTableModel.setShowDescListener(showDescListener);
         starterTableModel.setShowDescListener(showDescListener);
 
         // Module列表
@@ -219,6 +213,32 @@ public class EditStartersDialog {
                 starterTableModel.refresh(result);
             }
         });
+    }
+
+    /**
+     * 添加starter
+     */
+    private void addStarter(Starter starter) {
+        if (Points.contains(existDependencies, starter)) {
+            // 已经存在,不删除
+            removeStarters.remove(starter);
+        } else {
+            // 不存在,需要添加
+            addStarters.add(starter);
+        }
+    }
+
+    /**
+     * 删除starter
+     */
+    private void removeStarter(Starter starter) {
+        if (Points.contains(existDependencies, starter)) {
+            // 已存在, 需要删除
+            removeStarters.add(starter);
+        } else {
+            // 不存在,不添加
+            addStarters.remove(starter);
+        }
     }
 
     private void onCancel() {

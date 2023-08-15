@@ -25,16 +25,15 @@ public class StarterTableModel extends AbstractStarterTableModel {
 
     private static final int CHECKBOX_WIDTH = 20;
 
-    private final SelectedTableModel selectedTableModel;
-
     @Setter
-    private StarterRemoveListener removeListener;
+    private StarterProcessor<Boolean> checkBoxValueProcessor;
     @Setter
-    private StarterAddListener addListener;
+    private StarterProcessor<Void> removeProcessor;
+    @Setter
+    private StarterProcessor<Void> addProcessor;
 
-    public StarterTableModel(JBTable starterList, SelectedTableModel selectedTableModel) {
+    public StarterTableModel(JBTable starterList) {
         super(Collections.emptyList(), starterList, COLUMN_MAX);
-        this.selectedTableModel = selectedTableModel;
     }
 
     @Override
@@ -51,6 +50,35 @@ public class StarterTableModel extends AbstractStarterTableModel {
     }
 
     @Override
+    protected void tableValue() {
+        // starter
+        starterTableValue(STARTER_INDEX);
+        // 选项
+        tableValue.putValuer(CHECKBOX_INDEX, (row, column) -> {
+            if (!inStarters(row) || checkBoxValueProcessor == null) {
+                return false;
+            }
+
+            return checkBoxValueProcessor.process(starters.get(row));
+        }, (row, column, value) -> {
+            boolean checked = Boolean.TRUE.equals(value);
+            if (!inStarters(row)) {
+                return;
+            }
+
+            Starter starter = starters.get(row);
+            if (checked && addProcessor != null) {
+                addProcessor.process(starter);
+            } else if (removeProcessor != null) {
+                removeProcessor.process(starter);
+            }
+
+            fireTableCellUpdated(row, column);
+        });
+
+    }
+
+    @Override
     protected int getShowDescColumn() {
         return STARTER_INDEX;
     }
@@ -61,51 +89,5 @@ public class StarterTableModel extends AbstractStarterTableModel {
     public void refresh(List<Starter> starters) {
         this.starters = ContainerUtil.notNullize(starters);
         fireTableDataChanged();
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        switch (columnIndex) {
-            case STARTER_INDEX:
-                if (inStarters(rowIndex)) {
-                    return starters.get(rowIndex);
-                } else {
-                    return "Unknown";
-                }
-            case CHECKBOX_INDEX:
-                return selectedTableModel.containsStarter(starters.get(rowIndex));
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        switch (columnIndex) {
-            case CHECKBOX_INDEX:
-                Boolean checked = (Boolean) aValue;
-                if (!inStarters(rowIndex)) {
-                    break;
-                }
-
-                Starter starter = starters.get(rowIndex);
-                if (checked && addListener != null) {
-                    addListener.add(starter);
-                } else if (removeListener != null) {
-                    removeListener.remove(starter);
-                }
-
-                fireTableCellUpdated(rowIndex, columnIndex);
-
-                break;
-            case STARTER_INDEX:
-            default:
-                break;
-        }
-    }
-
-    @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == CHECKBOX_INDEX;
     }
 }

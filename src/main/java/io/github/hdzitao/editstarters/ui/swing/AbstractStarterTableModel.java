@@ -21,14 +21,20 @@ public abstract class AbstractStarterTableModel extends AbstractTableModel {
     protected final int columnMax;
 
     protected final TableMouseClicker mouseClicker;
+    protected final TableValue tableValue;
 
     public AbstractStarterTableModel(List<Starter> starters, JBTable table, int columnMax) {
         this.starters = starters;
         this.table = table;
         this.columnMax = columnMax;
 
+        // set/get value
+        this.tableValue = new TableValue(columnMax);
+        tableValue();
+
         // 点击事件
         this.mouseClicker = new TableMouseClicker(table, columnMax);
+
         // 去掉标题/边框等等
         startersTableStyle(table);
         // model
@@ -43,6 +49,11 @@ public abstract class AbstractStarterTableModel extends AbstractTableModel {
     protected abstract void render();
 
     /**
+     * 设置tableValue
+     */
+    protected abstract void tableValue();
+
+    /**
      * 点击显示详情的column
      */
     protected abstract int getShowDescColumn();
@@ -50,14 +61,14 @@ public abstract class AbstractStarterTableModel extends AbstractTableModel {
     /**
      * 显示详情
      */
-    public void setShowDescListener(ShowDescListener showDescListener) {
+    public void setShowDescListener(StarterProcessor<Void> showDescProcessor) {
         mouseClicker.putListener(getShowDescColumn(), rowIndex -> {
             if (!inStarters(rowIndex)) {
                 return;
             }
 
             Starter starter = starters.get(rowIndex);
-            showDescListener.show(starter);
+            showDescProcessor.process(starter);
         });
     }
 
@@ -69,6 +80,21 @@ public abstract class AbstractStarterTableModel extends AbstractTableModel {
     @Override
     public int getColumnCount() {
         return columnMax;
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        return tableValue.getValueAt(rowIndex, columnIndex);
+    }
+
+    @Override
+    public void setValueAt(Object value, int rowIndex, int columnIndex) {
+        tableValue.setValueAt(value, rowIndex, columnIndex);
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return tableValue.hasSetter(columnIndex);
     }
 
     /**
@@ -104,5 +130,18 @@ public abstract class AbstractStarterTableModel extends AbstractTableModel {
      */
     protected boolean inStarters(int row) {
         return row >= 0 && starters != null && row < starters.size();
+    }
+
+    /**
+     * starter tableValue
+     */
+    protected void starterTableValue(int starterColumn) {
+        tableValue.putValuer(starterColumn, (row, column) -> {
+            if (!inStarters(row)) {
+                return "Unknown";
+            }
+
+            return starters.get(row);
+        });
     }
 }

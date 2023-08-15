@@ -14,8 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TableMouseClicker extends MouseAdapter {
     private final JTable table;
-    private final Map<Integer, TableClickedListener> clickedListenerMap;
     private final int columnMax;
+    private final Map<Integer, TableClickedListener> clickedListenerMap;
 
     public TableMouseClicker(JTable table, int columnMax) {
         this.table = table;
@@ -25,6 +25,9 @@ public class TableMouseClicker extends MouseAdapter {
         table.addMouseListener(this);
     }
 
+    /**
+     * 设置点击事件
+     */
     public void putListener(int column, TableClickedListener clickedListener) {
         if (column >= 0 && column < columnMax) {
             clickedListenerMap.put(column, clickedListener);

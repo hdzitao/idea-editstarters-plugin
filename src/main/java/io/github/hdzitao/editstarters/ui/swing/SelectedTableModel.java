@@ -24,7 +24,7 @@ public class SelectedTableModel extends AbstractStarterTableModel {
     private static final int REMOVE_BUTTON_WIDTH = 20;
 
     @Setter
-    private StarterRemoveListener removeListener;
+    private StarterProcessor<Void> removeProcessor;
 
     public SelectedTableModel(JBTable selectedTable, List<Starter> selected) {
         super(selected, selectedTable, COLUMN_MAX);
@@ -43,11 +43,16 @@ public class SelectedTableModel extends AbstractStarterTableModel {
                 new InplaceButton(new IconButton("Delete", AllIcons.Actions.CloseHovered), null));
         // 点击事件
         mouseClicker.putListener(REMOVE_BUTTON_INDEX, rowIndex -> {
-            if (inStarters(rowIndex) && removeListener != null) {
-                removeListener.remove(starters.get(rowIndex));
-                removeStarter(rowIndex);
+            if (inStarters(rowIndex) && removeProcessor != null) {
+                removeProcessor.process(starters.get(rowIndex));
             }
         });
+    }
+
+    @Override
+    protected void tableValue() {
+        // starter
+        starterTableValue(STARTER_INDEX);
     }
 
     @Override
@@ -84,20 +89,5 @@ public class SelectedTableModel extends AbstractStarterTableModel {
      */
     public boolean containsStarter(Starter starter) {
         return starters.contains(starter);
-    }
-
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        switch (columnIndex) {
-            case STARTER_INDEX:
-                if (inStarters(rowIndex)) {
-                    return starters.get(rowIndex);
-                } else {
-                    return "Unknown";
-                }
-            case REMOVE_BUTTON_INDEX:
-            default:
-                return null;
-        }
     }
 }
