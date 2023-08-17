@@ -67,10 +67,14 @@ public class StarterTableModel extends AbstractStarterTableModel {
             }
 
             Starter starter = starters.get(row);
-            if (checked && addProcessor != null) {
-                addProcessor.process(starter);
-            } else if (removeProcessor != null) {
-                removeProcessor.process(starter);
+            if (checked) {
+                if (addProcessor != null) {
+                    addProcessor.process(starter);
+                }
+            } else {
+                if (removeProcessor != null) {
+                    removeProcessor.process(starter);
+                }
             }
 
             fireTableCellUpdated(row, column);
