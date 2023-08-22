@@ -36,7 +36,7 @@ public abstract class AbstractStarterTableModel extends AbstractTableModel {
         this.mouseClicker = new TableMouseClicker(table, columnMax);
 
         // 去掉标题/边框等等
-        startersTableStyle(table);
+        starterTableStyle(table);
         // model
         table.setModel(this);
         // 渲染
@@ -104,7 +104,7 @@ public abstract class AbstractStarterTableModel extends AbstractTableModel {
      * 2. 清除边框
      * 3. 被选择样式
      */
-    protected void startersTableStyle(JBTable table) {
+    protected void starterTableStyle(JBTable table) {
         table.setRowMargin(0);
         table.setBorder(JBUI.Borders.empty());
         table.setShowColumns(false);
