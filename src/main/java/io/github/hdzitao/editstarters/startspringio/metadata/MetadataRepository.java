@@ -26,9 +26,10 @@ public class MetadataRepository extends Repository {
         MetadataRepository repository = new MetadataRepository();
         repository.name = this.name;
         repository.url = this.url;
-        repository.snapshotEnabled = this.snapshotEnabled;
-
         repository.isSnapshot = this.snapshotEnabled;
+
+        repository.snapshotEnabled = this.snapshotEnabled;
+        repository.releasesEnabled = this.releasesEnabled;
 
         return repository;
     }
