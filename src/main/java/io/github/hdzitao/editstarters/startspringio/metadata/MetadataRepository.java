@@ -1,5 +1,6 @@
 package io.github.hdzitao.editstarters.startspringio.metadata;
 
+import com.google.gson.annotations.SerializedName;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MetadataRepository extends Repository {
+    @SerializedName(value = "snapshotEnabled", alternate = "snapshotsEnabled")
+    private boolean snapshotEnabled = false;
     private boolean releasesEnabled;
 
     /**
@@ -24,6 +27,9 @@ public class MetadataRepository extends Repository {
         repository.name = this.name;
         repository.url = this.url;
         repository.snapshotEnabled = this.snapshotEnabled;
+
+        repository.isSnapshot = this.snapshotEnabled;
+
         return repository;
     }
 }

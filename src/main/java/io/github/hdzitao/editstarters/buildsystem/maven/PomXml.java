@@ -114,7 +114,7 @@ public class PomXml extends ProjectFile<XmlTag> {
         addSubTagWithTextBody(repositoryTag, "id", repository.getId());
         addSubTagWithTextBody(repositoryTag, "name", repository.getName());
         addSubTagWithTextBody(repositoryTag, "url", repository.getUrl());
-        if (repository.isSnapshotEnabled()) {
+        if (repository.isSnapshot()) {
             XmlTag snapshotsTag = createSubTag(repositoryTag, "snapshots");
             addSubTagWithTextBody(snapshotsTag, "enabled", String.valueOf(true));
         }

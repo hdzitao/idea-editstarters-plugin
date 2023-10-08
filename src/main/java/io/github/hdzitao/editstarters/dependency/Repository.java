@@ -1,6 +1,5 @@
 package io.github.hdzitao.editstarters.dependency;
 
-import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,14 +16,13 @@ public class Repository implements Point {
     protected String id;
     protected String name;
     protected String url;
-    @SerializedName(value = "snapshotEnabled", alternate = "snapshotsEnabled")
-    protected boolean snapshotEnabled = false;
+    protected boolean isSnapshot = false;
 
-    public Repository(String id, String name, String url, boolean snapshotEnabled) {
+    public Repository(String id, String name, String url, boolean isSnapshot) {
         this.id = id;
         this.name = name;
         this.url = url;
-        this.snapshotEnabled = snapshotEnabled;
+        this.isSnapshot = isSnapshot;
     }
 
     public Repository(String url) {
