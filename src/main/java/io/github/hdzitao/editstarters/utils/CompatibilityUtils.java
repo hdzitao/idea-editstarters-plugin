@@ -1,5 +1,6 @@
 package io.github.hdzitao.editstarters.utils;
 
+import com.intellij.openapi.application.AccessToken;
 import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.ExternalProjectInfo;
 import com.intellij.openapi.externalSystem.model.ProjectSystemId;
@@ -9,6 +10,8 @@ import com.intellij.openapi.externalSystem.settings.AbstractExternalSystemSettin
 import com.intellij.openapi.externalSystem.settings.ExternalProjectSettings;
 import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.project.Project;
+
+import java.lang.reflect.Method;
 
 /**
  * 兼容性工具
@@ -34,5 +37,20 @@ public final class CompatibilityUtils {
             return null;
         }
         return projectInfo.getExternalProjectStructure();
+    }
+
+    /**
+     * 2023.3 暂时性兼容
+     *
+     * @return
+     */
+    public static AccessToken resetThreadContext() {
+        try {
+            Class<?> threadContext = Class.forName("com.intellij.concurrency.ThreadContext");
+            Method resetThreadContext = threadContext.getMethod("resetThreadContext");
+            return (AccessToken) resetThreadContext.invoke(null);
+        } catch (Exception ignore) {
+            return AccessToken.EMPTY_ACCESS_TOKEN;
+        }
     }
 }
