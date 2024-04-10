@@ -1,11 +1,11 @@
 package io.github.hdzitao.editstarters.ui;
 
+import com.intellij.concurrency.ThreadContext;
 import com.intellij.openapi.application.AccessToken;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.cache.InitializrCache;
 import io.github.hdzitao.editstarters.ohub.OHub;
-import io.github.hdzitao.editstarters.utils.CompatibilityUtils;
 import io.github.hdzitao.editstarters.version.Version;
 import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
@@ -96,7 +96,7 @@ public class InitializrDialog extends JDialog {
     public void showDialog() {
         pack();
         setLocationRelativeTo(null); // 中间显示
-        try (AccessToken token = CompatibilityUtils.resetThreadContext()) {
+        try (AccessToken token = ThreadContext.resetThreadContext()) {
             setVisible(true);
         }
     }

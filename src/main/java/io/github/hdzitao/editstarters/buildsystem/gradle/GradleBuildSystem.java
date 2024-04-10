@@ -6,13 +6,14 @@ import com.intellij.openapi.externalSystem.model.DataNode;
 import com.intellij.openapi.externalSystem.model.ProjectKeys;
 import com.intellij.openapi.externalSystem.model.project.LibraryData;
 import com.intellij.openapi.externalSystem.model.project.ProjectData;
+import com.intellij.openapi.externalSystem.util.ExternalSystemApiUtil;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.ui.ShowErrorException;
-import io.github.hdzitao.editstarters.utils.CompatibilityUtils;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
@@ -55,7 +56,11 @@ public class GradleBuildSystem extends BuildSystem {
                 throw new ShowErrorException("Not support extension!");
         }
 
-        DataNode<ProjectData> projectData = CompatibilityUtils.findProjectData(project, GradleConstants.SYSTEM_ID, project.getBasePath());
+        if (StringUtils.isEmpty(project.getBasePath())) {
+            throw ShowErrorException.internal();
+        }
+
+        DataNode<ProjectData> projectData = ExternalSystemApiUtil.findProjectNode(project, GradleConstants.SYSTEM_ID, project.getBasePath());
         if (projectData == null) {
             throw ShowErrorException.internal();
         }

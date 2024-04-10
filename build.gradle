@@ -26,10 +26,10 @@ dependencies {
 }
 
 // 兼容 Apple M1
-if ('Mac OS X' == System.getProperty('os.name') && 'aarch64' == System.getProperty('os.arch')) {
-    // 2019.1对应的jbr并没有M1的版本,请求下载jbr会403,改成amd64的jbr版本
-    System.setProperty('os.arch', 'amd64')
-}
+//if ('Mac OS X' == System.getProperty('os.name') && 'aarch64' == System.getProperty('os.arch')) {
+//    // 2019.1对应的jbr并没有M1的版本,请求下载jbr会403,改成amd64的jbr版本
+//    System.setProperty('os.arch', 'amd64')
+//}
 
 intellij {
     version = INTELLIJ_IDEA_VERSION
