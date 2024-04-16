@@ -1,6 +1,4 @@
-package io.github.hdzitao.editstarters
-
-import io.github.hdzitao.editstarters.springboot.Starter
+package io.github.hdzitao.editstarters.springboot
 
 
 /**

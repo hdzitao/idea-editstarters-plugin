@@ -6,11 +6,11 @@ package io.github.hdzitao.editstarters.dependency
  * @version 3.2.0
  */
 open class Repository(
-    val url: String,
+    var url: String? = null,
     var id: String? = null,
     var name: String? = null,
     var isSnapshot: Boolean = false,
 ) : Point {
 
-    override fun point() = url
+    override fun point() = url ?: ""
 }

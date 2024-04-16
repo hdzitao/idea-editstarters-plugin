@@ -34,4 +34,22 @@ public class StartSpringInitializr implements Initializr {
         StartSpringIO startSpringIO = new StartSpringIO(version, metadata);
         response.setSpringBoot(builder.buildSpringBoot(startSpringIO));
     }
+
+    fun checkMetadataConfigLink(url:String):
+
+    String {
+        var myUrl = url
+        if (myUrl.endsWith("/")) {
+            myUrl = myUrl.substring(0, myUrl.length - 1)
+        }
+
+        val metadataLink = "/metadata/config"
+
+        if (myUrl.endsWith(metadataLink)) {
+            return myUrl
+        }
+
+        return myUrl + metadataLink
+    }
+
 }

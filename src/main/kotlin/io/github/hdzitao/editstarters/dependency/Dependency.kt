@@ -6,8 +6,8 @@ package io.github.hdzitao.editstarters.dependency
  * @version 3.2.0
  */
 open class Dependency(
-    val groupId: String,
-    val artifactId: String,
+    var groupId: String? = null,
+    var artifactId: String? = null,
     var version: String? = null,
     var scope: String? = null,
 ) : Point {
