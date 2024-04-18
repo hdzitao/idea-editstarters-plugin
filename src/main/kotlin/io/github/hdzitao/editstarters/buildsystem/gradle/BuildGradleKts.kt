@@ -1,21 +1,20 @@
-package io.github.hdzitao.editstarters.buildsystem.gradle;
+package io.github.hdzitao.editstarters.buildsystem.gradle
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.containers.ContainerUtil;
-import io.github.hdzitao.editstarters.buildsystem.DependencyElement;
-import io.github.hdzitao.editstarters.dependency.Bom;
-import io.github.hdzitao.editstarters.dependency.Dependency;
-import io.github.hdzitao.editstarters.dependency.Repository;
-import io.github.hdzitao.editstarters.springboot.Starter;
-import io.github.hdzitao.editstarters.ui.ShowErrorException;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.kotlin.psi.*;
-
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.util.containers.ContainerUtil
+import io.github.hdzitao.editstarters.buildsystem.DependencyElement
+import io.github.hdzitao.editstarters.dependency.Bom
+import io.github.hdzitao.editstarters.dependency.Dependency
+import io.github.hdzitao.editstarters.dependency.Repository
+import io.github.hdzitao.editstarters.springboot.Starter
+import io.github.hdzitao.editstarters.ui.ShowErrorException
+import org.apache.commons.lang3.StringUtils
+import org.jetbrains.kotlin.psi.*
+import java.util.*
+import java.util.function.Function
+import java.util.regex.Pattern
 
 /**
  * build.gradle.kts
@@ -23,260 +22,244 @@ import java.util.stream.Collectors;
  *
  * @version 3.2.0
  */
-class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
-    private final KtFile buildFile;
-    private final KtPsiFactory factory;
+internal class BuildGradleKts(project: Project, override val buildFile: KtFile) :
+    AbstractBuildGradle<KtFile, KtBlockExpression>() {
 
-    public BuildGradleKts(Project project, KtFile buildFile) {
-        this.buildFile = buildFile;
-        this.factory = new KtPsiFactory(project);
+    private val factory = KtPsiFactory(project)
+
+    override fun KtFile.findOrCreateDependenciesTag(): KtBlockExpression {
+        return TAG_DEPENDENCY_MANAGEMENT.getOrCreateTopBlock()
     }
 
-    @Override
-    public KtBlockExpression findOrCreateDependenciesTag() {
-        return getOrCreateTopBlock(TAG_DEPENDENCY_MANAGEMENT);
+    override fun KtBlockExpression.findAllDependencies(): List<Dependency> {
+        return PsiTreeUtil.getChildrenOfTypeAsList(this, KtCallExpression::class.java)
+            .map { ktCallExpression: KtCallExpression -> ktCallExpression.getDependencyGroupArtifact() }
+            .toList()
     }
 
-    @Override
-    public List<Dependency> findAllDependencies(KtBlockExpression dependenciesTag) {
-        return PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, KtCallExpression.class).stream()
-                .map(this::getDependencyGroupArtifact)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void createDependencyTag(KtBlockExpression dependenciesTag, Starter starter) {
-        List<Instruction> instructions = dependencyInstruction(starter);
-        for (Instruction instruction : instructions) {
-            addExpression(dependenciesTag, instruction.toInstString("${inst}(\"${point}\")"));
+    override fun KtBlockExpression.createDependencyTag(starter: Starter) {
+        val instructions: List<Instruction> = dependencyInstruction(starter)
+        for (instruction in instructions) {
+            addExpression(instruction.toInstString("\${inst}(\"\${point}\")"))
         }
     }
 
-    @Override
-    public KtBlockExpression findOrCreateBomsTag() {
-        return getOrCreateBlock(getOrCreateTopBlock(TAG_BOM_MANAGEMENT), TAG_BOM_IMPORT);
+    override fun KtFile.findOrCreateBomsTag(): KtBlockExpression {
+        return TAG_BOM_MANAGEMENT.getOrCreateTopBlock().getOrCreateBlock(TAG_BOM_IMPORT)
     }
 
-    @Override
-    public List<Bom> findAllBoms(KtBlockExpression bomsTag) {
-        return findAllCallExpression(bomsTag, TAG_BOM).stream()
-                .map(tag -> newByGroupArtifact(getCallFirstParam(tag), Bom::new))
-                .collect(Collectors.toList());
+    override fun KtBlockExpression.findAllBoms(): List<Bom> {
+        return findAllCallExpression(TAG_BOM)
+            .map { tag: KtCallExpression ->
+                newByGroupArtifact(tag.getCallFirstParam()) { groupId, artifactId ->
+                    Bom(groupId, artifactId)
+                }
+            }
+            .toList()
     }
 
-    @Override
-    public void createBomTag(KtBlockExpression bomsTag, Bom bom) {
-        Instruction instruction = bomInstruction(bom);
-        addExpression(bomsTag, instruction.toInstString("${inst}(\"${point}\")"));
+    override fun KtBlockExpression.createBomTag(bom: Bom) {
+        val instruction: Instruction = bomInstruction(bom)
+        addExpression(instruction.toInstString("\${inst}(\"\${point}\")"))
     }
 
-    @Override
-    public KtBlockExpression findOrCreateRepositoriesTag() {
-        return getOrCreateTopBlock(TAG_REPOSITORY_MANAGEMENT);
+    override fun KtFile.findOrCreateRepositoriesTag(): KtBlockExpression {
+        return TAG_REPOSITORY_MANAGEMENT.getOrCreateTopBlock()
     }
 
-    @Override
-    public List<Repository> findAllRepositories(KtBlockExpression repositoriesTag) {
-        return findAllCallExpression(repositoriesTag, TAG_REPOSITORY).stream()
-                .map(tag -> {
-                    List<KtValueArgument> arguments = tag.getValueArguments();
-                    KtValueArgument first = ContainerUtil.getFirstItem(arguments);
-                    if (first == null) {
-                        return EMPTY;
+    override fun KtBlockExpression.findAllRepositories(): List<Repository> {
+        return findAllCallExpression(TAG_REPOSITORY).stream()
+            .map { tag: KtCallExpression ->
+                val arguments = tag.valueArguments
+                val first = ContainerUtil.getFirstItem<KtValueArgument>(arguments) ?: return@map EMPTY
+                if (first is KtLambdaArgument) {
+                    val urlStatement = first.findCallLambdaStatement("url")
+                    val right = urlStatement?.right ?: return@map EMPTY
+                    if (right !is KtCallExpression) {
+                        return@map EMPTY
                     }
 
-                    if (first instanceof KtLambdaArgument) {
-                        KtBinaryExpression urlStatement = findCallLambdaStatement((KtLambdaArgument) first, "url");
-                        KtExpression right;
-                        if (urlStatement == null || (right = urlStatement.getRight()) == null) {
-                            return EMPTY;
-                        }
-                        if (!(right instanceof KtCallExpression)) {
-                            return EMPTY;
-                        }
-
-                        return getCallFirstParam((KtCallExpression) right);
-                    } else {
-                        return getCallFirstParam(tag);
-                    }
-                })
-                .map(Repository::new)
-                .collect(Collectors.toList());
+                    return@map right.getCallFirstParam()
+                } else {
+                    return@map tag.getCallFirstParam()
+                }
+            }
+            .map { url -> Repository(url) }
+            .toList()
     }
 
-    @Override
-    public void createRepositoryTag(KtBlockExpression repositoriesTag, Repository repository) {
-        Instruction instruction = repositoryInstruction(repository);
-        addExpression(repositoriesTag, instruction.toInstString("${inst} { url = uri(\"${point}\") }"));
+    override fun KtBlockExpression.createRepositoryTag(repository: Repository) {
+        val instruction: Instruction = repositoryInstruction(repository)
+        addExpression(instruction.toInstString("\${inst} { url = uri(\"\${point}\") }"))
     }
 
     /**
      * 获取或创建顶层闭包
      */
-    private KtBlockExpression getOrCreateTopBlock(String name) {
-        Pattern regex = callNameRegex(name);
-        Collection<KtScriptInitializer> statements = PsiTreeUtil.findChildrenOfAnyType(buildFile, KtScriptInitializer.class);
-        KtScriptInitializer initializer = ContainerUtil.find(statements,
-                it -> regex.matcher(it.getText()).find());
-
-        KtCallExpression expression;
-        if (initializer == null) {
-            expression = (KtCallExpression) addExpression(buildFile, name + " {\n}");
+    private fun String.getOrCreateTopBlock(): KtBlockExpression {
+        val regex = callNameRegex()
+        val statements = PsiTreeUtil.findChildrenOfAnyType(
+            buildFile, KtScriptInitializer::class.java
+        )
+        val initializer = ContainerUtil.find(
+            statements
+        ) { it: KtScriptInitializer -> regex.matcher(it.text).find() }
+        val expression = if (initializer == null) {
+            buildFile.addExpression("$this {\n}") as KtCallExpression
         } else {
-            expression = PsiTreeUtil.findChildOfType(initializer, KtCallExpression.class);
+            PsiTreeUtil.findChildOfType(initializer, KtCallExpression::class.java)
         }
 
-        return getLambdaBodyExpression(expression);
+        return getLambdaBodyExpression(expression)
     }
 
     /**
      * 获取或创建闭包
      */
-    private KtBlockExpression getOrCreateBlock(PsiElement psiElement, String name) {
-        KtCallExpression block = findCallExpression(psiElement, name);
+    private fun PsiElement.getOrCreateBlock(name: String): KtBlockExpression {
+        var block = findCallExpression(name)
         if (block == null) {
-            block = (KtCallExpression) addExpression(psiElement, name + " {\n}");
+            block = addExpression("$name {\n}") as KtCallExpression
         }
 
-        return getLambdaBodyExpression(block);
-    }
-
-    /**
-     * 获取lambda体
-     */
-    private static KtBlockExpression getLambdaBodyExpression(KtCallExpression block) {
-        // 创建不会为空
-        if (block == null) {
-            throw ShowErrorException.internal();
-        }
-
-        List<KtLambdaArgument> lambdaArguments = block.getLambdaArguments();
-        if (ContainerUtil.isEmpty(lambdaArguments)) {
-            throw ShowErrorException.internal();
-        }
-        KtLambdaArgument ktLambdaArgument = lambdaArguments.get(0);
-        KtExpression argumentExpression = ktLambdaArgument.getArgumentExpression();
-        if (!(argumentExpression instanceof KtLambdaExpression)) {
-            throw ShowErrorException.internal();
-        }
-        KtBlockExpression bodyExpression = ((KtLambdaExpression) argumentExpression).getBodyExpression();
-        if (bodyExpression == null) {
-            throw ShowErrorException.internal();
-        }
-        return bodyExpression;
+        return getLambdaBodyExpression(block)
     }
 
     /**
      * 查找语句
      */
-    private KtCallExpression findCallExpression(PsiElement psiElement, String name) {
-        Pattern pattern = callNameRegex(name);
-        List<KtCallExpression> blocks = PsiTreeUtil.getChildrenOfTypeAsList(psiElement, KtCallExpression.class);
-        return ContainerUtil.find(blocks, expression -> pattern.matcher(expression.getText()).find());
+    private fun PsiElement.findCallExpression(name: String): KtCallExpression? {
+        val pattern = name.callNameRegex()
+        val blocks = PsiTreeUtil.getChildrenOfTypeAsList(this, KtCallExpression::class.java)
+        return ContainerUtil.find(blocks) { expression: KtCallExpression -> pattern.matcher(expression.text).find() }
     }
 
     /**
      * 查找语句/批量
      */
-    private List<KtCallExpression> findAllCallExpression(PsiElement psiElement, String name) {
-        Pattern pattern = callNameRegex(name);
-        List<KtCallExpression> blocks = PsiTreeUtil.getChildrenOfTypeAsList(psiElement, KtCallExpression.class);
-        return ContainerUtil.findAll(blocks, expression -> pattern.matcher(expression.getText()).find());
+    private fun PsiElement.findAllCallExpression(name: String): List<KtCallExpression> {
+        val pattern = name.callNameRegex()
+        val blocks = PsiTreeUtil.getChildrenOfTypeAsList(this, KtCallExpression::class.java)
+        return ContainerUtil.findAll(blocks) { expression: KtCallExpression -> pattern.matcher(expression.text).find() }
     }
 
-    private Pattern callNameRegex(String s) {
-        return Pattern.compile("^" + s + "\\W");
+    private fun String.callNameRegex(): Pattern {
+        return Pattern.compile("^$this\\W")
     }
 
     /**
      * 第一参数
      */
-    private String getCallFirstParam(KtCallExpression ktCallExpression) {
-        List<KtValueArgument> valueArguments = ktCallExpression.getValueArguments();
+    private fun KtCallExpression.getCallFirstParam(): String {
+        val valueArguments = valueArguments
         if (ContainerUtil.isEmpty(valueArguments)) {
-            return EMPTY;
+            return EMPTY
         }
 
-        return trimQuotation(valueArguments.get(0));
+        return valueArguments[0].trimQuotation()
     }
 
     /**
      * 获取依赖
      */
-    private DependencyElement<KtCallExpression> getDependencyGroupArtifact(KtCallExpression ktCallExpression) {
-        Map<String, String> namedArguments = ktCallExpression.getValueArguments().stream()
-                .filter(argument -> argument.getArgumentName() != null)
-                .collect(Collectors.toMap(
-                        argument -> trimQuotation(argument.getArgumentName()),
-                        argument -> trimQuotation(argument.getArgumentExpression())
-                ));
+    private fun KtCallExpression.getDependencyGroupArtifact(): DependencyElement<KtCallExpression> {
+        val namedArguments = valueArguments
+            .filter { argument: KtValueArgument -> argument.getArgumentName() != null }
+            .associate { argument ->
+                argument.getArgumentName().trimQuotation() to argument.getArgumentExpression().trimQuotation()
+            }
 
         if (namedArguments.isEmpty()) {
-            return newByGroupArtifact(getCallFirstParam(ktCallExpression), (groupId, artifactId) ->
-                    new DependencyElement<>(groupId, artifactId, ktCallExpression));
+            return newByGroupArtifact(getCallFirstParam()) { groupId, artifactId ->
+                DependencyElement<KtCallExpression>(groupId, artifactId, this)
+            }
         } else {
-            String group = checkEmpty(namedArguments.get("group"));
-            String name = checkEmpty(namedArguments.get("name"));
-            return new DependencyElement<>(group, name, ktCallExpression);
+            val group: String = namedArguments["group"].checkEmpty()
+            val name: String = namedArguments["name"].checkEmpty()
+            return DependencyElement(group, name, this)
         }
     }
 
     /**
      * 删除首尾引号
      */
-    private String trimQuotation(String s) {
-        return trimText(s, '"');
+    private fun String.trimQuotation(): String {
+        return trimText('"')
     }
 
     /**
      * 删除首尾引号
      */
-    private String trimQuotation(PsiElement psiElement) {
-        if (psiElement == null) {
-            return EMPTY;
+    private fun PsiElement?.trimQuotation(): String {
+        if (this == null) {
+            return EMPTY
         }
 
-        return trimQuotation(psiElement.getText());
+        return text.trimQuotation()
     }
 
     /**
      * 添加语句
      */
-    private PsiElement addExpression(PsiElement psiElement, String text) {
-        PsiElement addEle = psiElement.add(factory.createExpression(text));
+    private fun PsiElement.addExpression(text: String): PsiElement {
+        val addEle = add(factory.createExpression(text))
 
-        if (addEle.getPrevSibling() != null
-                && StringUtils.isNoneBlank(addEle.getPrevSibling().getText())) {
-            addEle.getParent().addBefore(factory.createNewLine(1), addEle);
+        if (addEle.prevSibling != null
+            && StringUtils.isNoneBlank(addEle.prevSibling.text)
+        ) {
+            addEle.parent.addBefore(factory.createNewLine(1), addEle)
         }
 
-        if (addEle.getNextSibling() != null
-                && StringUtils.isNoneBlank(addEle.getNextSibling().getText())) {
-            addEle.getParent().addAfter(factory.createNewLine(1), addEle);
+        if (addEle.nextSibling != null
+            && StringUtils.isNoneBlank(addEle.nextSibling.text)
+        ) {
+            addEle.parent.addAfter(factory.createNewLine(1), addEle)
         }
 
-        return addEle;
+        return addEle
     }
 
-    private KtBinaryExpression findCallLambdaStatement(KtLambdaArgument first, String leftName) {
-        List<KtExpression> statements = Optional.of(first)
-                .map(KtLambdaArgument::getLambdaExpression)
-                .map(KtLambdaExpression::getBodyExpression)
-                .map(KtBlockExpression::getStatements)
-                .orElse(null);
+    private fun KtLambdaArgument.findCallLambdaStatement(leftName: String): KtBinaryExpression? {
+        val statements = Optional.of<KtLambdaArgument>(this)
+            .map<KtLambdaExpression>(Function<KtLambdaArgument, KtLambdaExpression> { getLambdaExpression() })
+            .map<KtBlockExpression?> { obj: KtLambdaExpression -> obj.bodyExpression }
+            .map<List<KtExpression>?> { obj: KtBlockExpression? -> obj!!.statements }
+            .orElse(null)
         if (ContainerUtil.isEmpty(statements)) {
-            return null;
+            return null
         }
 
-        return (KtBinaryExpression) ContainerUtil.find(statements, statement -> {
-            if (statement instanceof KtBinaryExpression) {
-                KtExpression left = ((KtBinaryExpression) statement).getLeft();
+        return ContainerUtil.find(statements) { statement: KtExpression? ->
+            if (statement is KtBinaryExpression) {
+                val left = statement.left
                 if (left != null) {
-                    return Objects.equals(leftName, left.getText());
+                    return@find leftName == left.text
                 }
             }
+            false
+        } as KtBinaryExpression?
+    }
 
-            return false;
-        });
+    companion object {
+        /**
+         * 获取lambda体
+         */
+        private fun getLambdaBodyExpression(block: KtCallExpression?): KtBlockExpression {
+            // 创建不会为空
+            if (block == null) {
+                throw ShowErrorException.internal()
+            }
+
+            val lambdaArguments = block.lambdaArguments
+            if (ContainerUtil.isEmpty(lambdaArguments)) {
+                throw ShowErrorException.internal()
+            }
+            val ktLambdaArgument = lambdaArguments[0]
+            val argumentExpression =
+                ktLambdaArgument.getArgumentExpression()!! as? KtLambdaExpression ?: throw ShowErrorException.internal()
+            val bodyExpression = argumentExpression.bodyExpression
+                ?: throw ShowErrorException.internal()
+            return bodyExpression
+        }
     }
 }
