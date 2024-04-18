@@ -7,7 +7,6 @@ import io.github.hdzitao.editstarters.springboot.Starter
 import io.github.hdzitao.editstarters.startspringio.metadata.MetadataConfig
 import io.github.hdzitao.editstarters.version.Version
 import io.github.hdzitao.editstarters.version.Versions
-import org.apache.commons.lang3.StringUtils
 
 /**
  * 从StartSpringIO构建SpringBoot
@@ -18,8 +17,6 @@ class StartSpringIO2SpringBoot : SpringBootBuilder<StartSpringIO> {
     override fun buildSpringBoot(from: StartSpringIO): SpringBoot {
         val version = from.version
         val modules = getDeclaredModules(from.metadataConfig, version)
-
-        resolveModules(modules, version)
 
         return SpringBoot(version, modules)
     }
@@ -37,14 +34,22 @@ class StartSpringIO2SpringBoot : SpringBootBuilder<StartSpringIO> {
             val name = dependenciesContent.name ?: continue
 
             val module = Module(name, mutableListOf())
-            modules.add(module)
 
             val dependencyContent = dependenciesContent.content ?: continue
             for (ct in dependencyContent) {
                 val content = ct.resolve(version)
 
+                if (content.groupId?.isEmpty() == true) {
+                    continue
+                }
+
+                if (content.compatibilityRange?.isNotBlank() == true
+                    && !Versions.parseRange(content.compatibilityRange!!).match(version)
+                ) {
+                    continue
+                }
+
                 val starter = Starter()
-                module.values.add(starter)
 
                 starter.groupId = content.groupId
                 starter.artifactId = content.artifactId
@@ -74,35 +79,15 @@ class StartSpringIO2SpringBoot : SpringBootBuilder<StartSpringIO> {
                         starter.addRepository(rid, repository)
                     }
                 }
+
+                module.values.add(starter)
+            }
+
+            if (module.values.isNotEmpty()) {
+                modules.add(module)
             }
         }
 
         return modules
-    }
-
-    private fun resolveModules(modules: MutableList<Module>, version: Version) {
-        // 删除无效项
-        val moduleIterator = modules.iterator()
-        while (moduleIterator.hasNext()) {
-            val module = moduleIterator.next()
-            val infos = ArrayList(module.values)
-            val infoIterator = infos.iterator()
-            while (infoIterator.hasNext()) {
-                val starter = infoIterator.next()
-                if (StringUtils.isBlank(starter.groupId)) {
-                    // 检查坐标
-                    infoIterator.remove()
-                } else if ((StringUtils.isNoneBlank(starter.versionRange)
-                            && !Versions.parseRange(starter.versionRange).match(version))
-                ) {
-                    // 版本范围检查
-                    infoIterator.remove()
-                }
-            }
-            // 删空了,就删除module
-            if (infos.isEmpty()) {
-                moduleIterator.remove()
-            }
-        }
     }
 }

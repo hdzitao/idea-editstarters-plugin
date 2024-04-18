@@ -90,7 +90,7 @@ public class EditStartersDialog {
             oHubBox.addMouseMotionListener(new MouseAdapter() {
                 @Override
                 public void mouseMoved(MouseEvent e) {
-                    oHubBox.setToolTipText(response.getOHub().getName());
+                    oHubBox.setToolTipText(response.getOHub().name);
                 }
             });
         }

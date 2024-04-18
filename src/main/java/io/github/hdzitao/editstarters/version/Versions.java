@@ -3,6 +3,7 @@ package io.github.hdzitao.editstarters.version;
 import io.github.hdzitao.editstarters.ui.ShowErrorException;
 import io.github.hdzitao.editstarters.version.Version.Qualifier;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +19,7 @@ public final class Versions {
 
     private static final Pattern RANGE_REGEX = Pattern.compile("([(\\[])(.*),(.*)([)\\]])");
 
-    public static Version parse(String text) {
+    public static @NotNull Version parse(@NotNull String text) {
         Matcher matcher = VERSION_REGEX.matcher(text.trim());
         if (!matcher.find()) {
             throw new ShowErrorException("Unsupported version format: " + text);
@@ -32,7 +33,7 @@ public final class Versions {
         return new Version(major, minor, patch, qualifier, text);
     }
 
-    public static VersionRange parseRange(String text) {
+    public static @NotNull VersionRange parseRange(@NotNull String text) {
         Matcher matcher = RANGE_REGEX.matcher(text.trim());
         if (!matcher.matches()) {
             // 尝试单版本匹配

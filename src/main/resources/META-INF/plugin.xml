@@ -21,10 +21,7 @@
     <depends>org.intellij.groovy</depends>
     <depends>org.jetbrains.kotlin</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
-        <projectService serviceImplementation="io.github.hdzitao.editstarters.cache.InitializrCache"/>
-    </extensions>
+    <extensions defaultExtensionNs="com.intellij"/>
 
     <actions>
         <!-- Add your actions here -->

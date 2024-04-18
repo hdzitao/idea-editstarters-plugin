@@ -63,7 +63,7 @@ public class InitializrDialog extends JDialog {
         if (ArrayUtils.isNotEmpty(oHubs)) {
             oHubComboBox.setModel(new CollectionComboBoxModel<>(
                     Arrays.asList(oHubs), ContainerUtil.find(oHubs, oh ->
-                    Objects.equals(initializrCache.getOHubName(), oh.getName()))));
+                    Objects.equals(initializrCache.getOHubName(), oh.name))));
         }
 
         // 点击 X 时调用 onCancel()
