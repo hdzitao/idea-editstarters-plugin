@@ -20,7 +20,7 @@ import java.util.stream.Collectors
  *
  * @version 3.2.0
  */
-class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
+class PomXml(override val buildFile: XmlFile) : ProjectFile<XmlFile, XmlTag>() {
     companion object {
         // TAG ==================================================================================
         private const val TAG_DEPENDENCY_MANAGEMENT = "dependencyManagement"
@@ -35,18 +35,12 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
         // TAG ==================================================================================
     }
 
-    /**
-     * 根标签
-     */
-    override val root: XmlTag
-
     init {
-        val document = file.document ?: throw ShowErrorException.internal()
-        root = document.rootTag ?: throw ShowErrorException.internal()
+        buildFile.document?.rootTag ?: throw ShowErrorException.internal()
     }
 
-    public override fun XmlTag.findOrCreateDependenciesTag(): XmlTag {
-        return getOrCreateXmlTag(TAG_DEPENDENCIES)
+    override fun XmlFile.findOrCreateDependenciesTag(): XmlTag {
+        return this.document!!.rootTag!!.getOrCreateXmlTag(TAG_DEPENDENCIES)
     }
 
     override fun XmlTag.findAllDependencies(): List<Dependency> {
@@ -69,8 +63,10 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
         dependency.addSubTagWithTextBody(TAG_VERSION, starter.version)
     }
 
-    public override fun XmlTag.findOrCreateBomsTag(): XmlTag {
-        return getOrCreateXmlTag(TAG_DEPENDENCY_MANAGEMENT).getOrCreateXmlTag(TAG_DEPENDENCIES)
+    override fun XmlFile.findOrCreateBomsTag(): XmlTag {
+        return this.document!!.rootTag!!
+            .getOrCreateXmlTag(TAG_DEPENDENCY_MANAGEMENT)
+            .getOrCreateXmlTag(TAG_DEPENDENCIES)
     }
 
 
@@ -89,8 +85,8 @@ class PomXml(file: XmlFile) : ProjectFile<XmlTag>() {
         dependencyTag.addSubTagWithTextBody(TAG_SCOPE, "import")
     }
 
-    public override fun XmlTag.findOrCreateRepositoriesTag(): XmlTag {
-        return getOrCreateXmlTag(TAG_REPOSITORIES)
+    override fun XmlFile.findOrCreateRepositoriesTag(): XmlTag {
+        return this.document!!.rootTag!!.getOrCreateXmlTag(TAG_REPOSITORIES)
     }
 
     override fun XmlTag.findAllRepositories(): List<Repository> {

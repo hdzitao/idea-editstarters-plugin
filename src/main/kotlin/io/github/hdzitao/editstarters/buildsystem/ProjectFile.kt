@@ -1,6 +1,7 @@
 package io.github.hdzitao.editstarters.buildsystem
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 import com.intellij.util.containers.ContainerUtil
 import io.github.hdzitao.editstarters.dependency.*
 import io.github.hdzitao.editstarters.springboot.EditStarters
@@ -12,14 +13,14 @@ import io.github.hdzitao.editstarters.ui.ShowErrorException
  *
  * @version 3.2.0
  */
-abstract class ProjectFile<Psi : PsiElement> : EditStarters {
+abstract class ProjectFile<BuildFile : PsiFile, Psi : PsiElement> : EditStarters {
 
-    protected abstract val root: Psi
+    protected abstract val buildFile: BuildFile
 
     /**
      * 查找或创建 dependencies
      */
-    protected abstract fun Psi.findOrCreateDependenciesTag(): Psi
+    protected abstract fun BuildFile.findOrCreateDependenciesTag(): Psi
 
     /**
      * 查找所有 dependency
@@ -34,7 +35,7 @@ abstract class ProjectFile<Psi : PsiElement> : EditStarters {
     /**
      * 查找或创建 boms
      */
-    protected abstract fun Psi.findOrCreateBomsTag(): Psi
+    protected abstract fun BuildFile.findOrCreateBomsTag(): Psi
 
     /**
      * 查找所有 bom
@@ -49,7 +50,7 @@ abstract class ProjectFile<Psi : PsiElement> : EditStarters {
     /**
      * 查找或创建 repositories
      */
-    protected abstract fun Psi.findOrCreateRepositoriesTag(): Psi
+    protected abstract fun BuildFile.findOrCreateRepositoriesTag(): Psi
 
     /**
      * 查找所有 repository
@@ -67,7 +68,7 @@ abstract class ProjectFile<Psi : PsiElement> : EditStarters {
                 return
             }
 
-            val dependenciesTag = root.findOrCreateDependenciesTag()
+            val dependenciesTag = buildFile.findOrCreateDependenciesTag()
             val boms = ArrayList<Bom>()
             val repositories = ArrayList<Repository>()
             for (starter in dependencies) {
@@ -91,7 +92,7 @@ abstract class ProjectFile<Psi : PsiElement> : EditStarters {
                 return
             }
 
-            val dependenciesTag = root.findOrCreateDependenciesTag()
+            val dependenciesTag = buildFile.findOrCreateDependenciesTag()
             // 取已存在的依赖
             val extDependencies = dependenciesTag.findAllDependencies()
             // 遍历存在的依赖，如果待删除的依赖包含它，就删除
@@ -115,7 +116,7 @@ abstract class ProjectFile<Psi : PsiElement> : EditStarters {
             return
         }
 
-        val bomTag = root.findOrCreateBomsTag()
+        val bomTag = buildFile.findOrCreateBomsTag()
         // 去重后新建
         val allBoms = bomTag.findAllBoms()
         for (bom in boms) {
@@ -133,7 +134,7 @@ abstract class ProjectFile<Psi : PsiElement> : EditStarters {
             return
         }
 
-        val repositoriesTag = root.findOrCreateRepositoriesTag()
+        val repositoriesTag = buildFile.findOrCreateRepositoriesTag()
         val allRepos = repositoriesTag.findAllRepositories()
         for (repository in repositories) {
             if (!allRepos.hasPoint(repository)) {

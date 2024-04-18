@@ -1,199 +1,181 @@
-package io.github.hdzitao.editstarters.buildsystem.gradle;
+package io.github.hdzitao.editstarters.buildsystem.gradle
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.util.containers.ContainerUtil;
-import io.github.hdzitao.editstarters.buildsystem.DependencyElement;
-import io.github.hdzitao.editstarters.dependency.Bom;
-import io.github.hdzitao.editstarters.dependency.Dependency;
-import io.github.hdzitao.editstarters.dependency.Repository;
-import io.github.hdzitao.editstarters.springboot.Starter;
-import io.github.hdzitao.editstarters.ui.ShowErrorException;
-import org.apache.commons.lang3.ArrayUtils;
-import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
-import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElement;
-import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory;
-import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrStatement;
-import org.jetbrains.plugins.groovy.lang.psi.api.statements.blocks.GrClosableBlock;
-import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethodCall;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import com.intellij.openapi.project.Project
+import com.intellij.psi.PsiElement
+import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.util.containers.ContainerUtil
+import io.github.hdzitao.editstarters.buildsystem.DependencyElement
+import io.github.hdzitao.editstarters.dependency.Bom
+import io.github.hdzitao.editstarters.dependency.Dependency
+import io.github.hdzitao.editstarters.dependency.Repository
+import io.github.hdzitao.editstarters.springboot.Starter
+import io.github.hdzitao.editstarters.ui.ShowErrorException
+import org.apache.commons.lang3.ArrayUtils
+import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
+import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElement
+import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory
+import org.jetbrains.plugins.groovy.lang.psi.api.statements.blocks.GrClosableBlock
+import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethodCall
 
 /**
  * build.gradle
  *
  * @version 3.2.0
  */
-public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
-    private final GroovyFile buildFile;
-    private final GroovyPsiElementFactory factory;
+class BuildGradle(project: Project, override val buildFile: GroovyFile) :
+    AbstractBuildGradle<GroovyFile, GrClosableBlock>() {
 
-    public BuildGradle(Project project, GroovyFile buildFile) {
-        this.buildFile = buildFile;
-        this.factory = GroovyPsiElementFactory.getInstance(project);
+    private val factory = GroovyPsiElementFactory.getInstance(project)
+
+    override fun GroovyFile.findOrCreateDependenciesTag(): GrClosableBlock {
+        return getOrCreateClosure(TAG_DEPENDENCY_MANAGEMENT)
     }
 
-    @Override
-    public GrClosableBlock findOrCreateDependenciesTag() {
-        return getOrCreateClosure(buildFile, TAG_DEPENDENCY_MANAGEMENT);
-    }
-
-    @Override
-    public List<Dependency> findAllDependencies(GrClosableBlock dependenciesTag) {
-        return PsiTreeUtil.getChildrenOfTypeAsList(dependenciesTag, GrMethodCall.class).stream()
-                .map(this::getDependencyGroupArtifact)
-                .collect(Collectors.toList());
+    override fun GrClosableBlock.findAllDependencies(): List<Dependency> {
+        return PsiTreeUtil.getChildrenOfTypeAsList(this, GrMethodCall::class.java)
+            .map { call: GrMethodCall -> call.getDependencyGroupArtifact() }
+            .toList()
     }
 
 
-    @Override
-    public void createDependencyTag(GrClosableBlock dependenciesTag, Starter starter) {
-        List<Instruction> instructions = dependencyInstruction(starter);
-        for (Instruction instruction : instructions) {
-            GrStatement statement = factory.createStatementFromText(instruction.toInstString("${inst} '${point}'"));
-            dependenciesTag.addStatementBefore(statement, null);
+    override fun GrClosableBlock.createDependencyTag(starter: Starter) {
+        val instructions = dependencyInstruction(starter)
+        for (instruction in instructions) {
+            val statement = factory.createStatementFromText(instruction.toInstString("\${inst} '\${point}'"))
+            addStatementBefore(statement, null)
         }
     }
 
-    @Override
-    public GrClosableBlock findOrCreateBomsTag() {
-        return getOrCreateClosure(getOrCreateClosure(buildFile, TAG_BOM_MANAGEMENT), TAG_BOM_IMPORT);
+    override fun GroovyFile.findOrCreateBomsTag(): GrClosableBlock {
+        return getOrCreateClosure(TAG_BOM_MANAGEMENT).getOrCreateClosure(TAG_BOM_IMPORT)
     }
 
-    @Override
-    public List<Bom> findAllBoms(GrClosableBlock bomsTag) {
-        return findAllMethod(bomsTag, TAG_BOM).stream()
-                .map(tag -> newByGroupArtifact(getMethodFirstParam(tag), Bom::new))
-                .collect(Collectors.toList());
+    override fun GrClosableBlock.findAllBoms(): List<Bom> {
+        return findAllMethod(TAG_BOM)
+            .map { tag ->
+                newByGroupArtifact(tag.getMethodFirstParam()) { groupId, artifactId ->
+                    Bom(groupId, artifactId)
+                }
+            }
+            .toList()
     }
 
-    @Override
-    public void createBomTag(GrClosableBlock bomsTag, Bom bom) {
-        Instruction instruction = bomInstruction(bom);
-        GrStatement statement = factory.createStatementFromText(instruction.toInstString("${inst} '${point}'"));
-        bomsTag.addStatementBefore(statement, null);
+    override fun GrClosableBlock.createBomTag(bom: Bom) {
+        val instruction = bomInstruction(bom)
+        val statement = factory.createStatementFromText(instruction.toInstString("\${inst} '\${point}'"))
+        addStatementBefore(statement, null)
     }
 
-    @Override
-    public GrClosableBlock findOrCreateRepositoriesTag() {
-        return getOrCreateClosure(buildFile, TAG_REPOSITORY_MANAGEMENT);
+    override fun GroovyFile.findOrCreateRepositoriesTag(): GrClosableBlock {
+        return getOrCreateClosure(TAG_REPOSITORY_MANAGEMENT)
     }
 
 
-    @Override
-    public List<Repository> findAllRepositories(GrClosableBlock repositoriesTag) {
-        return findAllMethod(repositoriesTag, TAG_REPOSITORY).stream()
-                .map(tag -> {
-                    GrClosableBlock[] closureArguments = tag.getClosureArguments();
-                    if (ArrayUtils.isEmpty(closureArguments)) {
-                        return EMPTY;
-                    }
-                    GrMethodCall urlCall = findMethod(closureArguments[0], "url");
-                    if (urlCall == null) {
-                        return EMPTY;
-                    }
-                    return getMethodFirstParam(urlCall);
-                })
-                .map(Repository::new)
-                .collect(Collectors.toList());
+    override fun GrClosableBlock.findAllRepositories(): List<Repository> {
+        return findAllMethod(TAG_REPOSITORY)
+            .map { tag ->
+                val closureArguments = tag.closureArguments
+                if (ArrayUtils.isEmpty(closureArguments)) {
+                    return@map EMPTY
+                }
+                val urlCall = closureArguments[0].findMethod("url") ?: return@map EMPTY
+                return@map urlCall.getMethodFirstParam()
+            }
+            .map { url -> Repository(url) }
+            .toList()
     }
 
-    @Override
-    public void createRepositoryTag(GrClosableBlock repositoriesTag, Repository repository) {
-        Instruction instruction = repositoryInstruction(repository);
-        GrStatement statement = factory.createStatementFromText(instruction.toInstString("${inst} { url '${point}' }"));
-        repositoriesTag.addStatementBefore(statement, null);
+    override fun GrClosableBlock.createRepositoryTag(repository: Repository) {
+        val instruction = repositoryInstruction(repository)
+        val statement = factory.createStatementFromText(instruction.toInstString("\${inst} { url '\${point}' }"))
+        addStatementBefore(statement, null)
     }
 
     /**
      * 闭包的获取或创建
      */
-    private GrClosableBlock getOrCreateClosure(PsiElement psiElement, String name) {
-        GrMethodCall closure = findMethod(psiElement, name);
+    private fun PsiElement.getOrCreateClosure(name: String): GrClosableBlock {
+        var closure = findMethod(name)
         if (closure == null) {
-            GrStatement statement = factory.createStatementFromText(name + " {\n}");
-            if (psiElement instanceof GrClosableBlock) {
-                closure = (GrMethodCall) ((GrClosableBlock) psiElement).addStatementBefore(statement, null);
+            val statement = factory.createStatementFromText("$name {\n}")
+            closure = if (this is GrClosableBlock) {
+                addStatementBefore(statement, null) as GrMethodCall
             } else {
-                closure = (GrMethodCall) psiElement.add(statement);
+                add(statement) as GrMethodCall
             }
         }
 
-        GrClosableBlock[] closureArguments = closure.getClosureArguments();
+        val closureArguments = closure.closureArguments
         // 新建不可能为空,为空即内部错误
-        if (ArrayUtils.isEmpty(closureArguments)) {
-            throw ShowErrorException.internal();
+        if (closureArguments.isNotEmpty()) {
+            throw ShowErrorException.internal()
         }
 
-        return closureArguments[0];
+        return closureArguments[0]
     }
 
     /**
      * 查找方法
      */
-    private GrMethodCall findMethod(PsiElement psiElement, String name) {
-        return ContainerUtil.find(PsiTreeUtil.getChildrenOfTypeAsList(psiElement, GrMethodCall.class), call ->
-                Objects.equals(name, call.getInvokedExpression().getText()));
+    private fun PsiElement.findMethod(name: String): GrMethodCall? {
+        return ContainerUtil.find(PsiTreeUtil.getChildrenOfTypeAsList(this, GrMethodCall::class.java)) { call ->
+            name == call.invokedExpression.text
+        }
     }
 
     /**
      * 查找方法/批量
      */
-    private List<GrMethodCall> findAllMethod(PsiElement psiElement, String name) {
-        List<GrMethodCall> closableBlocks = PsiTreeUtil.getChildrenOfTypeAsList(psiElement, GrMethodCall.class);
-        return ContainerUtil.findAll(closableBlocks, call -> Objects.equals(name, call.getInvokedExpression().getText()));
+    private fun PsiElement.findAllMethod(name: String): List<GrMethodCall> {
+        val closableBlocks = PsiTreeUtil.getChildrenOfTypeAsList(this, GrMethodCall::class.java)
+        return ContainerUtil.findAll(closableBlocks) { call -> name == call.invokedExpression.text }
     }
 
     /**
      * 获取方法第一个参数
      */
-    private String getMethodFirstParam(GrMethodCall call) {
-        GroovyPsiElement[] allArguments = call.getArgumentList().getAllArguments();
+    private fun GrMethodCall.getMethodFirstParam(): String {
+        val allArguments = argumentList.allArguments
         if (ArrayUtils.isEmpty(allArguments)) {
-            return EMPTY;
+            return EMPTY
         }
-        return trimQuotation(allArguments[0]);
+        return allArguments[0].trimQuotation()
     }
 
     /**
      * 解析依赖语句
      */
-    private DependencyElement<GrMethodCall> getDependencyGroupArtifact(GrMethodCall call) {
-        Map<String, String> namedArguments = Arrays.stream(call.getNamedArguments()).collect(Collectors.toMap(
-                argument -> trimQuotation(argument.getLabel()),
-                argument -> trimQuotation(argument.getExpression())
-        ));
+    private fun GrMethodCall.getDependencyGroupArtifact(): DependencyElement<GrMethodCall> {
+        val namedArguments = namedArguments.associate { argument ->
+            argument.label.trimQuotation() to argument.expression.trimQuotation()
+        }
 
         if (namedArguments.isEmpty()) {
-            return newByGroupArtifact(getMethodFirstParam(call), (groupId, artifactId) ->
-                    new DependencyElement<>(groupId, artifactId, call));
+            return newByGroupArtifact(getMethodFirstParam()) { groupId, artifactId ->
+                DependencyElement(groupId, artifactId, this)
+            }
         } else {
-            String group = checkEmpty(namedArguments.get("group"));
-            String name = checkEmpty(namedArguments.get("name"));
-            return new DependencyElement<>(group, name, call);
+            val group = namedArguments["group"].checkEmpty()
+            val name = namedArguments["name"].checkEmpty()
+            return DependencyElement(group, name, this)
         }
     }
 
     /**
      * 删除头尾的引号
      */
-    private String trimQuotation(GroovyPsiElement psiElement) {
-        if (psiElement == null) {
-            return EMPTY;
+    private fun GroovyPsiElement?.trimQuotation(): String {
+        if (this == null) {
+            return EMPTY
         }
 
-        return trimQuotation(psiElement.getText());
+        return text.trimQuotation()
     }
 
     /**
      * 删除头尾的引号
      */
-    private String trimQuotation(String s) {
-        return trimText(s, '\'', '"');
+    private fun String.trimQuotation(): String {
+        return trimText('\'', '"')
     }
 }

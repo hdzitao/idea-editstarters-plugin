@@ -1,20 +1,20 @@
 package io.github.hdzitao.editstarters.buildsystem.gradle
 
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
 import io.github.hdzitao.editstarters.buildsystem.DependencyScope
 import io.github.hdzitao.editstarters.buildsystem.ProjectFile
 import io.github.hdzitao.editstarters.dependency.Bom
 import io.github.hdzitao.editstarters.dependency.Repository
 import io.github.hdzitao.editstarters.springboot.Starter
 import org.apache.commons.lang3.ArrayUtils
-import org.apache.commons.lang3.StringUtils
 
 /**
  * build.gradle抽象类
  *
  * @version 3.2.0
  */
-abstract class AbstractBuildGradle<T : PsiElement> : ProjectFile<T>() {
+abstract class AbstractBuildGradle<BuildFile : PsiFile, Psi : PsiElement> : ProjectFile<BuildFile, Psi>() {
     /**
      * gradle语法简单抽象
      */
@@ -40,7 +40,7 @@ abstract class AbstractBuildGradle<T : PsiElement> : ProjectFile<T>() {
      */
     protected fun dependencyInstruction(info: Starter): List<Instruction> {
         val instructions = ArrayList<Instruction>()
-        val point = splicingDependency(info.groupId, info.artifactId, info.version)
+        val point = splicingPoint(info.groupId, info.artifactId, info.version)
         for (inst in DependencyScope.getByScope(info.scope).resolveGradleScope()) {
             instructions.add(Instruction(inst, point))
         }
@@ -51,7 +51,7 @@ abstract class AbstractBuildGradle<T : PsiElement> : ProjectFile<T>() {
      * bom语法
      */
     protected fun bomInstruction(bom: Bom): Instruction {
-        val point = splicingDependency(bom.groupId, bom.artifactId, bom.version)
+        val point = splicingPoint(bom.groupId, bom.artifactId, bom.version)
         return Instruction(TAG_BOM, point)
     }
 
@@ -66,8 +66,8 @@ abstract class AbstractBuildGradle<T : PsiElement> : ProjectFile<T>() {
      * 割出GroupID/ArtifactID构建Depend
      */
     protected fun <Depend> newByGroupArtifact(point: String, buildFun: (String, String) -> Depend): Depend {
-        if (StringUtils.isNoneBlank(point)) {
-            val groupArtifact = point.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        if (point.isNotBlank()) {
+            val groupArtifact = point.split(":".toRegex())
             if (groupArtifact.size >= 2) {
                 return buildFun(groupArtifact[0], groupArtifact[1])
             }
@@ -92,41 +92,38 @@ abstract class AbstractBuildGradle<T : PsiElement> : ProjectFile<T>() {
     /**
      * " aaa " => "aaa"
      */
-    protected fun trimText(s: String?, vararg chars: Char): String {
-        if (s == null) {
+    protected fun String?.trimText(vararg chars: Char): String {
+        if (this == null) {
             return EMPTY
         }
 
-        var len = s.length
+        var len = length
         var st = 0
-        val `val` = s.toCharArray()
+        val v = toCharArray()
 
-        while ((st < len) && (ArrayUtils.contains(chars, `val`[st]))) {
+        while ((st < len) && (ArrayUtils.contains(chars, v[st]))) {
             st++
         }
-        while ((st < len) && (ArrayUtils.contains(chars, `val`[len - 1]))) {
+        while ((st < len) && (ArrayUtils.contains(chars, v[len - 1]))) {
             len--
         }
-        return if (((st > 0) || (len < s.length))) s.substring(st, len) else s
+        return if (st > 0 || len < length) substring(st, len) else this
     }
 
     /**
      * 检查空
      */
-    protected fun checkEmpty(s: String?): String {
-        return s ?: EMPTY
+    protected fun String?.checkEmpty(): String {
+        return this ?: EMPTY
     }
 
     /**
      * 拼接 groupId:artifactId:version
      */
-    protected fun splicingDependency(groupId: String?, artifactId: String?, version: String?): String {
-        val groupId = checkEmpty(groupId)
-        val artifactId = checkEmpty(artifactId)
+    protected fun splicingPoint(groupId: String?, artifactId: String?, version: String?): String {
+        var point = "${groupId.checkEmpty()}:${artifactId.checkEmpty()}"
 
-        var point = "$groupId:$artifactId"
-
-        if (StringUtils.isNoneBlank(version)) {
+        if (version?.isNotEmpty() == true) {
             point = "$point:$version"
         }
 
