@@ -21,7 +21,7 @@ class OHubBootVersion(
         }
 
         for (metaDataElement in metaDataList) {
-            if (metaDataElement.isEnable && metaDataElement.checkVersionRange(version)) {
+            if (metaDataElement.enable && metaDataElement.checkVersionRange(version)) {
                 return metaDataElement
             }
         }

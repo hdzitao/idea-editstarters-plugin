@@ -3,7 +3,6 @@ package io.github.hdzitao.editstarters.buildsystem.gradle
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.util.containers.ContainerUtil
 import io.github.hdzitao.editstarters.buildsystem.DependencyElement
 import io.github.hdzitao.editstarters.dependency.Bom
 import io.github.hdzitao.editstarters.dependency.Dependency
@@ -12,9 +11,6 @@ import io.github.hdzitao.editstarters.springboot.Starter
 import io.github.hdzitao.editstarters.ui.ShowErrorException
 import org.apache.commons.lang3.StringUtils
 import org.jetbrains.kotlin.psi.*
-import java.util.*
-import java.util.function.Function
-import java.util.regex.Pattern
 
 /**
  * build.gradle.kts
@@ -33,12 +29,12 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
 
     override fun KtBlockExpression.findAllDependencies(): List<Dependency> {
         return PsiTreeUtil.getChildrenOfTypeAsList(this, KtCallExpression::class.java)
-            .map { ktCallExpression: KtCallExpression -> ktCallExpression.getDependencyGroupArtifact() }
+            .map { it.getDependencyGroupArtifact() }
             .toList()
     }
 
     override fun KtBlockExpression.createDependencyTag(starter: Starter) {
-        val instructions: List<Instruction> = dependencyInstruction(starter)
+        val instructions = dependencyInstruction(starter)
         for (instruction in instructions) {
             addExpression(instruction.toInstString("\${inst}(\"\${point}\")"))
         }
@@ -50,7 +46,7 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
 
     override fun KtBlockExpression.findAllBoms(): List<Bom> {
         return findAllCallExpression(TAG_BOM)
-            .map { tag: KtCallExpression ->
+            .map { tag ->
                 newByGroupArtifact(tag.getCallFirstParam()) { groupId, artifactId ->
                     Bom(groupId, artifactId)
                 }
@@ -68,10 +64,10 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
     }
 
     override fun KtBlockExpression.findAllRepositories(): List<Repository> {
-        return findAllCallExpression(TAG_REPOSITORY).stream()
-            .map { tag: KtCallExpression ->
+        return findAllCallExpression(TAG_REPOSITORY)
+            .map { tag ->
                 val arguments = tag.valueArguments
-                val first = ContainerUtil.getFirstItem<KtValueArgument>(arguments) ?: return@map EMPTY
+                val first = arguments.firstOrNull() ?: return@map EMPTY
                 if (first is KtLambdaArgument) {
                     val urlStatement = first.findCallLambdaStatement("url")
                     val right = urlStatement?.right ?: return@map EMPTY
@@ -98,19 +94,15 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
      */
     private fun String.getOrCreateTopBlock(): KtBlockExpression {
         val regex = callNameRegex()
-        val statements = PsiTreeUtil.findChildrenOfAnyType(
-            buildFile, KtScriptInitializer::class.java
-        )
-        val initializer = ContainerUtil.find(
-            statements
-        ) { it: KtScriptInitializer -> regex.matcher(it.text).find() }
+        val statements = PsiTreeUtil.findChildrenOfAnyType(buildFile, KtScriptInitializer::class.java)
+        val initializer = statements.find { regex.matches(it.text) }
         val expression = if (initializer == null) {
             buildFile.addExpression("$this {\n}") as KtCallExpression
         } else {
             PsiTreeUtil.findChildOfType(initializer, KtCallExpression::class.java)
         }
 
-        return getLambdaBodyExpression(expression)
+        return expression.getLambdaBodyExpression()
     }
 
     /**
@@ -122,7 +114,7 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
             block = addExpression("$name {\n}") as KtCallExpression
         }
 
-        return getLambdaBodyExpression(block)
+        return block.getLambdaBodyExpression()
     }
 
     /**
@@ -131,7 +123,7 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
     private fun PsiElement.findCallExpression(name: String): KtCallExpression? {
         val pattern = name.callNameRegex()
         val blocks = PsiTreeUtil.getChildrenOfTypeAsList(this, KtCallExpression::class.java)
-        return ContainerUtil.find(blocks) { expression: KtCallExpression -> pattern.matcher(expression.text).find() }
+        return blocks.find { pattern.matches(it.text) }
     }
 
     /**
@@ -140,11 +132,11 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
     private fun PsiElement.findAllCallExpression(name: String): List<KtCallExpression> {
         val pattern = name.callNameRegex()
         val blocks = PsiTreeUtil.getChildrenOfTypeAsList(this, KtCallExpression::class.java)
-        return ContainerUtil.findAll(blocks) { expression: KtCallExpression -> pattern.matcher(expression.text).find() }
+        return blocks.filter { pattern.matches(it.text) }
     }
 
-    private fun String.callNameRegex(): Pattern {
-        return Pattern.compile("^$this\\W")
+    private fun String.callNameRegex(): Regex {
+        return "^$this\\W".toRegex()
     }
 
     /**
@@ -152,7 +144,7 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
      */
     private fun KtCallExpression.getCallFirstParam(): String {
         val valueArguments = valueArguments
-        if (ContainerUtil.isEmpty(valueArguments)) {
+        if (valueArguments.isEmpty()) {
             return EMPTY
         }
 
@@ -164,14 +156,12 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
      */
     private fun KtCallExpression.getDependencyGroupArtifact(): DependencyElement<KtCallExpression> {
         val namedArguments = valueArguments
-            .filter { argument: KtValueArgument -> argument.getArgumentName() != null }
-            .associate { argument ->
-                argument.getArgumentName().trimQuotation() to argument.getArgumentExpression().trimQuotation()
-            }
+            .filter { it.getArgumentName() != null }
+            .associate { it.getArgumentName().trimQuotation() to it.getArgumentExpression().trimQuotation() }
 
         if (namedArguments.isEmpty()) {
             return newByGroupArtifact(getCallFirstParam()) { groupId, artifactId ->
-                DependencyElement<KtCallExpression>(groupId, artifactId, this)
+                DependencyElement(groupId, artifactId, this)
             }
         } else {
             val group: String = namedArguments["group"].checkEmpty()
@@ -204,15 +194,11 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
     private fun PsiElement.addExpression(text: String): PsiElement {
         val addEle = add(factory.createExpression(text))
 
-        if (addEle.prevSibling != null
-            && StringUtils.isNoneBlank(addEle.prevSibling.text)
-        ) {
+        if (addEle.prevSibling != null && StringUtils.isNoneBlank(addEle.prevSibling.text)) {
             addEle.parent.addBefore(factory.createNewLine(1), addEle)
         }
 
-        if (addEle.nextSibling != null
-            && StringUtils.isNoneBlank(addEle.nextSibling.text)
-        ) {
+        if (addEle.nextSibling != null && StringUtils.isNoneBlank(addEle.nextSibling.text)) {
             addEle.parent.addAfter(factory.createNewLine(1), addEle)
         }
 
@@ -220,18 +206,14 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
     }
 
     private fun KtLambdaArgument.findCallLambdaStatement(leftName: String): KtBinaryExpression? {
-        val statements = Optional.of<KtLambdaArgument>(this)
-            .map<KtLambdaExpression>(Function<KtLambdaArgument, KtLambdaExpression> { getLambdaExpression() })
-            .map<KtBlockExpression?> { obj: KtLambdaExpression -> obj.bodyExpression }
-            .map<List<KtExpression>?> { obj: KtBlockExpression? -> obj!!.statements }
-            .orElse(null)
-        if (ContainerUtil.isEmpty(statements)) {
+        val statements = this.getLambdaExpression()?.bodyExpression?.statements
+        if (statements.isNullOrEmpty()) {
             return null
         }
 
-        return ContainerUtil.find(statements) { statement: KtExpression? ->
-            if (statement is KtBinaryExpression) {
-                val left = statement.left
+        return statements.find {
+            if (it is KtBinaryExpression) {
+                val left = it.left
                 if (left != null) {
                     return@find leftName == left.text
                 }
@@ -240,26 +222,24 @@ internal class BuildGradleKts(project: Project, override val buildFile: KtFile) 
         } as KtBinaryExpression?
     }
 
-    companion object {
-        /**
-         * 获取lambda体
-         */
-        private fun getLambdaBodyExpression(block: KtCallExpression?): KtBlockExpression {
-            // 创建不会为空
-            if (block == null) {
-                throw ShowErrorException.internal()
-            }
-
-            val lambdaArguments = block.lambdaArguments
-            if (ContainerUtil.isEmpty(lambdaArguments)) {
-                throw ShowErrorException.internal()
-            }
-            val ktLambdaArgument = lambdaArguments[0]
-            val argumentExpression =
-                ktLambdaArgument.getArgumentExpression()!! as? KtLambdaExpression ?: throw ShowErrorException.internal()
-            val bodyExpression = argumentExpression.bodyExpression
-                ?: throw ShowErrorException.internal()
-            return bodyExpression
+    /**
+     * 获取lambda体
+     */
+    private fun KtCallExpression?.getLambdaBodyExpression(): KtBlockExpression {
+        // 创建不会为空
+        if (this == null) {
+            throw ShowErrorException.internal()
         }
+
+        val lambdaArguments = this.lambdaArguments
+        if (lambdaArguments.isEmpty()) {
+            throw ShowErrorException.internal()
+        }
+        val ktLambdaArgument = lambdaArguments[0]
+        val argumentExpression =
+            ktLambdaArgument.getArgumentExpression()!! as? KtLambdaExpression ?: throw ShowErrorException.internal()
+        val bodyExpression = argumentExpression.bodyExpression
+            ?: throw ShowErrorException.internal()
+        return bodyExpression
     }
 }

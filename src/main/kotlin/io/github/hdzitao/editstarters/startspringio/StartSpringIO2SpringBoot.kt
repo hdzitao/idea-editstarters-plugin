@@ -39,11 +39,11 @@ class StartSpringIO2SpringBoot : SpringBootBuilder<StartSpringIO> {
             for (ct in dependencyContent) {
                 val content = ct.resolve(version)
 
-                if (content.groupId?.isEmpty() == true) {
+                if (content.groupId.isNullOrBlank()) {
                     continue
                 }
 
-                if (content.compatibilityRange?.isNotBlank() == true
+                if (!content.compatibilityRange.isNullOrBlank()
                     && !Versions.parseRange(content.compatibilityRange!!).match(version)
                 ) {
                     continue
@@ -61,7 +61,7 @@ class StartSpringIO2SpringBoot : SpringBootBuilder<StartSpringIO> {
                 starter.version = content.version
                 starter.scope = content.scope
 
-                if (content.bom?.isNotBlank() == true) {
+                if (!content.bom.isNullOrBlank()) {
                     env.boms?.get(content.bom!!)?.resolve(version)?.let { bom ->
                         starter.bom = bom
 
@@ -73,7 +73,7 @@ class StartSpringIO2SpringBoot : SpringBootBuilder<StartSpringIO> {
                     }
                 }
 
-                if (content.repository?.isNotBlank() == true) {
+                if (!content.repository.isNullOrBlank()) {
                     val rid = content.repository!!
                     env.repositories?.get(rid)?.resolve().let { repository ->
                         starter.addRepository(rid, repository)

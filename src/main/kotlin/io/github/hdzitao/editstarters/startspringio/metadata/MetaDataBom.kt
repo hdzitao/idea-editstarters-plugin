@@ -25,22 +25,24 @@ class MetaDataBom(
         bom.version = this.version
         bom.repositories = this.repositories
 
-        val mapping = this.mappings?.first { Versions.parseRange(it.compatibilityRange).match(version) }
-
-        if (mapping?.groupId?.isNotBlank() == true) {
-            bom.groupId = mapping.groupId
+        val mapping = this.mappings?.first {
+            it.compatibilityRange != null && Versions.parseRange(it.compatibilityRange!!).match(version)
         }
 
-        if (mapping?.artifactId?.isNotBlank() == true) {
-            bom.artifactId = mapping.artifactId
+        if (!mapping?.groupId.isNullOrBlank()) {
+            bom.groupId = mapping!!.groupId
         }
 
-        if (mapping?.version?.isNotBlank() == true) {
-            bom.version = mapping.version
+        if (!mapping?.artifactId.isNullOrBlank()) {
+            bom.artifactId = mapping!!.artifactId
         }
 
-        if (mapping?.repositories?.isNotEmpty() == true) {
-            bom.repositories = mapping.repositories
+        if (!mapping?.version.isNullOrBlank()) {
+            bom.version = mapping!!.version
+        }
+
+        if (!mapping?.repositories.isNullOrEmpty()) {
+            bom.repositories = mapping!!.repositories
         }
 
         return bom

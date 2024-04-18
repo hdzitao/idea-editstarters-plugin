@@ -43,6 +43,7 @@ enum class DependencyScope(val scope: String) {
     }
 
     companion object {
+        @JvmStatic
         fun getByScope(scope: String?): DependencyScope {
             if (scope != null) {
                 for (dependencyScope in entries) {

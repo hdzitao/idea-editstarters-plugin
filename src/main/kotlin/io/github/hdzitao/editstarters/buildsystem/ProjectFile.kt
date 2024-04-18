@@ -2,7 +2,6 @@ package io.github.hdzitao.editstarters.buildsystem
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.util.containers.ContainerUtil
 import io.github.hdzitao.editstarters.dependency.*
 import io.github.hdzitao.editstarters.springboot.EditStarters
 import io.github.hdzitao.editstarters.springboot.Starter
@@ -64,7 +63,7 @@ abstract class ProjectFile<BuildFile : PsiFile, Psi : PsiElement> : EditStarters
 
     override fun addStarters(dependencies: Collection<Starter>) {
         try {
-            if (ContainerUtil.isEmpty(dependencies)) {
+            if (dependencies.isEmpty()) {
                 return
             }
 
@@ -130,7 +129,7 @@ abstract class ProjectFile<BuildFile : PsiFile, Psi : PsiElement> : EditStarters
      * 添加 repositories
      */
     private fun addRepositories(repositories: Collection<Repository>) {
-        if (ContainerUtil.isEmpty(repositories)) {
+        if (repositories.isEmpty()) {
             return
         }
 

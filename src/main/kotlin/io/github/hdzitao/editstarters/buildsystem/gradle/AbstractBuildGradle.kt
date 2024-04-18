@@ -59,7 +59,8 @@ abstract class AbstractBuildGradle<BuildFile : PsiFile, Psi : PsiElement> : Proj
      * repository语句
      */
     protected fun repositoryInstruction(repository: Repository): Instruction {
-        return Instruction(TAG_REPOSITORY, repository.url ?: EMPTY)
+        val point = repository.url ?: EMPTY
+        return Instruction(TAG_REPOSITORY, point)
     }
 
     /**
@@ -67,7 +68,7 @@ abstract class AbstractBuildGradle<BuildFile : PsiFile, Psi : PsiElement> : Proj
      */
     protected fun <Depend> newByGroupArtifact(point: String, buildFun: (String, String) -> Depend): Depend {
         if (point.isNotBlank()) {
-            val groupArtifact = point.split(":".toRegex())
+            val groupArtifact = point.split(":")
             if (groupArtifact.size >= 2) {
                 return buildFun(groupArtifact[0], groupArtifact[1])
             }
@@ -121,12 +122,6 @@ abstract class AbstractBuildGradle<BuildFile : PsiFile, Psi : PsiElement> : Proj
      * 拼接 groupId:artifactId:version
      */
     protected fun splicingPoint(groupId: String?, artifactId: String?, version: String?): String {
-        var point = "${groupId.checkEmpty()}:${artifactId.checkEmpty()}"
-
-        if (version?.isNotEmpty() == true) {
-            point = "$point:$version"
-        }
-
-        return point
+        return "${groupId.checkEmpty()}:${artifactId.checkEmpty()}${version?.let { ":$it" } ?: ""}"
     }
 }

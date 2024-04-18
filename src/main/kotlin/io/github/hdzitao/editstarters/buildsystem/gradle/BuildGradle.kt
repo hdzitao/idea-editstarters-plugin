@@ -3,14 +3,11 @@ package io.github.hdzitao.editstarters.buildsystem.gradle
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
-import com.intellij.util.containers.ContainerUtil
 import io.github.hdzitao.editstarters.buildsystem.DependencyElement
 import io.github.hdzitao.editstarters.dependency.Bom
 import io.github.hdzitao.editstarters.dependency.Dependency
 import io.github.hdzitao.editstarters.dependency.Repository
 import io.github.hdzitao.editstarters.springboot.Starter
-import io.github.hdzitao.editstarters.ui.ShowErrorException
-import org.apache.commons.lang3.ArrayUtils
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElement
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElementFactory
@@ -33,7 +30,7 @@ class BuildGradle(project: Project, override val buildFile: GroovyFile) :
 
     override fun GrClosableBlock.findAllDependencies(): List<Dependency> {
         return PsiTreeUtil.getChildrenOfTypeAsList(this, GrMethodCall::class.java)
-            .map { call: GrMethodCall -> call.getDependencyGroupArtifact() }
+            .map { it.getDependencyGroupArtifact() }
             .toList()
     }
 
@@ -70,12 +67,11 @@ class BuildGradle(project: Project, override val buildFile: GroovyFile) :
         return getOrCreateClosure(TAG_REPOSITORY_MANAGEMENT)
     }
 
-
     override fun GrClosableBlock.findAllRepositories(): List<Repository> {
         return findAllMethod(TAG_REPOSITORY)
             .map { tag ->
                 val closureArguments = tag.closureArguments
-                if (ArrayUtils.isEmpty(closureArguments)) {
+                if (closureArguments.isEmpty()) {
                     return@map EMPTY
                 }
                 val urlCall = closureArguments[0].findMethod("url") ?: return@map EMPTY
@@ -105,21 +101,15 @@ class BuildGradle(project: Project, override val buildFile: GroovyFile) :
             }
         }
 
-        val closureArguments = closure.closureArguments
-        // 新建不可能为空,为空即内部错误
-        if (closureArguments.isNotEmpty()) {
-            throw ShowErrorException.internal()
-        }
-
-        return closureArguments[0]
+        return closure.closureArguments[0]
     }
 
     /**
      * 查找方法
      */
     private fun PsiElement.findMethod(name: String): GrMethodCall? {
-        return ContainerUtil.find(PsiTreeUtil.getChildrenOfTypeAsList(this, GrMethodCall::class.java)) { call ->
-            name == call.invokedExpression.text
+        return PsiTreeUtil.getChildrenOfTypeAsList(this, GrMethodCall::class.java).find {
+            it.invokedExpression.text == name
         }
     }
 
@@ -127,8 +117,9 @@ class BuildGradle(project: Project, override val buildFile: GroovyFile) :
      * 查找方法/批量
      */
     private fun PsiElement.findAllMethod(name: String): List<GrMethodCall> {
-        val closableBlocks = PsiTreeUtil.getChildrenOfTypeAsList(this, GrMethodCall::class.java)
-        return ContainerUtil.findAll(closableBlocks) { call -> name == call.invokedExpression.text }
+        return PsiTreeUtil.getChildrenOfTypeAsList(this, GrMethodCall::class.java).filter {
+            it.invokedExpression.text == name
+        }
     }
 
     /**
@@ -136,7 +127,7 @@ class BuildGradle(project: Project, override val buildFile: GroovyFile) :
      */
     private fun GrMethodCall.getMethodFirstParam(): String {
         val allArguments = argumentList.allArguments
-        if (ArrayUtils.isEmpty(allArguments)) {
+        if (allArguments.isEmpty()) {
             return EMPTY
         }
         return allArguments[0].trimQuotation()
@@ -146,8 +137,8 @@ class BuildGradle(project: Project, override val buildFile: GroovyFile) :
      * 解析依赖语句
      */
     private fun GrMethodCall.getDependencyGroupArtifact(): DependencyElement<GrMethodCall> {
-        val namedArguments = namedArguments.associate { argument ->
-            argument.label.trimQuotation() to argument.expression.trimQuotation()
+        val namedArguments = namedArguments.associate {
+            it.label.trimQuotation() to it.expression.trimQuotation()
         }
 
         if (namedArguments.isEmpty()) {

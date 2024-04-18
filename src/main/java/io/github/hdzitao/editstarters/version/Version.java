@@ -16,7 +16,6 @@
 
 package io.github.hdzitao.editstarters.version;
 
-import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -41,19 +40,14 @@ public final class Version implements Serializable, Comparable<Version> {
 
     private static final VersionQualifierComparator qualifierComparator = new VersionQualifierComparator();
 
-    @Getter
     private final Integer major;
 
-    @Getter
     private final Integer minor;
 
-    @Getter
     private final Integer patch;
 
-    @Getter
     private final Qualifier qualifier;
 
-    @Getter
     private final String originalText;
 
     public Version(Integer major, Integer minor, Integer patch, Qualifier qualifier, String originalText) {
@@ -62,6 +56,26 @@ public final class Version implements Serializable, Comparable<Version> {
         this.patch = patch;
         this.qualifier = qualifier;
         this.originalText = originalText;
+    }
+
+    public Integer getMajor() {
+        return major;
+    }
+
+    public Integer getMinor() {
+        return minor;
+    }
+
+    public Integer getPatch() {
+        return patch;
+    }
+
+    public Qualifier getQualifier() {
+        return qualifier;
+    }
+
+    public String getOriginalText() {
+        return originalText;
     }
 
     @Override

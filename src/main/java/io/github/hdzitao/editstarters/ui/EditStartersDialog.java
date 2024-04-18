@@ -11,7 +11,7 @@ import com.intellij.util.ui.JBUI;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.cache.MemoryCache;
 import io.github.hdzitao.editstarters.dependency.Dependency;
-import io.github.hdzitao.editstarters.dependency.Points;
+import io.github.hdzitao.editstarters.dependency.PointsKt;
 import io.github.hdzitao.editstarters.initializr.InitializrRequest;
 import io.github.hdzitao.editstarters.initializr.InitializrResponse;
 import io.github.hdzitao.editstarters.springboot.Module;
@@ -73,7 +73,7 @@ public class EditStartersDialog {
         frame.setContentPane(root);
 
         // 是否使用缓存
-        if (response.isEnableCache()) {
+        if (response.getEnableCache()) {
             cachedBox.setSelected(true);
             cachedBox.addMouseMotionListener(new MouseAdapter() {
                 @Override
@@ -85,12 +85,12 @@ public class EditStartersDialog {
         }
 
         // 是否启用Ohub
-        if (response.isEnableOHub()) {
+        if (response.getEnableOHub()) {
             oHubBox.setSelected(true);
             oHubBox.addMouseMotionListener(new MouseAdapter() {
                 @Override
                 public void mouseMoved(MouseEvent e) {
-                    oHubBox.setToolTipText(response.getOHub().name);
+                    oHubBox.setToolTipText(response.getOHub().getName());
                 }
             });
         }
@@ -155,7 +155,7 @@ public class EditStartersDialog {
         // selected/starter列表
         SelectedTableModel selectedTableModel = new SelectedTableModel(selectedList, modules.values().stream()
                 .flatMap(List::stream)
-                .filter(info -> Points.contains(existDependencies, info))
+                .filter(info -> PointsKt.hasPoint(existDependencies, info))
                 .collect(Collectors.toList()));
         StarterTableModel starterTableModel = new StarterTableModel(starterList);
         // 添加/删除监听器
@@ -219,7 +219,7 @@ public class EditStartersDialog {
      * 添加starter
      */
     private void addStarter(Starter starter) {
-        if (Points.contains(existDependencies, starter)) {
+        if (PointsKt.hasPoint(existDependencies, starter)) {
             // 已经存在,不删除
             removeStarters.remove(starter);
         } else {
@@ -232,7 +232,7 @@ public class EditStartersDialog {
      * 删除starter
      */
     private void removeStarter(Starter starter) {
-        if (Points.contains(existDependencies, starter)) {
+        if (PointsKt.hasPoint(existDependencies, starter)) {
             // 已存在, 需要删除
             removeStarters.add(starter);
         } else {

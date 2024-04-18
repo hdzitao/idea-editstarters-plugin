@@ -40,7 +40,7 @@ public abstract class EditStartersButtonAction extends AnAction {
             // 构建系统
             BuildSystem buildSystem = newBuildSystem(e.getDataContext());
             // 检查Spring boot
-            if (!buildSystem.isSpringBootProject()) {
+            if (!buildSystem.getSpringBootProject()) {
                 throw new ShowErrorException("Not a Spring Boot Project!");
             }
             // 缓存
@@ -62,13 +62,7 @@ public abstract class EditStartersButtonAction extends AnAction {
                 return;
             }
             // 组装参数
-            InitializrRequest request = new InitializrRequest()
-                    .setProject(project)
-                    .setBuildSystem(buildSystem)
-                    .setVersion(version)
-                    .setUrl(url)
-                    .setEnableCache(initializrDialog.isEnableCache())
-                    .setOHub(initializrDialog.getOHub());
+            InitializrRequest request = new InitializrRequest(project, buildSystem, url, version, initializrDialog.isEnableCache(), initializrDialog.getOHub());
             // 组装返回
             InitializrResponse response = new InitializrResponse();
             // 执行

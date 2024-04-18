@@ -27,7 +27,7 @@ class CacheInitializr : Initializr {
         chain.initialize(request, response)
 
         if (request.enableCache && response.springBoot != null) {
-            initializrCache.putSpringBoot(url, version, response.springBoot)
+            initializrCache.putSpringBoot(url, version, response.springBoot!!)
         }
     }
 }

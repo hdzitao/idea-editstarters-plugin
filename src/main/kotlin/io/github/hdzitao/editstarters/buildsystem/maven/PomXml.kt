@@ -11,7 +11,6 @@ import io.github.hdzitao.editstarters.dependency.Dependency
 import io.github.hdzitao.editstarters.dependency.Repository
 import io.github.hdzitao.editstarters.springboot.Starter
 import io.github.hdzitao.editstarters.ui.ShowErrorException
-import org.apache.commons.lang3.StringUtils
 import java.util.*
 import java.util.stream.Collectors
 
@@ -45,8 +44,8 @@ class PomXml(override val buildFile: XmlFile) : ProjectFile<XmlFile, XmlTag>() {
 
     override fun XmlTag.findAllDependencies(): List<Dependency> {
         return findSubTags(TAG_DEPENDENCY)
-            .map { tag ->
-                DependencyElement(tag.getTagText(TAG_GROUP_ID), tag.getTagText(TAG_ARTIFACT_ID), tag)
+            .map {
+                DependencyElement(it.getTagText(TAG_GROUP_ID), it.getTagText(TAG_ARTIFACT_ID), it)
             }
             .toList()
     }
@@ -72,7 +71,7 @@ class PomXml(override val buildFile: XmlFile) : ProjectFile<XmlFile, XmlTag>() {
 
     override fun XmlTag.findAllBoms(): List<Bom> {
         return findSubTags(TAG_DEPENDENCY)
-            .map { tag: XmlTag -> Bom(tag.getTagText(TAG_GROUP_ID), tag.getTagText(TAG_ARTIFACT_ID)) }
+            .map { Bom(it.getTagText(TAG_GROUP_ID), it.getTagText(TAG_ARTIFACT_ID)) }
             .toList()
     }
 
@@ -91,7 +90,7 @@ class PomXml(override val buildFile: XmlFile) : ProjectFile<XmlFile, XmlTag>() {
 
     override fun XmlTag.findAllRepositories(): List<Repository> {
         return Arrays.stream(findSubTags(TAG_REPOSITORY))
-            .map { tag: XmlTag -> Repository(tag.getTagText("url")) }
+            .map { Repository(it.getTagText("url")) }
             .collect(Collectors.toList())
     }
 
@@ -129,7 +128,7 @@ class PomXml(override val buildFile: XmlFile) : ProjectFile<XmlFile, XmlTag>() {
      * 添加有内容的标签
      */
     private fun XmlTag.addSubTagWithTextBody(key: String, value: String?) {
-        if (StringUtils.isNoneBlank(key) && StringUtils.isNoneBlank(value)) {
+        if (key.isNotBlank() && !value.isNullOrBlank()) {
             addSubTag(createChildTag(key, namespace, value, false), false)
         }
     }

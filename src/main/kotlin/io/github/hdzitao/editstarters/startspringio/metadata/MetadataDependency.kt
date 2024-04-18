@@ -39,26 +39,28 @@ class MetadataDependency(
         dependency.bom = this.bom
         dependency.repository = this.repository
 
-        val mapping = this.mappings?.first { Versions.parseRange(it.compatibilityRange).match(version) }
-
-        if (mapping?.groupId?.isNotBlank() == true) {
-            dependency.groupId = mapping.groupId
+        val mapping = this.mappings?.first {
+            it.compatibilityRange != null && Versions.parseRange(it.compatibilityRange!!).match(version)
         }
 
-        if (mapping?.artifactId?.isNotBlank() == true) {
-            dependency.artifactId = mapping.artifactId
+        if (!mapping?.groupId.isNullOrBlank()) {
+            dependency.groupId = mapping!!.groupId
         }
 
-        if (mapping?.version?.isNotBlank() == true) {
-            dependency.version = mapping.version
+        if (!mapping?.artifactId.isNullOrBlank()) {
+            dependency.artifactId = mapping!!.artifactId
         }
 
-        if (mapping?.bom?.isNotBlank() == true) {
-            dependency.bom = mapping.bom
+        if (!mapping?.version.isNullOrBlank()) {
+            dependency.version = mapping!!.version
         }
 
-        if (mapping?.repository?.isNotBlank() == true) {
-            dependency.repository = mapping.repository
+        if (!mapping?.bom.isNullOrBlank()) {
+            dependency.bom = mapping!!.bom
+        }
+
+        if (!mapping?.repository.isNullOrBlank()) {
+            dependency.repository = mapping!!.repository
         }
 
         return dependency

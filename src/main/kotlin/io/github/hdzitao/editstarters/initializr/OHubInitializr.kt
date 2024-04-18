@@ -8,6 +8,7 @@ import io.github.hdzitao.editstarters.springboot.SpringBootBuilder
 import io.github.hdzitao.editstarters.startspringio.StartSpringIO
 import io.github.hdzitao.editstarters.startspringio.StartSpringIO2SpringBoot
 import io.github.hdzitao.editstarters.startspringio.metadata.MetadataConfig
+import io.github.hdzitao.editstarters.ui.ShowErrorException
 import lombok.SneakyThrows
 
 /**
@@ -43,7 +44,9 @@ class OHubInitializr : Initializr {
             return
         }
         // 获取旧版本metadata
-        val metadataUrl = oHub.getMetadataUrl(oHubMetaData.metadataConfig)
+        val metadataUrl = oHub.getMetadataUrl(
+            oHubMetaData.metadataConfig ?: throw ShowErrorException("ohub‘s configure error!")
+        )
         val metadata = HttpRequests.request(metadataUrl).connect { req ->
             gson.fromJson(req.readString(), MetadataConfig::class.java)
         }

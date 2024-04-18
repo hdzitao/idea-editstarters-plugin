@@ -6,7 +6,6 @@ import com.intellij.psi.xml.XmlFile
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem
 import io.github.hdzitao.editstarters.dependency.Dependency
 import io.github.hdzitao.editstarters.ui.ShowErrorException
-import org.jetbrains.idea.maven.model.MavenArtifact
 import org.jetbrains.idea.maven.utils.actions.MavenActionUtil
 
 /**
@@ -14,13 +13,14 @@ import org.jetbrains.idea.maven.utils.actions.MavenActionUtil
  *
  * @version 3.2.0
  */
-class MavenBuildSystem private constructor(pomXml: PomXml, dependencies: List<Dependency>) :
+class MavenBuildSystem(pomXml: PomXml, dependencies: List<Dependency>) :
     BuildSystem(pomXml, dependencies) {
 
     companion object {
         /**
          * 构建 maven build system
          */
+        @JvmStatic
         fun from(context: DataContext): MavenBuildSystem {
             val psiFile = context.getData(CommonDataKeys.PSI_FILE) as? XmlFile
                 ?: throw ShowErrorException("Not an XML file!")
@@ -28,7 +28,7 @@ class MavenBuildSystem private constructor(pomXml: PomXml, dependencies: List<De
             val mavenProject = MavenActionUtil.getMavenProject(context)
                 ?: throw ShowErrorException("Not a maven project!")
             val dependencies = mavenProject.dependencies
-                .map { d: MavenArtifact -> Dependency(d.groupId, d.artifactId, d.baseVersion) }
+                .map { Dependency(it.groupId, it.artifactId, it.baseVersion) }
                 .toList()
             return MavenBuildSystem(pomXml, dependencies)
         }

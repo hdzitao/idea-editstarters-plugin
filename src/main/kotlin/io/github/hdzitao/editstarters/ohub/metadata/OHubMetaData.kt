@@ -18,10 +18,10 @@ class OHubMetaData(
      * 检查版本
      */
     fun checkVersionRange(version: Version): Boolean {
-        if (versionRange?.isEmpty() == true) {
-            return false
+        return if (versionRange.isNullOrBlank()) {
+            false
+        } else {
+            Versions.parseRange(versionRange!!).match(version)
         }
-
-        return Versions.parseRange(versionRange!!).match(version)
     }
 }

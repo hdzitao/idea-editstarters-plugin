@@ -12,11 +12,11 @@ import lombok.Getter
  * @version 3.2.0
  */
 @Getter
-abstract class BuildSystem(val projectFile: ProjectFile<*>, val dependencies: List<Dependency>) : EditStarters {
-    private val springbootDependency: Dependency? =
+abstract class BuildSystem(val projectFile: ProjectFile<*, *>, val dependencies: List<Dependency>) : EditStarters {
+    val springbootDependency: Dependency? =
         this.dependencies.findPont(Dependency("org.springframework.boot", "spring-boot"))
 
-    private val springBootProject = springbootDependency != null
+    val springBootProject = springbootDependency != null
 
     override fun addStarters(dependencies: Collection<Starter>) {
         projectFile.addStarters(dependencies)

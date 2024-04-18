@@ -37,7 +37,7 @@ class InitializrCache : PersistentStateComponent<InitializrCache.State?> {
      * 缓存是否有效
      */
     val enable: Boolean
-        get() = state?.url?.isNotBlank() == true
+        get() = !state?.url.isNullOrBlank()
 
     /**
      * 初始化
@@ -69,7 +69,7 @@ class InitializrCache : PersistentStateComponent<InitializrCache.State?> {
     }
 
     val url: String
-        get() = if (enable && state?.url?.isNotBlank() == true) {
+        get() = if (enable && !state?.url.isNullOrBlank()) {
             state!!.url!!
         } else {
             "https://start.spring.io/"
