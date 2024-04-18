@@ -1,0 +1,28 @@
+package io.github.hdzitao.editstarters.buildsystem
+
+import io.github.hdzitao.editstarters.dependency.Dependency
+import io.github.hdzitao.editstarters.dependency.findPont
+import io.github.hdzitao.editstarters.springboot.EditStarters
+import io.github.hdzitao.editstarters.springboot.Starter
+import lombok.Getter
+
+/**
+ * 构建系统
+ *
+ * @version 3.2.0
+ */
+@Getter
+abstract class BuildSystem(val projectFile: ProjectFile<*>, val dependencies: List<Dependency>) : EditStarters {
+    private val springbootDependency: Dependency? =
+        this.dependencies.findPont(Dependency("org.springframework.boot", "spring-boot"))
+
+    private val springBootProject = springbootDependency != null
+
+    override fun addStarters(dependencies: Collection<Starter>) {
+        projectFile.addStarters(dependencies)
+    }
+
+    override fun removeStarters(dependencies: Collection<Starter>) {
+        projectFile.removeStarters(dependencies)
+    }
+}

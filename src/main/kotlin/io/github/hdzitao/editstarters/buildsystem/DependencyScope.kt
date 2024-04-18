@@ -1,7 +1,4 @@
-package io.github.hdzitao.editstarters.buildsystem;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+package io.github.hdzitao.editstarters.buildsystem
 
 /**
  * 依赖的 scope
@@ -9,9 +6,7 @@ import lombok.Getter;
  *
  * @version 3.2.0
  */
-@Getter
-@AllArgsConstructor
-public enum DependencyScope {
+enum class DependencyScope(val scope: String) {
     /**
      * Compile Scope.
      */
@@ -43,20 +38,21 @@ public enum DependencyScope {
     TEST("test"),
     ;
 
-    private final String scope;
-
-    public static DependencyScope getByScope(String scope) {
-        for (DependencyScope dependencyScope : values()) {
-            if (dependencyScope.scope.equals(scope)) {
-                return dependencyScope;
-            }
-        }
-
-        return COMPILE;
+    override fun toString(): String {
+        return scope
     }
 
-    @Override
-    public String toString() {
-        return scope;
+    companion object {
+        fun getByScope(scope: String?): DependencyScope {
+            if (scope != null) {
+                for (dependencyScope in entries) {
+                    if (dependencyScope.scope == scope) {
+                        return dependencyScope
+                    }
+                }
+            }
+
+            return COMPILE
+        }
     }
 }
