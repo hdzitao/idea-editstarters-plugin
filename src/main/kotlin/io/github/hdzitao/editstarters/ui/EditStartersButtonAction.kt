@@ -1,11 +1,8 @@
 package io.github.hdzitao.editstarters.ui
 
 import com.intellij.openapi.actionSystem.*
-import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.ui.Messages
-import com.intellij.openapi.util.ThrowableComputable
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem
-import io.github.hdzitao.editstarters.cache.InitializrCache
 import io.github.hdzitao.editstarters.initializr.*
 import io.github.hdzitao.editstarters.ohub.GitHub
 import io.github.hdzitao.editstarters.ohub.Gitee
@@ -17,16 +14,6 @@ import io.github.hdzitao.editstarters.version.Versions
  * @version 3.2.0
  */
 abstract class EditStartersButtonAction : AnAction() {
-    private val initializrs = arrayOf(
-        CacheInitializr(),
-        StartSpringInitializr(),
-        OHubInitializr(),
-    )
-
-    private val oHubs = arrayOf(
-        GitHub(),
-        Gitee(),
-    )
 
     override fun actionPerformed(e: AnActionEvent) {
         try {
@@ -36,41 +23,30 @@ abstract class EditStartersButtonAction : AnAction() {
             if (!buildSystem.springBootProject) {
                 throw ShowErrorException("Not a Spring Boot Project!")
             }
-            // 缓存
+            // 项目
             val project = e.project ?: throw ShowErrorException.internal()
-            val initializrCache = InitializrCache.getInstance(project)
-            // 初始化
-            initializrCache.initialize()
             // spring boot version
             val version = Versions.parse(buildSystem.springbootDependency!!.version!!)
-            // 弹出spring initializr地址输入框
-            val initializrDialog = InitializrDialog(initializrCache, version, oHubs)
-            initializrDialog.showDialog()
-            // 获取url
-            val url = initializrDialog.url
-            if (url.isNullOrBlank()) {
-                return
-            }
             // 组装参数
             val request = InitializrRequest(
                 project,
                 buildSystem,
-                url,
                 version,
-                initializrDialog.isEnableCache,
-                initializrDialog.oHub
+                InitializrChain(
+                    CacheInitializr(),
+                    StartSpringInitializr(),
+                    OHubInitializr(),
+                ),
+                listOf(
+                    GitHub(),
+                    Gitee(),
+                )
             )
             // 组装返回
             val response = InitializrResponse()
-            // 执行
-            val progressManager = ProgressManager.getInstance()
-            progressManager.runProcessWithProgressSynchronously(ThrowableComputable<Void, Exception> {
-                progressManager.progressIndicator.isIndeterminate = true
-                InitializrChain(initializrs).initialize(request, response)
-                null
-            }, "Loading $url", true, project)
-            // 模块弹窗
-            EditStartersDialog(request, response).show()
+            // 对话框
+            val initializrDialog = InitializrDialog(request, response)
+            initializrDialog.show()
         } catch (throwable: Throwable) {
             // 所有异常弹错误框
             val message = if (throwable is ShowErrorException) {

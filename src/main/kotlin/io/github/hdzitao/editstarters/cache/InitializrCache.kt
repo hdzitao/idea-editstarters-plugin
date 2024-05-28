@@ -3,7 +3,6 @@ package io.github.hdzitao.editstarters.cache
 import com.intellij.openapi.components.*
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.annotations.OptionTag
-import io.github.hdzitao.editstarters.ohub.GitHub
 import io.github.hdzitao.editstarters.springboot.SpringBoot
 
 /**
@@ -34,25 +33,10 @@ class InitializrCache : PersistentStateComponent<InitializrCache.State?> {
     private var state: State? = null
 
     /**
-     * 缓存是否有效
-     */
-    val enable: Boolean
-        get() = !state?.url.isNullOrBlank()
-
-    /**
-     * 初始化
-     */
-    fun initialize() {
-        if (!enable) {
-            state = State()
-        }
-    }
-
-    /**
      * 获取缓存
      */
     fun getSpringBoot(url: String, version: String): SpringBoot? =
-        if (enable && state?.url == url && version == state?.version && state?.springBoot != null) {
+        if (state?.url == url && version == state?.version && state?.springBoot != null) {
             state?.springBoot
         } else {
             null
@@ -68,32 +52,16 @@ class InitializrCache : PersistentStateComponent<InitializrCache.State?> {
         state?.updateTime = System.currentTimeMillis()
     }
 
-    val url: String
-        get() = if (enable && !state?.url.isNullOrBlank()) {
-            state!!.url!!
-        } else {
-            "https://start.spring.io/"
-        }
+    val url: String?
+        get() = state?.url
 
-    val updateTime: Long
-        /**
-         * 获取更新时间
-         */
-        get() = if (enable && state?.updateTime != null) {
-            state!!.updateTime
-        } else {
-            0L
-        }
+    val updateTime: Long?
+        get() = state?.updateTime
 
-    val oHubName: String
-        /**
-         * 获取ohub
-         */
-        get() = if (enable && state?.oHub != null) {
-            state!!.oHub!!
-        } else {
-            GitHub().name
-        }
+
+    val oHubName: String?
+        get() = state?.oHub
+
 
     /**
      * 缓存oHub

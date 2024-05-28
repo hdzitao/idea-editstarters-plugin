@@ -1,70 +1,76 @@
 package io.github.hdzitao.editstarters.ui;
 
-import com.intellij.concurrency.ThreadContext;
-import com.intellij.openapi.application.AccessToken;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.cache.InitializrCache;
+import io.github.hdzitao.editstarters.initializr.InitializrRequest;
+import io.github.hdzitao.editstarters.initializr.InitializrResponse;
 import io.github.hdzitao.editstarters.ohub.OHub;
-import io.github.hdzitao.editstarters.version.Version;
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 /**
  * Initializr UI
  *
  * @version 3.2.0
  */
-public class InitializrDialog extends JDialog {
+public class InitializrDialog implements FlowDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JTextField urlInput;
     private JCheckBox enableCacheCheckBox;
     private JComboBox<OHub> oHubComboBox;
+    private final JFrame frame;
 
-    private String url;
-
-    private boolean enableCache;
-
-    private OHub oHub;
+    private final InitializrRequest request;
+    private final InitializrResponse response;
 
     private final static Pattern urlCheck = Pattern.compile("^https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 
-    public InitializrDialog(InitializrCache initializrCache, Version version, OHub[] oHubs) {
-        setTitle("Spring Initializr Url");
-        setContentPane(contentPane);
-        setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+    public InitializrDialog(InitializrRequest request, InitializrResponse response) {
+        this.request = request;
+        this.response = response;
+
+        frame = new JFrame("Spring Initializr Url");
+        frame.setContentPane(contentPane);
+        frame.getRootPane().setDefaultButton(buttonOK);
+        // cache
+        InitializrCache initializrCache = InitializrCache.getInstance(request.getProject());
         // url
         urlInput.setText(initializrCache.getUrl());
 
         buttonOK.addActionListener(e -> onOK());
 
         // cache 超15天默认不启动
-        long updateTime = initializrCache.getUpdateTime();
-        if (updateTime != 0 && System.currentTimeMillis() - updateTime > TimeUnit.DAYS.toMillis(15)) {
+        Long updateTime = initializrCache.getUpdateTime();
+        if (updateTime != null && System.currentTimeMillis() - updateTime > TimeUnit.DAYS.toMillis(15)) {
             enableCacheCheckBox.setSelected(false);
         }
 
         // OHub
-        if (ArrayUtils.isNotEmpty(oHubs)) {
+        List<OHub> supportedOHubs = request.getSupportedOHubs();
+        if (CollectionUtils.isNotEmpty(supportedOHubs)) {
             oHubComboBox.setModel(new CollectionComboBoxModel<>(
-                    Arrays.asList(oHubs), ContainerUtil.find(oHubs, oh ->
+                    supportedOHubs, ContainerUtil.find(supportedOHubs, oh ->
                     Objects.equals(initializrCache.getOHubName(), oh.getName()))));
         }
 
         // 点击 X 时调用 onCancel()
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
+        frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 onCancel();
             }
@@ -75,37 +81,40 @@ public class InitializrDialog extends JDialog {
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public boolean isEnableCache() {
-        return enableCache;
-    }
-
-    public OHub getOHub() {
-        return oHub;
-    }
-
     private void onOK() {
         String url = urlInput.getText();
         if (StringUtils.isNoneBlank(url) && urlCheck.matcher(url).find()) {
-            this.url = url;
-            this.enableCache = enableCacheCheckBox.isSelected();
-            this.oHub = (OHub) oHubComboBox.getSelectedItem();
-            dispose();
+            request.setUrl(url);
+            request.setEnableCache(enableCacheCheckBox.isSelected());
+            request.setOHub((OHub) oHubComboBox.getSelectedItem());
+
+            frame.dispose();
+
+            next();
         }
     }
 
     private void onCancel() {
-        dispose();
+        frame.dispose();
     }
 
-    public void showDialog() {
-        pack();
-        setLocationRelativeTo(null); // 中间显示
-        try (AccessToken token = ThreadContext.resetThreadContext()) {
-            setVisible(true);
-        }
+    @Override
+    public void show() {
+        frame.pack();
+        frame.setLocationRelativeTo(null); // 中间显示
+        frame.setVisible(true);
+    }
+
+    @Override
+    public void next() {
+        // 执行
+        ProgressManager progressManager = ProgressManager.getInstance();
+        progressManager.runProcessWithProgressSynchronously((ThrowableComputable<Void, RuntimeException>) () -> {
+            progressManager.getProgressIndicator().setIndeterminate(true);
+            request.getChain().initialize(request, response);
+            return null;
+        }, "Loading " + request.getUrl(), true, request.getProject());
+        // 模块弹窗
+        new EditStartersDialog(request, response).show();
     }
 }

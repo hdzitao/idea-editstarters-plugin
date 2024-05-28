@@ -17,7 +17,7 @@ class CacheInitializr : Initializr {
             val springBoot = initializrCache.getSpringBoot(url, version)
             if (springBoot != null) {
                 response.enableCache = true
-                response.cacheUpdateTime = initializrCache.updateTime
+                response.cacheUpdateTime = initializrCache.updateTime ?: 0
 
                 response.springBoot = springBoot
                 return

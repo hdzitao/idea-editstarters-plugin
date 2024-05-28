@@ -7,7 +7,7 @@ import io.github.hdzitao.editstarters.ui.ShowErrorException
  *
  * @version 3.2.0
  */
-class InitializrChain(private val chain: Array<Initializr>) {
+class InitializrChain(private vararg val chain: Initializr) {
     private var i = 0
 
     fun initialize(request: InitializrRequest, response: InitializrResponse) {
