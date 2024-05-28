@@ -9,7 +9,6 @@ import io.github.hdzitao.editstarters.startspringio.StartSpringIO
 import io.github.hdzitao.editstarters.startspringio.StartSpringIO2SpringBoot
 import io.github.hdzitao.editstarters.startspringio.metadata.MetadataConfig
 import io.github.hdzitao.editstarters.ui.ShowErrorException
-import lombok.SneakyThrows
 
 /**
  * 旧版本初始化
@@ -20,7 +19,6 @@ class OHubInitializr : Initializr {
     private val gson = Gson()
     private val springIO2SpringBoot: SpringBootBuilder<StartSpringIO> = StartSpringIO2SpringBoot()
 
-    @SneakyThrows
     override fun initialize(request: InitializrRequest, response: InitializrResponse, chain: InitializrChain) {
         val version = request.version
         val oHub = request.oHub

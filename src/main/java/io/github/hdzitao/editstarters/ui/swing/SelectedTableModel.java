@@ -5,7 +5,6 @@ import com.intellij.openapi.ui.popup.IconButton;
 import com.intellij.ui.InplaceButton;
 import com.intellij.ui.table.JBTable;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import lombok.Setter;
 
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -23,11 +22,14 @@ public class SelectedTableModel extends AbstractStarterTableModel {
 
     private static final int REMOVE_BUTTON_WIDTH = 20;
 
-    @Setter
     private StarterProcessor<Void> removeProcessor;
 
     public SelectedTableModel(JBTable selectedTable, List<Starter> selected) {
         super(selected, selectedTable, COLUMN_MAX);
+    }
+
+    public void setRemoveProcessor(StarterProcessor<Void> removeProcessor) {
+        this.removeProcessor = removeProcessor;
     }
 
     @Override
