@@ -28,7 +28,6 @@ class OHubInitializr : Initializr {
             return
         }
 
-        response.enableOHub = true
         response.oHub = oHub
 
         // 初始化旧版本配置

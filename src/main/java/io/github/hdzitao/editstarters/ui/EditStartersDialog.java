@@ -85,7 +85,7 @@ public class EditStartersDialog implements FlowDialog {
         }
 
         // 是否启用Ohub
-        if (response.getEnableOHub()) {
+        if (response.getOHub() != null) {
             oHubBox.setSelected(true);
             oHubBox.addMouseMotionListener(new MouseAdapter() {
                 @Override
@@ -97,6 +97,9 @@ public class EditStartersDialog implements FlowDialog {
 
         // spring boot
         SpringBoot springBoot = response.getSpringBoot();
+        if (springBoot == null) {
+            throw ShowErrorException.internal();
+        }
 
         // boot版本选框
         versionComboBox.setModel(new CollectionComboBoxModel<>(

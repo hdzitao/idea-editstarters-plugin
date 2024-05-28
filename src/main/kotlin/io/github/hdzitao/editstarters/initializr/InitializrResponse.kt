@@ -12,6 +12,5 @@ class InitializrResponse(
     var springBoot: SpringBoot? = null,
     var enableCache: Boolean = false,
     var cacheUpdateTime: Long = 0,
-    var enableOHub: Boolean = false,
     var oHub: OHub? = null
 )
