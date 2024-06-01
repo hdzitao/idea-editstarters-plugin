@@ -18,10 +18,10 @@ import io.github.hdzitao.editstarters.springboot.Module;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
 import io.github.hdzitao.editstarters.springboot.Starter;
 import io.github.hdzitao.editstarters.ui.swing.SelectedTableModel;
-import io.github.hdzitao.editstarters.ui.swing.StarterProcessor;
 import io.github.hdzitao.editstarters.ui.swing.StarterTableModel;
 import io.github.hdzitao.editstarters.ui.swing.WarpEditorKit;
 import io.github.hdzitao.editstarters.version.Version;
+import kotlin.Unit;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,6 +30,7 @@ import javax.swing.event.DocumentEvent;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
@@ -141,7 +142,7 @@ public class EditStartersDialog implements FlowDialog {
         // 显示详细信息
         descPane.setEditorKit(new WarpEditorKit());
         pointTextField.setBorder(JBUI.Borders.empty());
-        StarterProcessor<Void> showDescListener = starter -> {
+        Function<Starter, Unit> showDescListener = starter -> {
             // 详情
             descPane.setText(descPaneCache.get(starter));
             descPane.setCaretPosition(0);
@@ -184,9 +185,12 @@ public class EditStartersDialog implements FlowDialog {
             selectedTableModel.removeStarter(starter);
             return null;
         });
-        // 详情
-        selectedTableModel.setShowDescListener(showDescListener);
-        starterTableModel.setShowDescListener(showDescListener);
+        selectedTableModel.setShowDescListener(showDescListener::apply);
+        starterTableModel.setShowDescListener(showDescListener::apply);
+
+        // 准备完毕
+        selectedTableModel.ready();
+        starterTableModel.ready();
 
         // Module列表
         moduleList.setModel(new CollectionListModel<>(modules.keySet()));
@@ -195,7 +199,7 @@ public class EditStartersDialog implements FlowDialog {
             public void mouseClicked(MouseEvent e) {
                 searchField.setText("");
                 String name = moduleList.getSelectedValue();
-                starterTableModel.refresh(modules.getOrDefault(name, Collections.emptyList()));
+                starterTableModel.resetStarters(modules.getOrDefault(name, Collections.emptyList()));
             }
         });
 
@@ -213,7 +217,7 @@ public class EditStartersDialog implements FlowDialog {
                         .parallel()
                         .filter(starter -> searchCache.get(starter).contains(searchKey))
                         .collect(Collectors.toList());
-                starterTableModel.refresh(result);
+                starterTableModel.resetStarters(result);
             }
         });
     }

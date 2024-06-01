@@ -1,53 +1,43 @@
-package io.github.hdzitao.editstarters.ui.swing;
+package io.github.hdzitao.editstarters.ui.swing
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import com.jetbrains.rd.util.concurrentMapOf
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import javax.swing.JTable
+
+private typealias TableClickedListener = (Int) -> Unit
 
 /**
  * 通用table点击事件
  *
  * @version 3.2.0
  */
-public class TableMouseClicker extends MouseAdapter {
-    private final JTable table;
-    private final int columnMax;
-    private final Map<Integer, TableClickedListener> clickedListenerMap;
+class TableMouseClicker(private val table: JTable, private val columnMax: Int) : MouseAdapter() {
+    private val clickedListenerMap: MutableMap<Int, TableClickedListener> = concurrentMapOf()
 
-    public TableMouseClicker(JTable table, int columnMax) {
-        this.table = table;
-        this.columnMax = columnMax;
-        this.clickedListenerMap = new ConcurrentHashMap<>(columnMax);
-
-        table.addMouseListener(this);
+    init {
+        table.addMouseListener(this)
     }
 
     /**
      * 设置点击事件
      */
-    public void putListener(int column, TableClickedListener clickedListener) {
-        if (column >= 0 && column < columnMax) {
-            clickedListenerMap.put(column, clickedListener);
+    fun putListener(column: Int, clickedListener: TableClickedListener) {
+        if (column in 0..<columnMax) {
+            clickedListenerMap[column] = clickedListener
         }
     }
 
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() != MouseEvent.BUTTON1) {
-            return;
+    override fun mouseClicked(e: MouseEvent) {
+        if (e.button != MouseEvent.BUTTON1) {
+            return
         }
 
-        Point point = e.getPoint();
-        int column = table.columnAtPoint(point);
-        TableClickedListener clickedListener = clickedListenerMap.get(column);
-        if (clickedListener == null) {
-            return;
-        }
+        val point = e.point
+        val column = table.columnAtPoint(point)
+        val clickedListener = clickedListenerMap[column] ?: return
 
-        clickedListener.click(table.rowAtPoint(point));
+        clickedListener(table.rowAtPoint(point))
     }
 }
