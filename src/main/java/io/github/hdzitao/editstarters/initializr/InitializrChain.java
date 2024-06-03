@@ -16,7 +16,7 @@ public class InitializrChain {
         this.chain = chain;
     }
 
-    public void initialize(InitializrRequest request, InitializrResponse response) {
+    public void initialize(InitializrRequest request, InitializrResponse response) throws Exception {
         if (i >= chain.length) {
             throw new ShowErrorException("Initialization Failed!");
         }

@@ -16,7 +16,6 @@
 
 package io.github.hdzitao.editstarters.version;
 
-import lombok.Getter;
 
 /**
  * 拷贝自 spring-io/initializr,删除不必要功能
@@ -37,19 +36,10 @@ import lombok.Getter;
  */
 public class VersionRange {
 
-    @Getter
     private final Version lowerVersion;
-
-    @Getter
     private final boolean lowerInclusive;
-
-    @Getter
     private final Version higherVersion;
-
-    @Getter
     private final boolean higherInclusive;
-
-    @Getter
     private final String originalText;
 
     protected VersionRange(Version lowerVersion, boolean lowerInclusive,
@@ -64,6 +54,26 @@ public class VersionRange {
 
     public VersionRange(Version startingVersion) {
         this(startingVersion, true, null, false, startingVersion.getOriginalText());
+    }
+
+    public Version getLowerVersion() {
+        return lowerVersion;
+    }
+
+    public boolean isLowerInclusive() {
+        return lowerInclusive;
+    }
+
+    public Version getHigherVersion() {
+        return higherVersion;
+    }
+
+    public boolean isHigherInclusive() {
+        return higherInclusive;
+    }
+
+    public String getOriginalText() {
+        return originalText;
     }
 
     /**

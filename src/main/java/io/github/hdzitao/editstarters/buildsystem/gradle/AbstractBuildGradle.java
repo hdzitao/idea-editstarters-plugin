@@ -6,8 +6,6 @@ import io.github.hdzitao.editstarters.buildsystem.ProjectFile;
 import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,11 +23,18 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
     /**
      * gradle语法简单抽象
      */
-    @Getter
-    @AllArgsConstructor
     public static class Instruction {
         private final String inst;
         private final String point;
+
+        public Instruction(String inst, String point) {
+            this.inst = inst;
+            this.point = point;
+        }
+
+        public String getInst() {
+            return inst;
+        }
 
         public String toInstString(String format) {
             return format.replace("${inst}", inst).replace("${point}", point);

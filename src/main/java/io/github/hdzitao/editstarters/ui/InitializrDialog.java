@@ -7,7 +7,6 @@ import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.cache.InitializrCache;
 import io.github.hdzitao.editstarters.ohub.OHub;
 import io.github.hdzitao.editstarters.version.Version;
-import lombok.Getter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,13 +31,10 @@ public class InitializrDialog extends JDialog {
     private JCheckBox enableCacheCheckBox;
     private JComboBox<OHub> oHubComboBox;
 
-    @Getter
     private String url;
 
-    @Getter
     private boolean enableCache;
 
-    @Getter
     private OHub oHub;
 
     private final static Pattern urlCheck = Pattern.compile("^https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
@@ -77,6 +73,18 @@ public class InitializrDialog extends JDialog {
         // 遇到 ESCAPE 时调用 onCancel()
         contentPane.registerKeyboardAction(e -> onCancel(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public boolean isEnableCache() {
+        return enableCache;
+    }
+
+    public OHub getOHub() {
+        return oHub;
     }
 
     private void onOK() {

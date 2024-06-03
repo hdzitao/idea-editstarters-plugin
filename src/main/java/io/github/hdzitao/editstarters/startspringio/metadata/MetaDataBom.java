@@ -4,9 +4,6 @@ import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.version.Version;
 import io.github.hdzitao.editstarters.version.Versions;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -17,14 +14,35 @@ import java.util.Optional;
  *
  * @version 3.2.0
  */
-@Getter
-@Setter
-@NoArgsConstructor
 public class MetaDataBom extends Bom {
     private List<String> repositories;
     private List<MetaDataBom> mappings;
     // mapping 字段
     private String compatibilityRange;
+
+    public List<String> getRepositories() {
+        return repositories;
+    }
+
+    public void setRepositories(List<String> repositories) {
+        this.repositories = repositories;
+    }
+
+    public List<MetaDataBom> getMappings() {
+        return mappings;
+    }
+
+    public void setMappings(List<MetaDataBom> mappings) {
+        this.mappings = mappings;
+    }
+
+    public String getCompatibilityRange() {
+        return compatibilityRange;
+    }
+
+    public void setCompatibilityRange(String compatibilityRange) {
+        this.compatibilityRange = compatibilityRange;
+    }
 
     /**
      * 根据版本处理

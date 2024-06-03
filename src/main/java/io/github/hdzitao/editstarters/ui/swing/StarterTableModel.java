@@ -5,7 +5,6 @@ import com.intellij.ui.BooleanTableCellRenderer;
 import com.intellij.ui.table.JBTable;
 import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import lombok.Setter;
 
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -25,15 +24,24 @@ public class StarterTableModel extends AbstractStarterTableModel {
 
     private static final int CHECKBOX_WIDTH = 20;
 
-    @Setter
     private StarterProcessor<Boolean> checkBoxValueProcessor;
-    @Setter
     private StarterProcessor<Void> removeProcessor;
-    @Setter
     private StarterProcessor<Void> addProcessor;
 
     public StarterTableModel(JBTable starterList) {
         super(Collections.emptyList(), starterList, COLUMN_MAX);
+    }
+
+    public void setCheckBoxValueProcessor(StarterProcessor<Boolean> checkBoxValueProcessor) {
+        this.checkBoxValueProcessor = checkBoxValueProcessor;
+    }
+
+    public void setRemoveProcessor(StarterProcessor<Void> removeProcessor) {
+        this.removeProcessor = removeProcessor;
+    }
+
+    public void setAddProcessor(StarterProcessor<Void> addProcessor) {
+        this.addProcessor = addProcessor;
     }
 
     @Override

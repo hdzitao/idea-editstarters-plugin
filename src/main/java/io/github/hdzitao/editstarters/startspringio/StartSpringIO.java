@@ -2,24 +2,37 @@ package io.github.hdzitao.editstarters.startspringio;
 
 import io.github.hdzitao.editstarters.startspringio.metadata.MetadataConfig;
 import io.github.hdzitao.editstarters.version.Version;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * start.spring.io
  *
  * @version 3.2.0
  */
-@Getter
-@Setter
-@NoArgsConstructor
 public class StartSpringIO {
     private Version version;
     private MetadataConfig metadataConfig;
 
+    public StartSpringIO() {
+    }
+
     public StartSpringIO(Version version, MetadataConfig metadataConfig) {
         this.version = version;
+        this.metadataConfig = metadataConfig;
+    }
+
+    public Version getVersion() {
+        return version;
+    }
+
+    public void setVersion(Version version) {
+        this.version = version;
+    }
+
+    public MetadataConfig getMetadataConfig() {
+        return metadataConfig;
+    }
+
+    public void setMetadataConfig(MetadataConfig metadataConfig) {
         this.metadataConfig = metadataConfig;
     }
 

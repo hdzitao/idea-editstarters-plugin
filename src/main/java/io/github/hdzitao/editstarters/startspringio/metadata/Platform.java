@@ -1,17 +1,18 @@
 package io.github.hdzitao.editstarters.startspringio.metadata;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 /**
  * configuration.env.platform
  *
  * @version 3.2.0
  */
-@Getter
-@Setter
-@NoArgsConstructor
 public class Platform {
     private String compatibilityRange;
+
+    public String getCompatibilityRange() {
+        return compatibilityRange;
+    }
+
+    public void setCompatibilityRange(String compatibilityRange) {
+        this.compatibilityRange = compatibilityRange;
+    }
 }

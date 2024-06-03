@@ -2,9 +2,6 @@ package io.github.hdzitao.editstarters.startspringio.metadata;
 
 import io.github.hdzitao.editstarters.version.Version;
 import io.github.hdzitao.editstarters.version.Versions;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
@@ -14,12 +11,25 @@ import java.util.Optional;
  *
  * @version 3.2.0
  */
-@Getter
-@Setter
-@NoArgsConstructor
 public class MetadataConfig {
     private Configuration configuration;
     private Dependencies dependencies;
+
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    public Dependencies getDependencies() {
+        return dependencies;
+    }
+
+    public void setDependencies(Dependencies dependencies) {
+        this.dependencies = dependencies;
+    }
 
     /**
      * 判断版本是否匹配

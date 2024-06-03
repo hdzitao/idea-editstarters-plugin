@@ -4,9 +4,6 @@ import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.version.Version;
 import io.github.hdzitao.editstarters.version.Versions;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
@@ -17,9 +14,6 @@ import java.util.Optional;
  *
  * @version 3.2.0
  */
-@Getter
-@Setter
-@NoArgsConstructor
 public class MetadataDependency extends Dependency {
     private String id;
     private String name;
@@ -29,6 +23,70 @@ public class MetadataDependency extends Dependency {
     private String bom;
     private String repository;
     private List<MetadataDependency> mappings;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<Link> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<Link> links) {
+        this.links = links;
+    }
+
+    public String getCompatibilityRange() {
+        return compatibilityRange;
+    }
+
+    public void setCompatibilityRange(String compatibilityRange) {
+        this.compatibilityRange = compatibilityRange;
+    }
+
+    public String getBom() {
+        return bom;
+    }
+
+    public void setBom(String bom) {
+        this.bom = bom;
+    }
+
+    public String getRepository() {
+        return repository;
+    }
+
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
+
+    public List<MetadataDependency> getMappings() {
+        return mappings;
+    }
+
+    public void setMappings(List<MetadataDependency> mappings) {
+        this.mappings = mappings;
+    }
 
     /**
      * 根据版本处理

@@ -12,7 +12,6 @@ import com.intellij.psi.PsiFile;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.ui.ShowErrorException;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
@@ -35,7 +34,6 @@ public class GradleBuildSystem extends BuildSystem {
     /**
      * 根据文件名构建gradle build system
      */
-    @SneakyThrows
     public static GradleBuildSystem from(DataContext context) {
         PsiFile psiFile = context.getData(CommonDataKeys.PSI_FILE);
         Project project = context.getData(CommonDataKeys.PROJECT);
@@ -44,17 +42,11 @@ public class GradleBuildSystem extends BuildSystem {
         }
 
         String name = psiFile.getName();
-        AbstractBuildGradle<?> buildGradle;
-        switch (name) {
-            case GradleConstants.DEFAULT_SCRIPT_NAME:
-                buildGradle = new BuildGradle(project, (GroovyFile) psiFile);
-                break;
-            case GradleConstants.KOTLIN_DSL_SCRIPT_NAME:
-                buildGradle = new BuildGradleKts(project, (KtFile) psiFile);
-                break;
-            default:
-                throw new ShowErrorException("Not support extension!");
-        }
+        AbstractBuildGradle<?> buildGradle = switch (name) {
+            case GradleConstants.DEFAULT_SCRIPT_NAME -> new BuildGradle(project, (GroovyFile) psiFile);
+            case GradleConstants.KOTLIN_DSL_SCRIPT_NAME -> new BuildGradleKts(project, (KtFile) psiFile);
+            default -> throw new ShowErrorException("Not support extension!");
+        };
 
         if (StringUtils.isEmpty(project.getBasePath())) {
             throw ShowErrorException.internal();

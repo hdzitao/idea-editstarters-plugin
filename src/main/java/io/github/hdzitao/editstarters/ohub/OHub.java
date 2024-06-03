@@ -1,17 +1,10 @@
 package io.github.hdzitao.editstarters.ohub;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * spring boot旧版本处理
  *
  * @version 3.2.0
  */
-@Getter
-@Setter
-@AllArgsConstructor
 public abstract class OHub {
     /**
      * 基础url

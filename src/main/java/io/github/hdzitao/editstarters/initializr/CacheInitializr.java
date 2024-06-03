@@ -11,7 +11,7 @@ import io.github.hdzitao.editstarters.springboot.SpringBoot;
  */
 public class CacheInitializr implements Initializr {
     @Override
-    public void initialize(InitializrRequest request, InitializrResponse response, InitializrChain chain) {
+    public void initialize(InitializrRequest request, InitializrResponse response, InitializrChain chain) throws Exception {
         String url = request.getUrl();
         String version = request.getVersion().getOriginalText();
         InitializrCache initializrCache = InitializrCache.getInstance(request.getProject());

@@ -1,8 +1,5 @@
 package io.github.hdzitao.editstarters.springboot;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.List;
 
 /**
@@ -10,9 +7,23 @@ import java.util.List;
  *
  * @version 3.2.0
  */
-@Getter
-@Setter
 public class Module {
     private String name;
     private List<Starter> values;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Starter> getValues() {
+        return values;
+    }
+
+    public void setValues(List<Starter> values) {
+        this.values = values;
+    }
 }

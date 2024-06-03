@@ -8,8 +8,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.util.xmlb.annotations.OptionTag;
 import io.github.hdzitao.editstarters.ohub.GitHub;
 import io.github.hdzitao.editstarters.springboot.SpringBoot;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,8 +30,6 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
     /**
      * 缓存bean
      */
-    @Getter
-    @Setter
     public static class State {
         @OptionTag(converter = SpringBootConverter.class)
         private SpringBoot springBoot;
@@ -41,6 +37,46 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
         private String oHub;
         private String version;
         private long updateTime;
+
+        public SpringBoot getSpringBoot() {
+            return springBoot;
+        }
+
+        public void setSpringBoot(SpringBoot springBoot) {
+            this.springBoot = springBoot;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getOHub() {
+            return oHub;
+        }
+
+        public void setOHub(String oHub) {
+            this.oHub = oHub;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public void setVersion(String version) {
+            this.version = version;
+        }
+
+        public long getUpdateTime() {
+            return updateTime;
+        }
+
+        public void setUpdateTime(long updateTime) {
+            this.updateTime = updateTime;
+        }
     }
 
     public static class SpringBootConverter extends JSONConverter<SpringBoot> {

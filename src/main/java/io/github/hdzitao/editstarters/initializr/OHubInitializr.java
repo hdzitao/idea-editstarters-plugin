@@ -11,7 +11,6 @@ import io.github.hdzitao.editstarters.startspringio.StartSpringIO;
 import io.github.hdzitao.editstarters.startspringio.StartSpringIO2SpringBoot;
 import io.github.hdzitao.editstarters.startspringio.metadata.MetadataConfig;
 import io.github.hdzitao.editstarters.version.Version;
-import lombok.SneakyThrows;
 
 /**
  * 旧版本初始化
@@ -23,8 +22,7 @@ public class OHubInitializr implements Initializr {
     private final SpringBootBuilder<StartSpringIO> springIO2SpringBoot = new StartSpringIO2SpringBoot();
 
     @Override
-    @SneakyThrows
-    public void initialize(InitializrRequest request, InitializrResponse response, InitializrChain chain) {
+    public void initialize(InitializrRequest request, InitializrResponse response, InitializrChain chain) throws Exception {
         Version version = request.getVersion();
         OHub oHub = request.getOHub();
 

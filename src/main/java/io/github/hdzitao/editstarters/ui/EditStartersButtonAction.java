@@ -62,13 +62,13 @@ public abstract class EditStartersButtonAction extends AnAction {
                 return;
             }
             // 组装参数
-            InitializrRequest request = new InitializrRequest()
-                    .setProject(project)
-                    .setBuildSystem(buildSystem)
-                    .setVersion(version)
-                    .setUrl(url)
-                    .setEnableCache(initializrDialog.isEnableCache())
-                    .setOHub(initializrDialog.getOHub());
+            InitializrRequest request = new InitializrRequest();
+            request.setProject(project);
+            request.setBuildSystem(buildSystem);
+            request.setVersion(version);
+            request.setUrl(url);
+            request.setEnableCache(initializrDialog.isEnableCache());
+            request.setOHub(initializrDialog.getOHub());
             // 组装返回
             InitializrResponse response = new InitializrResponse();
             // 执行

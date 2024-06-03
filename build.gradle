@@ -17,10 +17,6 @@ repositories {
 }
 
 dependencies {
-    // lombok
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: LOMBOK_VERSION
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: LOMBOK_VERSION
-
     // junit
     testImplementation group: 'junit', name: 'junit', version: JUNIT_VERSION
 }

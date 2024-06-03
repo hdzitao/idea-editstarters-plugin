@@ -1,8 +1,6 @@
 package io.github.hdzitao.editstarters.springboot;
 
 import io.github.hdzitao.editstarters.version.Version;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
@@ -11,8 +9,6 @@ import java.util.List;
  *
  * @version 3.2.0
  */
-@Getter
-@Setter
 public class SpringBoot {
     private final Version version;
     private final List<Module> modules;
@@ -20,5 +16,13 @@ public class SpringBoot {
     public SpringBoot(Version version, List<Module> modules) {
         this.version = version;
         this.modules = modules;
+    }
+
+    public Version getVersion() {
+        return version;
+    }
+
+    public List<Module> getModules() {
+        return modules;
     }
 }

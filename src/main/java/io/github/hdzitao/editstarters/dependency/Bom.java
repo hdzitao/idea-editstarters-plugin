@@ -1,21 +1,17 @@
 package io.github.hdzitao.editstarters.dependency;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 /**
  * bom
  *
  * @version 3.2.0
  */
-@Getter
-@Setter
-@NoArgsConstructor
 public class Bom implements Point {
     protected String groupId;
     protected String artifactId;
     protected String version;
+
+    public Bom() {
+    }
 
     public Bom(String groupId, String artifactId, String version) {
         this.groupId = groupId;
@@ -25,6 +21,30 @@ public class Bom implements Point {
 
     public Bom(String groupId, String artifactId) {
         this(groupId, artifactId, null);
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     @Override
