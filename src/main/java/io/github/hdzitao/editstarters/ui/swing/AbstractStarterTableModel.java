@@ -27,20 +27,35 @@ public abstract class AbstractStarterTableModel extends AbstractTableModel {
         this.starters = starters;
         this.table = table;
         this.columnMax = columnMax;
-
         // set/get value
         this.tableValue = new TableValue(columnMax);
-        tableValue();
-
         // 点击事件
         this.mouseClicker = new TableMouseClicker(table, columnMax);
+    }
 
+    /**
+     * 准备就绪
+     * 模版方法，不能重写
+     */
+    public final void ready() {
+        // 设置tableValue
+        tableValue();
         // 去掉标题/边框等等
         starterTableStyle(table);
+
+        // 子类自己的准备动作
+        readyMyself();
+
         // model
         table.setModel(this);
         // 渲染
         render();
+    }
+
+    /**
+     * 子类自己的准备动作
+     */
+    protected void readyMyself() {
     }
 
     /**

@@ -184,6 +184,9 @@ public class EditStartersDialog implements FlowDialog {
         // 详情
         selectedTableModel.setShowDescListener(showDescListener);
         starterTableModel.setShowDescListener(showDescListener);
+        // 准备解析
+        selectedTableModel.ready();
+        starterTableModel.ready();
 
         // Module列表
         moduleList.setModel(new CollectionListModel<>(modules.keySet()));
