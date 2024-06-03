@@ -1,5 +1,6 @@
 package io.github.hdzitao.editstarters.buildsystem;
 
+import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.containers.ContainerUtil;
 import io.github.hdzitao.editstarters.dependency.Bom;
@@ -12,6 +13,8 @@ import io.github.hdzitao.editstarters.springboot.Starter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * pom.xml和build.gradle项目文件
@@ -93,18 +96,32 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
 
         Psi dependenciesTag = findOrCreateDependenciesTag();
         // 取已存在的依赖
-        List<Dependency> extDependencies = findAllDependencies(dependenciesTag);
+        Map<String, DependencyElement<?>> extDependencyMap = findAllDependencies(dependenciesTag).stream()
+                .filter(dependency -> dependency instanceof DependencyElement)
+                .collect(Collectors.toMap(Dependency::point, dependency -> (DependencyElement<?>) dependency));
+        // 非直接依赖项
+        List<Starter> indirectDependencies = new ArrayList<>();
         // 遍历存在的依赖，如果待删除的依赖包含它，就删除
-        for (Dependency extDependency : extDependencies) {
-            if (Points.contains(dependencies, extDependency) && extDependency instanceof DependencyElement) {
-                @SuppressWarnings("unchecked")
-                PsiElement element = ((DependencyElement<PsiElement>) extDependency).getElement();
-                if (element != null) {
-                    element.delete();
-                }
+        for (Starter dependency : dependencies) {
+            DependencyElement<?> dependencyElement = extDependencyMap.get(dependency.point());
+            if (dependencyElement == null) {
+                // 非直接依赖项
+                indirectDependencies.add(dependency);
+                continue;
+            }
+
+            PsiElement element = dependencyElement.getElement();
+            if (element != null) {
+                element.delete();
             }
         }
 
+        if (!indirectDependencies.isEmpty()) {
+            Messages.showInfoMessage("Indirect dependencies cannot be deleted:\n" + indirectDependencies.stream()
+                            .map(Starter::toString)
+                            .collect(Collectors.joining("\n")),
+                    "Remove Starters Info");
+        }
     }
 
     /**
