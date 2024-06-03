@@ -1,7 +1,7 @@
 {
   "metaDataList": [
     {
-      "versionRange": "3.1.x",
+      "versionRange": "3.1.0",
       "metadataConfig": "metadata_config_3_1_0.json",
       "enable": true
     },
