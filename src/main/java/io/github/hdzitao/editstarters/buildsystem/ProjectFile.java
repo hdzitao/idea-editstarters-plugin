@@ -101,7 +101,7 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
                 .collect(Collectors.toMap(Dependency::point, dependency -> (DependencyElement<?>) dependency));
         // 非直接依赖项
         List<Starter> indirectDependencies = new ArrayList<>();
-        // 遍历存在的依赖，如果待删除的依赖包含它，就删除
+        // 遍历删除
         for (Starter dependency : dependencies) {
             DependencyElement<?> dependencyElement = extDependencyMap.get(dependency.point());
             if (dependencyElement == null) {
