@@ -177,6 +177,7 @@
         "spring-modulith": {
           "groupId": "org.springframework.modulith",
           "artifactId": "spring-modulith-bom",
+          "versionProperty": "spring-modulith.version",
           "mappings": [
             {
               "compatibilityRange": "[3.1.0,3.2.0-M1)",
@@ -249,11 +250,11 @@
             },
             {
               "compatibilityRange": "[2.7.0-M1,3.0.0-M1)",
-              "version": "23.3.27"
+              "version": "23.3.28"
             },
             {
               "compatibilityRange": "[3.0.0-M1,3.2.0-M1)",
-              "version": "24.2.3"
+              "version": "24.2.4"
             }
           ]
         },
@@ -330,6 +331,27 @@
             "artifactId": "spring-boot",
             "scope": "compile",
             "description": "Support for compiling Spring applications to native executables using the GraalVM native-image compiler.",
+            "compatibilityRange": "3.0.0-M1",
+            "starter": false
+          },
+          {
+            "name": "GraphQL DGS Code Generation",
+            "id": "dgs-codegen",
+            "groupId": "com.netflix.graphql.dgs.codegen",
+            "artifactId": "graphql-dgs-codegen-gradle",
+            "mappings": [
+              {
+                "compatibilityRange": "3.0.0-M1",
+                "groupId": null,
+                "artifactId": null,
+                "version": "6.0.3",
+                "starter": null,
+                "bom": null,
+                "repository": null
+              }
+            ],
+            "scope": "compile",
+            "description": "Generate data types and type-safe APIs for querying GraphQL APIs by parsing schema files.",
             "compatibilityRange": "3.0.0-M1",
             "starter": false
           },
@@ -2938,43 +2960,38 @@
     "description": "spring boot version",
     "content": [
       {
-        "name": "3.2.0 (SNAPSHOT)",
-        "id": "3.2.0-SNAPSHOT",
+        "name": "3.3.1 (SNAPSHOT)",
+        "id": "3.3.1-SNAPSHOT",
         "default": false
       },
       {
-        "name": "3.2.0 (RC2)",
-        "id": "3.2.0-RC2",
-        "default": false
-      },
-      {
-        "name": "3.1.6 (SNAPSHOT)",
-        "id": "3.1.6-SNAPSHOT",
-        "default": false
-      },
-      {
-        "name": "3.1.5",
-        "id": "3.1.5",
+        "name": "3.3.0",
+        "id": "3.3.0",
         "default": true
       },
       {
-        "name": "3.0.13 (SNAPSHOT)",
-        "id": "3.0.13-SNAPSHOT",
+        "name": "3.2.7 (SNAPSHOT)",
+        "id": "3.2.7-SNAPSHOT",
         "default": false
       },
       {
-        "name": "3.0.12",
-        "id": "3.0.12",
+        "name": "3.2.6",
+        "id": "3.2.6",
         "default": false
       },
       {
-        "name": "2.7.18 (SNAPSHOT)",
-        "id": "2.7.18-SNAPSHOT",
+        "name": "3.1.12",
+        "id": "3.1.12",
         "default": false
       },
       {
-        "name": "2.7.17",
-        "id": "2.7.17",
+        "name": "3.0.13",
+        "id": "3.0.13",
+        "default": false
+      },
+      {
+        "name": "2.7.18",
+        "id": "2.7.18",
         "default": false
       }
     ]
