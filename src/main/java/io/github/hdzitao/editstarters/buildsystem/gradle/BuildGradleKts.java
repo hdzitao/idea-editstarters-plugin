@@ -9,7 +9,6 @@ import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import io.github.hdzitao.editstarters.ui.ShowErrorException;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.kotlin.psi.*;
 
@@ -145,25 +144,10 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
      * 获取lambda体
      */
     private static KtBlockExpression getLambdaBodyExpression(KtCallExpression block) {
-        // 创建不会为空
-        if (block == null) {
-            throw ShowErrorException.internal();
-        }
-
         List<KtLambdaArgument> lambdaArguments = block.getLambdaArguments();
-        if (ContainerUtil.isEmpty(lambdaArguments)) {
-            throw ShowErrorException.internal();
-        }
         KtLambdaArgument ktLambdaArgument = lambdaArguments.get(0);
         KtExpression argumentExpression = ktLambdaArgument.getArgumentExpression();
-        if (!(argumentExpression instanceof KtLambdaExpression)) {
-            throw ShowErrorException.internal();
-        }
-        KtBlockExpression bodyExpression = ((KtLambdaExpression) argumentExpression).getBodyExpression();
-        if (bodyExpression == null) {
-            throw ShowErrorException.internal();
-        }
-        return bodyExpression;
+        return ((KtLambdaExpression) Objects.requireNonNull(argumentExpression)).getBodyExpression();
     }
 
     /**

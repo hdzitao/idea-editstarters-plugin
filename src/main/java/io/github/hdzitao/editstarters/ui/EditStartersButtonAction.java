@@ -31,9 +31,6 @@ public abstract class EditStartersButtonAction extends AnAction {
             }
             // 缓存
             Project project = e.getProject();
-            if (project == null) {
-                throw ShowErrorException.internal();
-            }
             // spring boot version
             Version version = Versions.parse(buildSystem.getSpringbootDependency().getVersion());
             // 组装参数

@@ -10,11 +10,11 @@ import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import io.github.hdzitao.editstarters.ui.ShowErrorException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -41,10 +41,7 @@ public class PomXml extends ProjectFile<XmlTag> {
     private final XmlTag rootTag;
 
     public PomXml(XmlFile file) {
-        XmlDocument document = file.getDocument();
-        if (document == null) {
-            throw ShowErrorException.internal();
-        }
+        XmlDocument document = Objects.requireNonNull(file.getDocument());
         rootTag = document.getRootTag();
     }
 

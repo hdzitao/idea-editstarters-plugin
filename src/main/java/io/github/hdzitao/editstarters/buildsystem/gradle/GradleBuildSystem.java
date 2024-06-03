@@ -12,12 +12,12 @@ import com.intellij.psi.PsiFile;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.ui.ShowErrorException;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -35,11 +35,8 @@ public class GradleBuildSystem extends BuildSystem {
      * 根据文件名构建gradle build system
      */
     public static GradleBuildSystem from(DataContext context) {
-        PsiFile psiFile = context.getData(CommonDataKeys.PSI_FILE);
-        Project project = context.getData(CommonDataKeys.PROJECT);
-        if (psiFile == null || project == null) {
-            throw ShowErrorException.internal();
-        }
+        PsiFile psiFile = Objects.requireNonNull(context.getData(CommonDataKeys.PSI_FILE));
+        Project project = Objects.requireNonNull(context.getData(CommonDataKeys.PROJECT));
 
         String name = psiFile.getName();
         AbstractBuildGradle<?> buildGradle = switch (name) {
@@ -48,13 +45,10 @@ public class GradleBuildSystem extends BuildSystem {
             default -> throw new ShowErrorException("Not support extension!");
         };
 
-        if (StringUtils.isEmpty(project.getBasePath())) {
-            throw ShowErrorException.internal();
-        }
-
-        DataNode<ProjectData> projectData = ExternalSystemApiUtil.findProjectNode(project, GradleConstants.SYSTEM_ID, project.getBasePath());
+        DataNode<ProjectData> projectData = ExternalSystemApiUtil.findProjectNode(project, GradleConstants.SYSTEM_ID,
+                Objects.requireNonNull(project.getBasePath()));
         if (projectData == null) {
-            throw ShowErrorException.internal();
+            throw new ShowErrorException("ProjectData not found!");
         }
         List<Dependency> dependencies = projectData.getChildren().stream()
                 .filter(node -> ProjectKeys.LIBRARY.equals(node.getKey()))
