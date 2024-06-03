@@ -37,9 +37,19 @@ public class InitializrRequest {
     private boolean enableCache = true;
 
     /**
-     * 旧版本
+     * 支持的接版本
      */
-    private OHub oHub;
+    private OHub[] supportedOHubs;
+
+    /**
+     * 选择的旧版本
+     */
+    private OHub selectedOHub;
+
+    /**
+     * 初始化链
+     */
+    private InitializrChain chain;
 
     public Project getProject() {
         return project;
@@ -81,11 +91,27 @@ public class InitializrRequest {
         this.enableCache = enableCache;
     }
 
-    public OHub getOHub() {
-        return oHub;
+    public OHub[] getSupportedOHubs() {
+        return supportedOHubs;
     }
 
-    public void setOHub(OHub oHub) {
-        this.oHub = oHub;
+    public void setSupportedOHubs(OHub[] supportedOHubs) {
+        this.supportedOHubs = supportedOHubs;
+    }
+
+    public OHub getSelectedOHub() {
+        return selectedOHub;
+    }
+
+    public void setSelectedOHub(OHub selectedOHub) {
+        this.selectedOHub = selectedOHub;
+    }
+
+    public InitializrChain getChain() {
+        return chain;
+    }
+
+    public void setChain(InitializrChain chain) {
+        this.chain = chain;
     }
 }

@@ -1,20 +1,16 @@
 package io.github.hdzitao.editstarters.ui;
 
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.psi.PsiFile;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
-import io.github.hdzitao.editstarters.cache.InitializrCache;
 import io.github.hdzitao.editstarters.initializr.*;
 import io.github.hdzitao.editstarters.ohub.GitHub;
 import io.github.hdzitao.editstarters.ohub.Gitee;
 import io.github.hdzitao.editstarters.ohub.OHub;
 import io.github.hdzitao.editstarters.version.Version;
 import io.github.hdzitao.editstarters.version.Versions;
-import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -23,16 +19,6 @@ import org.jetbrains.annotations.NotNull;
  * @version 3.2.0
  */
 public abstract class EditStartersButtonAction extends AnAction {
-    private final Initializr[] initializrs = {
-            new CacheInitializr(),
-            new StartSpringInitializr(),
-            new OHubInitializr(),
-    };
-
-    private final OHub[] oHubs = {
-            new GitHub(),
-            new Gitee(),
-    };
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
@@ -48,38 +34,28 @@ public abstract class EditStartersButtonAction extends AnAction {
             if (project == null) {
                 throw ShowErrorException.internal();
             }
-            InitializrCache initializrCache = InitializrCache.getInstance(project);
-            // 初始化
-            initializrCache.initialize();
             // spring boot version
             Version version = Versions.parse(buildSystem.getSpringbootDependency().getVersion());
-            // 弹出spring initializr地址输入框
-            InitializrDialog initializrDialog = new InitializrDialog(initializrCache, version, oHubs);
-            initializrDialog.showDialog();
-            // 获取url
-            String url = initializrDialog.getUrl();
-            if (StringUtils.isBlank(url)) {
-                return;
-            }
             // 组装参数
             InitializrRequest request = new InitializrRequest();
             request.setProject(project);
             request.setBuildSystem(buildSystem);
             request.setVersion(version);
-            request.setUrl(url);
-            request.setEnableCache(initializrDialog.isEnableCache());
-            request.setOHub(initializrDialog.getOHub());
+            request.setSupportedOHubs(new OHub[]{
+                    new GitHub(),
+                    new Gitee(),
+            });
+            request.setChain(new InitializrChain(
+                    new CacheInitializr(),
+                    new StartSpringInitializr(),
+                    new OHubInitializr()
+            ));
             // 组装返回
             InitializrResponse response = new InitializrResponse();
-            // 执行
-            ProgressManager progressManager = ProgressManager.getInstance();
-            progressManager.runProcessWithProgressSynchronously((ThrowableComputable<Void, Exception>) () -> {
-                progressManager.getProgressIndicator().setIndeterminate(true);
-                new InitializrChain(initializrs).initialize(request, response);
-                return null;
-            }, "Loading " + url, true, project);
-            // 模块弹窗
-            new EditStartersDialog(request, response).show();
+
+            // 显示对话框
+            InitializrDialog initializrDialog = new InitializrDialog(request, response);
+            initializrDialog.show();
         } catch (Throwable throwable) { // 所有异常弹错误框
             String message;
 

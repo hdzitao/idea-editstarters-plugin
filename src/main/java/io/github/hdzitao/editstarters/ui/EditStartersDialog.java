@@ -39,7 +39,7 @@ import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
  *
  * @version 3.2.0
  */
-public class EditStartersDialog {
+public class EditStartersDialog implements FlowDialog {
     private JPanel root;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -245,6 +245,7 @@ public class EditStartersDialog {
         frame.dispose();
     }
 
+    @Override
     public void show() {
         frame.pack();
         frame.setLocationRelativeTo(null); // 中间显示

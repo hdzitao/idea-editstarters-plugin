@@ -12,7 +12,7 @@ public class InitializrChain {
 
     private int i = 0;
 
-    public InitializrChain(Initializr[] chain) {
+    public InitializrChain(Initializr... chain) {
         this.chain = chain;
     }
 

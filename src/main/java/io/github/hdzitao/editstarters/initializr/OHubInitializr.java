@@ -24,7 +24,7 @@ public class OHubInitializr implements Initializr {
     @Override
     public void initialize(InitializrRequest request, InitializrResponse response, InitializrChain chain) throws Exception {
         Version version = request.getVersion();
-        OHub oHub = request.getOHub();
+        OHub oHub = request.getSelectedOHub();
 
         if (oHub == null) {
             chain.initialize(request, response);

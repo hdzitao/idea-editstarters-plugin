@@ -92,15 +92,6 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
     }
 
     /**
-     * 初始化
-     */
-    public void initialize() {
-        if (!enable()) {
-            state = new State();
-        }
-    }
-
-    /**
      * 获取缓存
      */
     public SpringBoot getSpringBoot(String url, String version) {
@@ -119,6 +110,10 @@ public class InitializrCache implements PersistentStateComponent<InitializrCache
      * 更新缓存
      */
     public void putSpringBoot(String url, String version, SpringBoot project) {
+        if (!enable()) {
+            state = new State();
+        }
+
         state.url = url;
         state.version = version;
         state.springBoot = project;
