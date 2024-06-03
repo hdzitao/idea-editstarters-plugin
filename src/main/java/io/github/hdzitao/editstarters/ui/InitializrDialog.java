@@ -118,8 +118,8 @@ public class InitializrDialog implements FlowDialog {
                 request.getChain().initialize(request, response);
                 return null;
             }, "Loading " + request.getUrl(), true, request.getProject());
-        } catch (Exception e) {
-            Messages.showErrorDialog("Initialization failed, please check the URL and network", "Initializr Chain Error");
+        } catch (Exception ignore) {
+            Messages.showErrorDialog("Initialization failed, please check the URL and network. If you confirm that there is no problem, please contact HdziTao.", "Initializr Chain Error");
             return;
         }
 
