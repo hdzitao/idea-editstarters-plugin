@@ -1,6 +1,7 @@
 package io.github.hdzitao.editstarters.ui;
 
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.ui.CollectionComboBoxModel;
 import com.intellij.util.containers.ContainerUtil;
@@ -118,7 +119,8 @@ public class InitializrDialog implements FlowDialog {
                 return null;
             }, "Loading " + request.getUrl(), true, request.getProject());
         } catch (Exception e) {
-            throw new ShowErrorException("Initializr Chain error!", e);
+            Messages.showErrorDialog("Initialization failed, please check the URL and network", "Initializr Chain Error");
+            return;
         }
 
         new EditStartersDialog(request, response).show();

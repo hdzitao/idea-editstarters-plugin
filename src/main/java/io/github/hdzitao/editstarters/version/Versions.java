@@ -1,6 +1,5 @@
 package io.github.hdzitao.editstarters.version;
 
-import io.github.hdzitao.editstarters.ui.ShowErrorException;
 import io.github.hdzitao.editstarters.version.Version.Qualifier;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,7 +20,7 @@ public final class Versions {
     public static Version parse(String text) {
         Matcher matcher = VERSION_REGEX.matcher(text.trim());
         if (!matcher.find()) {
-            throw new ShowErrorException("Unsupported version format: " + text);
+            throw new UnsupportedOperationException("Unsupported version format: " + text);
         }
         Integer major = Integer.valueOf(matcher.group(1));
         String minorStr = matcher.group(2);

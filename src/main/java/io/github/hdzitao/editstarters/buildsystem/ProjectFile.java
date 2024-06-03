@@ -8,7 +8,6 @@ import io.github.hdzitao.editstarters.dependency.Points;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.EditStarters;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import io.github.hdzitao.editstarters.ui.ShowErrorException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,53 +68,41 @@ public abstract class ProjectFile<Psi extends PsiElement> implements EditStarter
 
     @Override
     public void addStarters(Collection<Starter> dependencies) {
-        try {
-            if (ContainerUtil.isEmpty(dependencies)) {
-                return;
-            }
-
-            Psi dependenciesTag = findOrCreateDependenciesTag();
-            List<Bom> boms = new ArrayList<>();
-            List<Repository> repositories = new ArrayList<>();
-            for (Starter starter : dependencies) {
-                createDependencyTag(dependenciesTag, starter);
-                Points.addUniq(boms, starter.getBom());
-                Points.addAllUniq(repositories, starter.getRepositories());
-            }
-
-            addBoms(boms);
-            addRepositories(repositories);
-        } catch (ShowErrorException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ShowErrorException("Syntax error!", e);
+        if (ContainerUtil.isEmpty(dependencies)) {
+            return;
         }
+
+        Psi dependenciesTag = findOrCreateDependenciesTag();
+        List<Bom> boms = new ArrayList<>();
+        List<Repository> repositories = new ArrayList<>();
+        for (Starter starter : dependencies) {
+            createDependencyTag(dependenciesTag, starter);
+            Points.addUniq(boms, starter.getBom());
+            Points.addAllUniq(repositories, starter.getRepositories());
+        }
+
+        addBoms(boms);
+        addRepositories(repositories);
     }
 
     @Override
     public void removeStarters(Collection<Starter> dependencies) {
-        try {
-            if (ContainerUtil.isEmpty(dependencies)) {
-                return;
-            }
+        if (ContainerUtil.isEmpty(dependencies)) {
+            return;
+        }
 
-            Psi dependenciesTag = findOrCreateDependenciesTag();
-            // 取已存在的依赖
-            List<Dependency> extDependencies = findAllDependencies(dependenciesTag);
-            // 遍历存在的依赖，如果待删除的依赖包含它，就删除
-            for (Dependency extDependency : extDependencies) {
-                if (Points.contains(dependencies, extDependency) && extDependency instanceof DependencyElement) {
-                    @SuppressWarnings("unchecked")
-                    PsiElement element = ((DependencyElement<PsiElement>) extDependency).getElement();
-                    if (element != null) {
-                        element.delete();
-                    }
+        Psi dependenciesTag = findOrCreateDependenciesTag();
+        // 取已存在的依赖
+        List<Dependency> extDependencies = findAllDependencies(dependenciesTag);
+        // 遍历存在的依赖，如果待删除的依赖包含它，就删除
+        for (Dependency extDependency : extDependencies) {
+            if (Points.contains(dependencies, extDependency) && extDependency instanceof DependencyElement) {
+                @SuppressWarnings("unchecked")
+                PsiElement element = ((DependencyElement<PsiElement>) extDependency).getElement();
+                if (element != null) {
+                    element.delete();
                 }
             }
-        } catch (ShowErrorException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ShowErrorException("Syntax error!", e);
         }
 
     }

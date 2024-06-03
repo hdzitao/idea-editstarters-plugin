@@ -6,11 +6,11 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.xml.XmlFile;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.dependency.Dependency;
-import io.github.hdzitao.editstarters.ui.ShowErrorException;
 import org.jetbrains.idea.maven.project.MavenProject;
 import org.jetbrains.idea.maven.utils.actions.MavenActionUtil;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -28,15 +28,9 @@ public class MavenBuildSystem extends BuildSystem {
      * 构建 maven build system
      */
     public static MavenBuildSystem from(DataContext context) {
-        PsiFile psiFile = context.getData(CommonDataKeys.PSI_FILE);
-        if (!(psiFile instanceof XmlFile)) {
-            throw new ShowErrorException("Not an XML file!");
-        }
+        PsiFile psiFile = Objects.requireNonNull(context.getData(CommonDataKeys.PSI_FILE));
         PomXml pomXml = new PomXml((XmlFile) psiFile);
-        MavenProject mavenProject = MavenActionUtil.getMavenProject(context);
-        if (mavenProject == null) {
-            throw new ShowErrorException("Not a maven project!");
-        }
+        MavenProject mavenProject = Objects.requireNonNull(MavenActionUtil.getMavenProject(context));
         List<Dependency> dependencies = mavenProject.getDependencies().stream()
                 .map(d -> new Dependency(d.getGroupId(), d.getArtifactId(), d.getBaseVersion()))
                 .collect(Collectors.toList());

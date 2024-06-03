@@ -16,6 +16,6 @@ public interface FlowDialog {
      * 下一个对话框
      */
     default void next() {
-        throw ShowErrorException.internal();
+        throw new UnsupportedOperationException("Not have next dialog.");
     }
 }

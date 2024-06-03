@@ -11,7 +11,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import io.github.hdzitao.editstarters.buildsystem.BuildSystem;
 import io.github.hdzitao.editstarters.dependency.Dependency;
-import io.github.hdzitao.editstarters.ui.ShowErrorException;
 import org.jetbrains.kotlin.psi.KtFile;
 import org.jetbrains.plugins.gradle.util.GradleConstants;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
@@ -42,14 +41,13 @@ public class GradleBuildSystem extends BuildSystem {
         AbstractBuildGradle<?> buildGradle = switch (name) {
             case GradleConstants.DEFAULT_SCRIPT_NAME -> new BuildGradle(project, (GroovyFile) psiFile);
             case GradleConstants.KOTLIN_DSL_SCRIPT_NAME -> new BuildGradleKts(project, (KtFile) psiFile);
-            default -> throw new ShowErrorException("Not support extension!");
+            default -> throw new UnsupportedOperationException("Not support extension!");
         };
 
-        DataNode<ProjectData> projectData = ExternalSystemApiUtil.findProjectNode(project, GradleConstants.SYSTEM_ID,
-                Objects.requireNonNull(project.getBasePath()));
-        if (projectData == null) {
-            throw new ShowErrorException("ProjectData not found!");
-        }
+        DataNode<ProjectData> projectData = Objects.requireNonNull(ExternalSystemApiUtil.findProjectNode(
+                project,
+                GradleConstants.SYSTEM_ID,
+                Objects.requireNonNull(project.getBasePath())));
         List<Dependency> dependencies = projectData.getChildren().stream()
                 .filter(node -> ProjectKeys.LIBRARY.equals(node.getKey()))
                 .map(node -> (LibraryData) node.getData())

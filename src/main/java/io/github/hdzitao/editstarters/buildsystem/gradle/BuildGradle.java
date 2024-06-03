@@ -9,7 +9,6 @@ import io.github.hdzitao.editstarters.dependency.Bom;
 import io.github.hdzitao.editstarters.dependency.Dependency;
 import io.github.hdzitao.editstarters.dependency.Repository;
 import io.github.hdzitao.editstarters.springboot.Starter;
-import io.github.hdzitao.editstarters.ui.ShowErrorException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElement;
@@ -125,11 +124,6 @@ public class BuildGradle extends AbstractBuildGradle<GrClosableBlock> {
         }
 
         GrClosableBlock[] closureArguments = closure.getClosureArguments();
-        // 新建不可能为空,为空即内部错误
-        if (ArrayUtils.isEmpty(closureArguments)) {
-            throw ShowErrorException.internal();
-        }
-
         return closureArguments[0];
     }
 

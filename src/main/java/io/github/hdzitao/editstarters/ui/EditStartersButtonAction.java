@@ -22,48 +22,37 @@ public abstract class EditStartersButtonAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        try {
-            // 构建系统
-            BuildSystem buildSystem = newBuildSystem(e.getDataContext());
-            // 检查Spring boot
-            if (!buildSystem.isSpringBootProject()) {
-                throw new ShowErrorException("Not a Spring Boot Project!");
-            }
-            // 缓存
-            Project project = e.getProject();
-            // spring boot version
-            Version version = Versions.parse(buildSystem.getSpringbootDependency().getVersion());
-            // 组装参数
-            InitializrRequest request = new InitializrRequest();
-            request.setProject(project);
-            request.setBuildSystem(buildSystem);
-            request.setVersion(version);
-            request.setSupportedOHubs(new OHub[]{
-                    new GitHub(),
-                    new Gitee(),
-            });
-            request.setChain(new InitializrChain(
-                    new CacheInitializr(),
-                    new StartSpringInitializr(),
-                    new OHubInitializr()
-            ));
-            // 组装返回
-            InitializrResponse response = new InitializrResponse();
-
-            // 显示对话框
-            InitializrDialog initializrDialog = new InitializrDialog(request, response);
-            initializrDialog.show();
-        } catch (Throwable throwable) { // 所有异常弹错误框
-            String message;
-
-            if (throwable instanceof ShowErrorException) {
-                message = throwable.getMessage();
-            } else {
-                message = throwable.getClass().getSimpleName() + ": " + throwable.getMessage();
-            }
-
-            Messages.showErrorDialog(message, "Edit Starters Error");
+        // 构建系统
+        BuildSystem buildSystem = newBuildSystem(e.getDataContext());
+        // 检查Spring boot
+        if (!buildSystem.isSpringBootProject()) {
+            Messages.showErrorDialog("Not a spring boot project!", "Edit Starters Error");
+            return;
         }
+        // 缓存
+        Project project = e.getProject();
+        // spring boot version
+        Version version = Versions.parse(buildSystem.getSpringbootDependency().getVersion());
+        // 组装参数
+        InitializrRequest request = new InitializrRequest();
+        request.setProject(project);
+        request.setBuildSystem(buildSystem);
+        request.setVersion(version);
+        request.setSupportedOHubs(new OHub[]{
+                new GitHub(),
+                new Gitee(),
+        });
+        request.setChain(new InitializrChain(
+                new CacheInitializr(),
+                new StartSpringInitializr(),
+                new OHubInitializr()
+        ));
+        // 组装返回
+        InitializrResponse response = new InitializrResponse();
+
+        // 显示对话框
+        InitializrDialog initializrDialog = new InitializrDialog(request, response);
+        initializrDialog.show();
     }
 
     /**
