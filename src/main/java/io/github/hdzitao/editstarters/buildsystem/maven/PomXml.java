@@ -156,19 +156,11 @@ public class PomXml extends ProjectFile<XmlTag> {
     }
 
     private String resolveScope(DependencyScope scope) {
-        switch (scope) {
-            case PROVIDED:
-                return "provided";
-            case RUNTIME:
-                return "runtime";
-            case TEST:
-                return "test";
-            case ANNOTATION_PROCESSOR:
-            case COMPILE:
-            case COMPILE_ONLY:
-            default:
-                return null;
-
-        }
+        return switch (scope) {
+            case PROVIDED -> "provided";
+            case RUNTIME -> "runtime";
+            case TEST -> "test";
+            default -> null;
+        };
     }
 }

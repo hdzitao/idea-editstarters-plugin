@@ -122,7 +122,7 @@ class BuildGradleKts extends AbstractBuildGradle<KtBlockExpression> {
         if (initializer == null) {
             expression = (KtCallExpression) addExpression(buildFile, name + " {\n}");
         } else {
-            expression = PsiTreeUtil.findChildOfType(initializer, KtCallExpression.class);
+            expression = Objects.requireNonNull(PsiTreeUtil.findChildOfType(initializer, KtCallExpression.class));
         }
 
         return getLambdaBodyExpression(expression);

@@ -13,9 +13,7 @@ public interface FlowDialog {
     void show();
 
     /**
-     * 生成下一个对话框
-     *
-     * @return
+     * 下一个对话框
      */
     default void next() {
         throw ShowErrorException.internal();

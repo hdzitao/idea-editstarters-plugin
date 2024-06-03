@@ -94,22 +94,14 @@ public abstract class AbstractBuildGradle<T extends PsiElement> extends ProjectF
      * 处理scope
      */
     protected String[] resolveScope(DependencyScope scope) {
-        switch (scope) {
-            case ANNOTATION_PROCESSOR:
-                return new String[]{"compileOnly", "annotationProcessor"};
-            case COMPILE:
-                return new String[]{"implementation"};
-            case COMPILE_ONLY:
-                return new String[]{"compileOnly"};
-            case PROVIDED:
-                return new String[]{"providedRuntime"};
-            case RUNTIME:
-                return new String[]{"runtimeOnly"};
-            case TEST:
-                return new String[]{"testImplementation"};
-            default:
-                return null;
-        }
+        return switch (scope) {
+            case ANNOTATION_PROCESSOR -> new String[]{"compileOnly", "annotationProcessor"};
+            case COMPILE -> new String[]{"implementation"};
+            case COMPILE_ONLY -> new String[]{"compileOnly"};
+            case PROVIDED -> new String[]{"providedRuntime"};
+            case RUNTIME -> new String[]{"runtimeOnly"};
+            case TEST -> new String[]{"testImplementation"};
+        };
     }
 
     /**
