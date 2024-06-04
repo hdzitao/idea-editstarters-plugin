@@ -29,7 +29,7 @@ public abstract class EditStartersButtonAction extends AnAction {
             Messages.showErrorDialog("Not a spring boot project!", "Edit Starters Error");
             return;
         }
-        // 缓存
+        // project
         Project project = e.getProject();
         // spring boot version
         Version version = Versions.parse(buildSystem.getSpringbootDependency().getVersion());
