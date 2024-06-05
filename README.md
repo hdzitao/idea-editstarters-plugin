@@ -1,5 +1,7 @@
 # IDEA EditStarters Plugin
 
+**最新版IDEA已经支持edit starters**
+
 这个插件让你在开发过程中也能方便添加修改spring boot starter.
 
 图标来自 [icon-icons.com](https://icon-icons.com/icon/feather-pen-graphic-design/52939), 作者: FreeVectors.
