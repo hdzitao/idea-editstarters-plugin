@@ -1,6 +1,6 @@
 # IDEA EditStarters Plugin
 
-**最新版IDEA已经支持edit starters**
+**最新版IDEA已经支持edit starters，该插件弃用**
 
 这个插件让你在开发过程中也能方便添加修改spring boot starter.
 
@@ -12,6 +12,8 @@
 
 
 ==============================================================
+
+**The latest version of Idea now supports starter editing, and this plugin has been deprecated.**
 
 Edit Spring Boot Starters just like sts and vscode spring boot plugin.
 
